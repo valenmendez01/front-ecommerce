@@ -1,10 +1,12 @@
-import Ejemplo from "./components/ejemplo/Ejemplo"
+// import Ejemplo from "./components/ejemplo/Ejemplo"
+// import { Catalogo } from "./views/catalogo"
+import { DetalleCatalogo } from "./views/DetalleCatalogo"
 
 function App() {
 
   return (
-    <div className="p-10 max-w-2xl">
-    <Ejemplo />
+    <div>
+      <DetalleCatalogo />
     </div>
   )
 }
