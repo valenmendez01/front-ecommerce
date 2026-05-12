@@ -1,8 +1,3 @@
-
-// Cuando conectes react-router, reemplazá MOCK_PRODUCTO por:
-//   const { id } = useParams();
-//   const producto = fetchProductoById(id);
-
 import { Divider } from "@heroui/react";
 import { GaleriaProducto } from "../components/detalleCatalogo/Galeriaproducto";
 import { MOCK_PRODUCTO } from "../components/detalleCatalogo/Mockproducto";
@@ -11,7 +6,7 @@ import { AccionesProducto } from "../components/detalleCatalogo/Accionesproducto
 
 
 export const DetalleCatalogo = () => {
-  const producto = MOCK_PRODUCTO; // 👈 reemplazar por fetch real
+  const producto = MOCK_PRODUCTO;
 
   return (
     <div className="min-h-screen bg-[#f4f5f8] p-6 md:p-10">

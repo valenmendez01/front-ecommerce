@@ -1,12 +1,10 @@
-// import Ejemplo from "./components/ejemplo/Ejemplo"
-// import { Catalogo } from "./views/catalogo"
-import { DetalleCatalogo } from "./views/DetalleCatalogo"
+import Ejemplo from "./components/ejemplo/Ejemplo"
 
 function App() {
 
   return (
     <div>
-      <DetalleCatalogo />
+      <Ejemplo />
     </div>
   )
 }
