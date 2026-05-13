@@ -1,11 +1,10 @@
 import Ejemplo from "./components/ejemplo/Ejemplo"
+import RaizTienda from "./raizTienda"
 
 function App() {
 
   return (
-    <div className="p-10 max-w-2xl">
-    <Ejemplo />
-    </div>
+    <RaizTienda />
   )
 }
 
