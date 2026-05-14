@@ -9,7 +9,7 @@ export const FiltroByPrecio = ({ precioMin, precioMax, onChange }) => {
   }
 
   return (
-    <div className="mt-4">
+    <>
       <h2>Rango de precio</h2>
 
       <Divider className="my-2" />
@@ -43,6 +43,6 @@ export const FiltroByPrecio = ({ precioMin, precioMax, onChange }) => {
           </div>
         )}
       />
-    </div>
+    </>
   );
 }

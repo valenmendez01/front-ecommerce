@@ -1,32 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Filtros } from "../components/catalogo/filtrosCatalogo/Filtros";
-import fruit1 from "../assets/fruit-1.jpeg";
-import fruit2 from "../assets/fruit-2.jpeg";
-import fruit3 from "../assets/fruit-3.jpeg";
-import fruit4 from "../assets/fruit-4.jpeg";
-import fruit5 from "../assets/fruit-1.jpeg";
-import fruit6 from "../assets/fruit-2.jpeg";
-import { CardProductos } from "../components/catalogo/cardPorductos/CardProductos";
+import { CardProductos } from "../components/catalogo/CardProductos";
 import { Card, CardBody, CardHeader, Divider, Input } from "@heroui/react";
 import { Search } from "lucide-react";
 
-const CATEGORIAS = ["Remeras", "Pantalones", "Calzado", "Accesorios"];
-
-const PRODUCTOS = [
-  { id: 1, nombre: "Remera básica",       categoria: "Remeras",    precio: 1500,  img: fruit1  },
-  { id: 2, nombre: "Jean slim",           categoria: "Pantalones", precio: 8000,  img: fruit2  },
-  { id: 3, nombre: "Zapatillas blancas",  categoria: "Calzado",    precio: 12000, img: fruit3  },
-  { id: 4, nombre: "Cinturón de cuero",   categoria: "Accesorios", precio: 3000,  img: fruit4  },
-  { id: 5, nombre: "Remera rayada",       categoria: "Remeras",    precio: 2000,  img: fruit5  },
-  { id: 6, nombre: "Jogger gris",         categoria: "Pantalones", precio: 6000,  img: fruit6  },
-];
-
 export const Catalogo = () => {
 
+  const [categorias, setCategorias] = useState([]);
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
+  const [productos, setProductos] = useState([]);
   const [precioMin, setPrecioMin] = useState(0);
   const [precioMax, setPrecioMax] = useState(20000);
   const [busqueda, setBusqueda] = useState("");
+
+  useEffect(() => {
+    fetch('/categorias')
+      .then((res) => res.json())
+      .then((json) => {
+        setCategorias(json.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener categorías:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch('/productos')
+      .then((res) => res.json())
+      .then((json) => {
+        setProductos(Array.isArray(json.data.content) ? json.data.content : []);
+      })
+      .catch((error) => {
+        console.error("Error al obtener productos:", error);
+      });
+  }, []);
 
   function handleCambioCategoria(categoria) {
     setCategoriasSeleccionadas((categoriasPrevias) => {
@@ -46,17 +53,17 @@ export const Catalogo = () => {
     if (tipo === "max") setPrecioMax(valor);
   }
 
-  const productosFiltrados = PRODUCTOS
+  const productosFiltrados = productos
     .filter((p) => categoriasSeleccionadas.length === 0 || categoriasSeleccionadas.includes(p.categoria))
     .filter((p) => p.precio >= precioMin && p.precio <= precioMax)
     .filter((p) => p.nombre.toLowerCase().includes(busqueda.toLowerCase()));
 
   return (
-    <div className="flex bg-[#f4f5f8] min-h-screen font-sans">
+    <div className="flex font-sans">
       
-      <aside className="w-80 shrink-0 bg-white border-r border-gray-200 p-6 flex flex-col gap-8 sticky top-0 h-screen overflow-y-auto">
+      <aside className="w-90 shrink-0 p-6 sticky top-16 self-start">
         <Filtros
-          categorias={CATEGORIAS}
+          categorias={categorias}
           categoriasSeleccionadas={categoriasSeleccionadas}
           onCambiarCategoria={handleCambioCategoria}
           precioMin={precioMin}

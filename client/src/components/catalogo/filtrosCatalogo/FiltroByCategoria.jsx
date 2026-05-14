@@ -1,8 +1,11 @@
 import {CheckboxGroup, Checkbox, Divider} from "@heroui/react";
 
 export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
+
+  const capitalizar = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
   return (
-    <div className="mt-4">
+    <>
       <h2>Categoría</h2>
 
       <Divider className="my-2" />
@@ -15,10 +18,10 @@ export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
             isSelected={seleccionadas.includes(cat)}
             onChange={() => onCambiar(cat)}
           >
-            {cat}
+            {capitalizar(cat)}
           </Checkbox>
         ))}
       </CheckboxGroup>
-    </div>
+    </>
   );
 }

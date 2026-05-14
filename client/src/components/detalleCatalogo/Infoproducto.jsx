@@ -1,12 +1,12 @@
 import { Chip } from "@heroui/react";
-import { CheckCircle, Truck, RotateCcw } from "lucide-react";
-
-const ICONOS_TAGS = [Truck, CheckCircle, RotateCcw];
 
 export const InfoProducto = ({ producto }) => {
-  const { nombre, categoria, precio, precioOriginal, descripcion, stock, tags } = producto;
+  const { nombre, categoria, precio, descuento, description, stock, disponible } = producto;
 
-  const descuento = Math.round((1 - precio / precioOriginal) * 100);
+  const precioFinal = descuento > 0 ? precio * (1 - descuento / 100) : precio;
+
+  const formatear = (valor) =>
+    new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(valor);
 
   return (
     <div className="flex flex-col gap-5">
@@ -24,40 +24,31 @@ export const InfoProducto = ({ producto }) => {
       {/* Precios */}
       <div className="flex items-center gap-3">
         <span className="text-2xl font-bold text-gray-900 dark:text-white">
-          {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(precio)}
+          {formatear(precioFinal)}
         </span>
-        <span className="text-gray-400 line-through text-sm">
-          {new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS" }).format(precioOriginal)}
-        </span>
-        <Chip color="danger" size="sm" variant="flat">
-          {descuento}% OFF
-        </Chip>
+        {descuento > 0 && (
+          <>
+            <span className="text-sm text-gray-400 line-through">
+              {formatear(precio)}
+            </span>
+            <Chip color="danger" size="sm" variant="flat">
+              {descuento}% OFF
+            </Chip>
+          </>
+        )}
       </div>
 
       {/* Descripción */}
       <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
-        {descripcion}
+        {description}
       </p>
 
       {/* Stock */}
       <div className="flex items-center gap-2">
-        <span className={`w-2 h-2 rounded-full ${stock ? "bg-green-500" : "bg-red-500"}`} />
-        <p className={`text-sm font-medium ${stock ? "text-green-600" : "text-red-500"}`}>
-          {stock ? "En stock · Listo para despachar" : "Sin stock"}
+        <span className={`w-2 h-2 rounded-full ${disponible ? "bg-green-500" : "bg-red-500"}`} />
+        <p className={`text-sm font-medium ${disponible ? "text-green-600" : "text-red-500"}`}>
+          {disponible ? `En stock · ${stock} disponibles` : "Sin stock"}
         </p>
-      </div>
-
-      {/* Tags */}
-      <div className="flex flex-col gap-2">
-        {tags.map((tag, index) => {
-          const Icono = ICONOS_TAGS[index] ?? CheckCircle;
-          return (
-            <div key={tag} className="flex items-center gap-2 text-sm text-gray-500">
-              <Icono size={16} className="text-gray-400" />
-              {tag}
-            </div>
-          );
-        })}
       </div>
 
     </div>
