@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@heroui/react";
-import { ShoppingCart, Minus, Plus, Zap } from "lucide-react";
+import { ShoppingCart, Minus, Plus } from "lucide-react";
 
 export const AccionesProducto = ({ stock }) => {
   const [cantidad, setCantidad] = useState(1);
@@ -40,17 +40,6 @@ export const AccionesProducto = ({ stock }) => {
         onPress={() => console.log("Agregar al carrito", cantidad)}
       >
         Agregar al carrito
-      </Button>
-
-      <Button
-        variant="bordered"
-        size="lg"
-        isDisabled={!stock}
-        startContent={<Zap size={18} />}
-        className="w-full font-semibold"
-        onPress={() => console.log("Comprar ahora", cantidad)}
-      >
-        Comprar ahora
       </Button>
 
     </div>

@@ -8,4 +8,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      '^/(api/v1/auth|categorias|productos|pedidos)': {
+        target: 'http://localhost:4002',
+        changeOrigin: true,
+      }
+    }
+  }
 })
