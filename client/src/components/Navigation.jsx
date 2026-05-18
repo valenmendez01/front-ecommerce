@@ -29,9 +29,17 @@ export default function Navigation() {
 
         <Divider orientation="vertical" className="h-5 self-center opacity-50 mx-2" />
 
-        <NavbarItem isActive={pathname.startsWith("/otro")}>
-          <Link color="foreground" to="/otro">
-            Otro
+        <NavbarItem isActive={pathname.startsWith("/mi-cuenta")}>
+          <Link color="foreground" to="/mi-cuenta">
+            Mi cuenta
+          </Link>
+        </NavbarItem>
+
+        <Divider orientation="vertical" className="h-5 self-center opacity-50 mx-2" />
+
+        <NavbarItem isActive={pathname.startsWith("/panel-vendedor")}>
+          <Link color="foreground" to="/panel-vendedor">
+            Panel vendedor
           </Link>
         </NavbarItem>
 

@@ -4,7 +4,7 @@ import { Input, Select, SelectItem } from "@heroui/react";
 
 const PAISES = ["Argentina", "Brasil", "Chile", "México", "España", "Estados Unidos", "Qatar"];
 
-export default function envio({ alGuardar }) {
+export default function Envio({ alGuardar }) {
   const [abierto, setAbierto] = useState(false);
   const [guardado, setGuardado] = useState(false);
   const [formulario, setFormulario] = useState({
