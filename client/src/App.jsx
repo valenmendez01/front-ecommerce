@@ -6,13 +6,14 @@ import CrearProducto from "./views/CrearProducto"
 import MiCuenta from "./views/MiCuenta"
 import PanelVendedor from "./views/PanelVendedor"
 import VentasVendedor from "./views/VentasVendedor"
-import RaizTienda from "./raizTienda"
+import CarritoView from "./views/carritoView"
+import CompraView from "./views/compraView"
 import { productosIniciales } from "./data/productosMock"
 import { usuarioInicial } from "./data/usuarioMock"
 import { ventasIniciales } from "./data/ventasMock"
 import { useState } from "react"
 
-const rutasPantallaCompleta = ['/mi-cuenta', '/panel-vendedor', '/crear-producto', '/ventas', '/carrito']
+const rutasPantallaCompleta = ['/mi-cuenta', '/panel-vendedor', '/crear-producto', '/ventas', '/carrito', '/compra']
 
 const crearIniciales = (nombre) => {
   const iniciales = nombre
@@ -99,7 +100,8 @@ function App() {
   if (rutasPantallaCompleta.some((ruta) => pathname.startsWith(ruta))) {
     return (
       <Routes>
-        <Route path="/carrito" element={<RaizTienda />} />
+        <Route path="/carrito" element={<CarritoView />} />
+        <Route path="/compra" element={<CompraView />} />
         <Route
           path="/mi-cuenta"
           element={
