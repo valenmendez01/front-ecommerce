@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Navigation from "../components/Navigation"
 import { ArrowLeft, PackageCheck } from "lucide-react";
-import PanelRevisionPedido from "../components/compra/panelPedido";
+import PanelPedido from "../components/compra/panelPedido";
 import AccordionEnvio from "../components/compra/envio";
 import AccordionPago from "../components/compra/pago";
 import ResumenPago from "../components/compra/resumenPago";
@@ -8,22 +10,44 @@ import copaMundo from "../assets/copa-mundo.png";
 
 const PASOS = ["Carrito", "Información", "Confirmación"];
 
-export default function CompraView({ articulosIniciales = [], alVolver }) {
-  const [articulos, setArticulos] = useState(articulosIniciales);
+export default function CompraView() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
   const [pagoGuardado, setPagoGuardado] = useState(false);
   const [confirmado, setConfirmado] = useState(false);
-
-  const actualizarCantidad = (id, nuevaCantidad) => {
-    if (nuevaCantidad < 1) return setArticulos((prev) => prev.filter((a) => a.id !== id));
-    setArticulos((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, cantidad: nuevaCantidad } : a))
-    );
-  };
-
-  const eliminarArticulo = (id) => setArticulos((prev) => prev.filter((a) => a.id !== id));
+  const [cargandoConfirmar, setCargandoConfirmar] = useState(false);
+  const [errorConfirmar, setErrorConfirmar] = useState(null);
+  const navigate = useNavigate();
+  const articulosIniciales = JSON.parse(localStorage.getItem("articulosCompra") || "[]");
 
   const puedeConfirmar = envioGuardado && pagoGuardado;
+
+  const confirmarPedido = () => {
+    setCargandoConfirmar(true);
+    setErrorConfirmar(null);
+
+    fetch('/pedidos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({
+        items: articulosIniciales.map((a) => ({
+          idProducto: a.idProducto,
+          cantidad: a.cantidad,
+        })),
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.data) setConfirmado(true);
+      })
+      .catch((error) => {
+        console.error("Error al confirmar pedido:", error);
+        setErrorConfirmar("No se pudo confirmar el pedido. Intentá de nuevo.");
+      })
+      .finally(() => setCargandoConfirmar(false));
+  };
 
   if (confirmado) {
     return (
@@ -37,7 +61,7 @@ export default function CompraView({ articulosIniciales = [], alVolver }) {
             Recibirás un email con los detalles de tu colección. ¡Gracias por tu compra!
           </p>
           <button
-            onClick={alVolver}
+            onClick={() => navigate("/carrito")}
             className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors"
           >
             Volver al inicio
@@ -54,14 +78,14 @@ export default function CompraView({ articulosIniciales = [], alVolver }) {
         alt=""
         className="absolute -right-48 top-16 w-[900px] opacity-5 pointer-events-none select-none z-0"
       />
-      {/* Encabezado */}
+
       <header className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
           <span className="font-black text-blue-700 text-xl italic tracking-tight">
             FIGULLECT
           </span>
           <button
-            onClick={alVolver}
+            onClick={() => navigate("/carrito")}
             className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft size={16} />
@@ -71,7 +95,6 @@ export default function CompraView({ articulosIniciales = [], alVolver }) {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-16">
-        {/* Indicador de pasos */}
         <div className="flex items-center gap-2 mb-8">
           {PASOS.map((paso, i) => (
             <div key={paso} className="flex items-center gap-2">
@@ -91,7 +114,6 @@ export default function CompraView({ articulosIniciales = [], alVolver }) {
           <p className="ml-2 text-xs text-gray-400">Paso 3 de 3: Confirmación segura</p>
         </div>
 
-        {/* Título */}
         <div className="mb-8">
           <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tight">
             Revisar Pedido
@@ -99,25 +121,26 @@ export default function CompraView({ articulosIniciales = [], alVolver }) {
           <div className="h-1 w-16 bg-green-400 rounded-full mt-2" />
         </div>
 
+        {errorConfirmar && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600 font-semibold">
+            {errorConfirmar}
+          </div>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Izquierda */}
           <div className="lg:col-span-2 flex flex-col gap-5">
-            <PanelRevisionPedido
-              articulos={articulos}
-              alActualizarCantidad={actualizarCantidad}
-              alEliminar={eliminarArticulo}
-            />
+            <PanelPedido articulos={articulosIniciales} />
             <AccordionEnvio alGuardar={() => setEnvioGuardado(true)} />
             <AccordionPago alGuardar={() => setPagoGuardado(true)} />
           </div>
 
-          {/* Derecha */}
           <div className="lg:col-span-1">
             <div className="sticky top-24">
               <ResumenPago
-                articulos={articulos}
+                articulos={articulosIniciales}
                 puedeConfirmar={puedeConfirmar}
-                alConfirmar={() => setConfirmado(true)}
+                cargando={cargandoConfirmar}
+                alConfirmar={confirmarPedido}
               />
             </div>
           </div>

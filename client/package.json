@@ -15,9 +15,10 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "lucide-react": "^1.14.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "react-router-dom": "^7.15.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.1",
+    "router-dom": "^3.0.3",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.4"
   },

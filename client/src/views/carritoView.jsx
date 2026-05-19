@@ -1,34 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Navigation from "../components/Navigation"
 import { ShoppingBag, ArrowRight } from "lucide-react";
 import ArticuloCarrito from "../components/carrito/itemCarrito";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
 import ProductosRecomendados from "../components/carrito/itemsRecomendados";
 import copaMundo from "../assets/copa-mundo.png";
 
-const ARTICULOS_INICIALES = [
-  {
-    id: "1",
-    nombre: "Star Striker #07 - Gold Edition",
-    subtitulo: "RARO HOLOGRÁFICO",
-    precio: 89.0,
-    precioOriginal: 125.0,
-    cantidad: 1,
-    etiqueta: "SHINY",
-    badge: "PRECIO MATCH",
-  },
-  {
-    id: "2",
-    nombre: "Master Pack: 50 Stickers",
-    subtitulo: "EDICIÓN ESTÁNDAR",
-    precio: 24.0,
-    cantidad: 2,
-  },
-];
-
 const PROGRESO_COLECCION = 85;
 
-export default function CarritoView({ alIrAlPago }) {
-  const [articulos, setArticulos] = useState(ARTICULOS_INICIALES);
+export default function CarritoView() {
+  const [articulos, setArticulos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const idUsuario = localStorage.getItem("idUsuario");
+
+  useEffect(() => {
+    fetch(`/pedidos/usuario/${idUsuario}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((json) => setArticulos(json.data.content))
+      .catch((error) => {
+        console.error("Error al cargar carrito:", error);
+        setError("No se pudo cargar el carrito");
+      })
+      .finally(() => setCargando(false));
+  }, []);
 
   const actualizarCantidad = (id, nuevaCantidad) => {
     if (nuevaCantidad < 1) return eliminarArticulo(id);
@@ -49,7 +51,24 @@ export default function CarritoView({ alIrAlPago }) {
     });
   };
 
+  const irAlPago = () => {
+    localStorage.setItem("articulosCompra", JSON.stringify(articulos));
+    navigate("/compra");
+  };
+
   const subtotal = articulos.reduce((acc, a) => acc + a.precio * a.cantidad, 0);
+
+  if (cargando) return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <p className="text-gray-400 font-semibold">Cargando tu carrito...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <p className="text-red-400 font-semibold">{error}</p>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
@@ -75,7 +94,6 @@ export default function CarritoView({ alIrAlPago }) {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-16">
-        {/* Título */}
         <div className="mb-8">
           <h1 className="text-3xl font-black text-gray-900 uppercase tracking-tight flex items-center gap-3">
             <ShoppingBag size={28} className="text-blue-600" />
@@ -92,9 +110,7 @@ export default function CarritoView({ alIrAlPago }) {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Izquierda: artículos + recomendados */}
             <div className="lg:col-span-2 flex flex-col gap-4">
-              {/* Progreso de colección */}
               <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
                 <div className="flex justify-between items-center mb-2">
                   <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
@@ -112,7 +128,6 @@ export default function CarritoView({ alIrAlPago }) {
                 </div>
               </div>
 
-              {/* Artículos */}
               {articulos.map((articulo) => (
                 <ArticuloCarrito
                   key={articulo.id}
@@ -125,21 +140,19 @@ export default function CarritoView({ alIrAlPago }) {
               <ProductosRecomendados alAgregar={agregarArticulo} />
             </div>
 
-            {/* Derecha: resumen */}
             <div className="lg:col-span-1">
               <div className="sticky top-24">
-                <ResumenCarrito subtotal={subtotal} alProcederAlPago={alIrAlPago} />
+                <ResumenCarrito subtotal={subtotal} alProcederAlPago={() => irAlPago(articulos)} />
               </div>
             </div>
           </div>
         )}
       </main>
 
-      {/* Botón flotante en mobile */}
       {articulos.length > 0 && (
         <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-lg">
           <button
-            onClick={alIrAlPago}
+            onClick={() => irAlPago(articulos)}
             className="w-full py-3 bg-yellow-400 text-gray-900 font-black rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
           >
             Ir al Pago · ${subtotal.toFixed(2)}
