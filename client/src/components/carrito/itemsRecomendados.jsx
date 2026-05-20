@@ -1,9 +1,10 @@
 import { Sparkles } from "lucide-react";
+import { formatearPesos } from "../../lib/formatters";
 
 const RECOMENDADOS = [
-  { id: "r1", nombre: "Album Tapa Dura", precio: 35.0 },
-  { id: "r2", nombre: "Fundas Anti-Reflejos (100u)", precio: 12.0 },
-  { id: "r3", nombre: "Acceso VIP Pass", precio: 99.0 },
+  { id: "r1", nombre: "Album Tapa Dura", precio: 3500 },
+  { id: "r2", nombre: "Fundas Anti-Reflejos (100u)", precio: 1200 },
+  { id: "r3", nombre: "Acceso VIP Pass", precio: 9900 },
 ];
 
 export default function itemsRecomendados({ alAgregar }) {
@@ -25,7 +26,7 @@ export default function itemsRecomendados({ alAgregar }) {
               <span className="text-yellow-400 text-2xl">★</span>
             </div>
             <p className="text-xs font-semibold text-gray-800 leading-tight">{articulo.nombre}</p>
-            <p className="text-sm font-black text-green-600 mt-0.5">${articulo.precio.toFixed(2)}</p>
+            <p className="text-sm font-black text-green-600 mt-0.5">{formatearPesos(articulo.precio)}</p>
             <span className="text-[10px] text-blue-600 font-bold group-hover:underline">
               + Agregar
             </span>

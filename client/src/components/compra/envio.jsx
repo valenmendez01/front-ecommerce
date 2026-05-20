@@ -57,47 +57,57 @@ export default function Envio({ alGuardar }) {
       {/* Contenido desplegable */}
       <div
         className={`overflow-hidden transition-all duration-300 ease-in-out ${
-          abierto ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          abierto ? "max-h-[650px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="p-4 pt-0 bg-white border-t border-gray-100 flex flex-col gap-3">
           <div className="grid grid-cols-2 gap-3 pt-4">
             <Input
               label="Nombre completo"
+              labelPlacement="outside"
+              placeholder="Nombre y apellido"
               value={formulario.nombre}
               onChange={(e) => actualizar("nombre", e.target.value)}
               size="sm"
-              classNames={{ inputWrapper: "rounded-lg" }}
+              classNames={{ inputWrapper: "rounded-lg h-11", label: "text-xs font-semibold text-gray-600" }}
               className="col-span-2"
             />
             <Input
               label="Dirección"
+              labelPlacement="outside"
+              placeholder="Calle, numero, piso"
               value={formulario.direccion}
               onChange={(e) => actualizar("direccion", e.target.value)}
               size="sm"
-              classNames={{ inputWrapper: "rounded-lg" }}
+              classNames={{ inputWrapper: "rounded-lg h-11", label: "text-xs font-semibold text-gray-600" }}
               className="col-span-2"
             />
             <Input
               label="Ciudad"
+              labelPlacement="outside"
+              placeholder="Ciudad"
               value={formulario.ciudad}
               onChange={(e) => actualizar("ciudad", e.target.value)}
               size="sm"
-              classNames={{ inputWrapper: "rounded-lg" }}
+              classNames={{ inputWrapper: "rounded-lg h-11", label: "text-xs font-semibold text-gray-600" }}
             />
             <Input
               label="Código Postal"
+              labelPlacement="outside"
+              placeholder="CP"
               value={formulario.codigoPostal}
               onChange={(e) => actualizar("codigoPostal", e.target.value)}
               size="sm"
-              classNames={{ inputWrapper: "rounded-lg" }}
+              classNames={{ inputWrapper: "rounded-lg h-11", label: "text-xs font-semibold text-gray-600" }}
             />
             <Select
               label="País"
+              labelPlacement="outside"
+              placeholder="Selecciona un pais"
               selectedKeys={formulario.pais ? [formulario.pais] : []}
               onSelectionChange={(keys) => actualizar("pais", [...keys][0] || "")}
               size="sm"
-              classNames={{ trigger: "rounded-lg" }}
+              classNames={{ trigger: "rounded-lg h-11", label: "text-xs font-semibold text-gray-600" }}
               className="col-span-2"
             >
               {PAISES.map((p) => (

@@ -1,4 +1,5 @@
 import { Trash2 } from "lucide-react";
+import { formatearPesos } from "../../lib/formatters";
 
 export default function itemCarrito({ articulo, alActualizarCantidad, alEliminar }) {
   return (
@@ -58,9 +59,9 @@ export default function itemCarrito({ articulo, alActualizarCantidad, alEliminar
       {/* Precio */}
       <div className="text-right shrink-0">
         {articulo.precioOriginal && (
-          <p className="text-xs text-gray-400 line-through">${articulo.precioOriginal.toFixed(2)}</p>
+          <p className="text-xs text-gray-400 line-through">{formatearPesos(articulo.precioOriginal)}</p>
         )}
-        <p className="font-bold text-gray-900">${(articulo.precio * articulo.cantidad).toFixed(2)}</p>
+        <p className="font-bold text-gray-900">{formatearPesos(articulo.precio * articulo.cantidad)}</p>
         {articulo.badge && (
           <span className="text-[10px] font-bold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">
             {articulo.badge}
