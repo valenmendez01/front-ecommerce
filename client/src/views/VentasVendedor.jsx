@@ -6,12 +6,19 @@ import Footer from '../components/layout/Footer'
 import MenuLateral from '../components/layout/MenuLateral'
 import TarjetaMetrica from '../components/vendedor/TarjetaMetrica'
 
-const formatearPesos = (monto) => `$${monto.toLocaleString('es-AR')}`
+const formatearPesos = (monto) => `$${Number(monto || 0).toLocaleString('es-AR')}`
 
-const VentasVendedor = ({ usuario, ventas }) => {
+const VentasVendedor = ({
+  cargandoVentas = false,
+  errorVentas = '',
+  usuario,
+  ventas = [],
+  onCerrarSesion,
+}) => {
   const [mostrarTodas, setMostrarTodas] = useState(false)
   const [ventaAbierta, setVentaAbierta] = useState(null)
   const ventasVisibles = mostrarTodas ? ventas : ventas.slice(0, 3)
+  const puedeVerHistorial = ventas.length > 3
 
   const totalVendido = ventas.reduce((total, venta) => total + venta.total, 0)
   const productosVendidos = ventas.reduce((total, venta) => total + venta.cantidad, 0)
@@ -43,7 +50,7 @@ const VentasVendedor = ({ usuario, ventas }) => {
       <BarraSuperior />
 
       <div className="flex min-h-[calc(100vh-4rem)]">
-        <MenuLateral usuario={usuario} />
+        <MenuLateral usuario={usuario} onCerrarSesion={onCerrarSesion} />
 
         <main className="flex-1">
           <div className="mx-auto max-w-7xl px-8 py-10">
@@ -52,7 +59,7 @@ const VentasVendedor = ({ usuario, ventas }) => {
                 Ventas
               </h2>
               <p className="mt-5 max-w-2xl text-xl leading-relaxed text-slate-700">
-                Consultá las ventas realizadas y el detalle de cada operación.
+                Consulta las ventas realizadas y el detalle de cada operacion.
               </p>
             </section>
 
@@ -78,38 +85,60 @@ const VentasVendedor = ({ usuario, ventas }) => {
                   <p className="mt-1 text-sm text-slate-500">
                     {mostrarTodas
                       ? 'Todas las ventas registradas.'
-                      : 'Últimas tres ventas realizadas.'}
+                      : 'Ultimas ventas realizadas.'}
                   </p>
                 </div>
 
-                <Button
-                  className="bg-transparent text-sm font-bold text-[#0b2b88]"
-                  radius="sm"
-                  size="sm"
-                  onPress={() => {
-                    setMostrarTodas(!mostrarTodas)
-                    setVentaAbierta(null)
-                  }}
-                >
-                  {mostrarTodas ? 'Ver ventas recientes' : 'Ver todo el historial'}
-                </Button>
+                {puedeVerHistorial && (
+                  <Button
+                    className="bg-transparent text-sm font-bold text-[#0b2b88]"
+                    radius="sm"
+                    size="sm"
+                    onPress={() => {
+                      setMostrarTodas(!mostrarTodas)
+                      setVentaAbierta(null)
+                    }}
+                  >
+                    {mostrarTodas ? 'Ver ventas recientes' : 'Ver todo el historial'}
+                  </Button>
+                )}
               </div>
 
+              {errorVentas && (
+                <div className="mx-8 mb-6 rounded-md border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
+                  {errorVentas}
+                </div>
+              )}
+
               <div className="border-t border-slate-100">
-                {ventasVisibles.map((venta) => {
+                {cargandoVentas && (
+                  <div className="px-8 py-10 text-center font-semibold text-slate-500">
+                    Cargando ventas...
+                  </div>
+                )}
+
+                {!cargandoVentas && ventasVisibles.length === 0 && (
+                  <div className="px-8 py-10 text-center font-semibold text-slate-500">
+                    Todavia no hay ventas para mostrar.
+                  </div>
+                )}
+
+                {!cargandoVentas && ventasVisibles.map((venta) => {
                   const estaAbierta = ventaAbierta === venta.idVenta
 
                   return (
                     <article className="border-b border-slate-100" key={venta.idVenta}>
                       <div className="grid gap-4 px-8 py-5 lg:grid-cols-[1fr_1fr_120px_160px_130px] lg:items-center">
                         <div>
-                          <p className="text-lg font-black text-[#0b2b88]">#{venta.idVenta}</p>
+                          <p className="text-lg font-black text-[#0b2b88]">#{venta.idVentaTexto}</p>
                           <p className="mt-1 text-sm text-slate-500">{venta.fecha}</p>
                         </div>
 
                         <div>
                           <p className="font-bold text-slate-950">{venta.producto}</p>
-                          <p className="mt-1 text-sm text-slate-500">Comprador: {venta.comprador}</p>
+                          <p className="mt-1 text-sm text-slate-500">
+                            Comprador: {venta.comprador}
+                          </p>
                         </div>
 
                         <p className="font-bold text-slate-700">{venta.cantidad} u.</p>
@@ -134,17 +163,15 @@ const VentasVendedor = ({ usuario, ventas }) => {
                           <div className="grid gap-4 md:grid-cols-3">
                             <div className="rounded-md bg-white p-4">
                               <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                                Producto vendido
+                                Comprador
                               </p>
-                              <p className="mt-2 font-black text-[#0b2b88]">{venta.producto}</p>
+                              <p className="mt-2 font-black text-[#0b2b88]">{venta.comprador}</p>
                             </div>
                             <div className="rounded-md bg-white p-4">
                               <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                                Precio unitario
+                                Cantidad total
                               </p>
-                              <p className="mt-2 font-black text-[#0b2b88]">
-                                {formatearPesos(venta.precioUnitario)}
-                              </p>
+                              <p className="mt-2 font-black text-[#0b2b88]">{venta.cantidad} u.</p>
                             </div>
                             <div className="rounded-md bg-white p-4">
                               <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
@@ -154,24 +181,49 @@ const VentasVendedor = ({ usuario, ventas }) => {
                                 {formatearPesos(venta.total)}
                               </p>
                             </div>
-                            <div className="rounded-md bg-white p-4">
-                              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                                Comprador
-                              </p>
-                              <p className="mt-2 font-black text-[#0b2b88]">{venta.comprador}</p>
-                            </div>
-                            <div className="rounded-md bg-white p-4">
-                              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                                Cantidad
-                              </p>
-                              <p className="mt-2 font-black text-[#0b2b88]">{venta.cantidad} u.</p>
-                            </div>
-                            <div className="rounded-md bg-white p-4">
-                              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-                                Fecha
-                              </p>
-                              <p className="mt-2 font-black text-[#0b2b88]">{venta.fecha}</p>
-                            </div>
+                          </div>
+
+                          <div className="mt-5 overflow-hidden rounded-md border border-blue-100 bg-white">
+                            <table className="w-full">
+                              <thead>
+                                <tr className="bg-slate-50 text-left text-xs font-bold uppercase text-slate-400">
+                                  <th className="px-4 py-3">Producto</th>
+                                  <th className="px-4 py-3">Cantidad</th>
+                                  <th className="px-4 py-3">Precio unitario</th>
+                                  <th className="px-4 py-3">Subtotal</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {venta.items.length === 0 && (
+                                  <tr className="border-t border-slate-100">
+                                    <td
+                                      className="px-4 py-5 text-center font-semibold text-slate-500"
+                                      colSpan="4"
+                                    >
+                                      No hay productos asociados a esta venta.
+                                    </td>
+                                  </tr>
+                                )}
+
+                                {venta.items.map((item) => (
+                                  <tr
+                                    className="border-t border-slate-100"
+                                    key={`${venta.idVenta}-${item.idProducto || item.nombreProducto}`}
+                                  >
+                                    <td className="px-4 py-3 font-semibold text-slate-800">
+                                      {item.nombreProducto}
+                                    </td>
+                                    <td className="px-4 py-3">{item.cantidad}</td>
+                                    <td className="px-4 py-3">
+                                      {formatearPesos(item.precioUnitario)}
+                                    </td>
+                                    <td className="px-4 py-3 font-bold text-[#0b2b88]">
+                                      {formatearPesos(item.subtotal)}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
                           </div>
                         </CardBody>
                       )}

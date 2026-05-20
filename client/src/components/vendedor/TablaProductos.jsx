@@ -96,43 +96,55 @@ const obtenerErrorNumero = (valor, tipo) => {
 
 const obtenerPrimerValor = (keys) => Array.from(keys)[0]
 
-const TablaProductos = ({ productos, onActualizarProducto, onEliminarProducto }) => {
+const TablaProductos = ({ cargando = false, error = '', productos, onActualizarProducto, onEliminarProducto }) => {
   const [mostrarTodos, setMostrarTodos] = useState(false)
   const [productoAbierto, setProductoAbierto] = useState(null)
   const [productoEditando, setProductoEditando] = useState(null)
   const [borrador, setBorrador] = useState(null)
+  const [idGuardando, setIdGuardando] = useState(null)
+  const [idEliminando, setIdEliminando] = useState(null)
+  const [errorAccion, setErrorAccion] = useState('')
   const productosVisibles = mostrarTodos ? productos : productos.slice(0, 2)
+  const puedeVerTodos = productos.length > 2
 
   const cambiarProductoAbierto = (idProducto) => {
     setProductoAbierto(productoAbierto === idProducto ? null : idProducto)
     setProductoEditando(null)
     setBorrador(null)
+    setErrorAccion('')
   }
 
-  const eliminarProducto = (idProducto) => {
-    onEliminarProducto(idProducto)
+  const eliminarProducto = async (idProducto) => {
+    setIdEliminando(idProducto)
+    setErrorAccion('')
 
-    if (productoAbierto === idProducto) {
-      setProductoAbierto(null)
-    }
+    try {
+      await onEliminarProducto(idProducto)
 
-    if (productoEditando === idProducto) {
-      setProductoEditando(null)
-      setBorrador(null)
+      if (productoEditando === idProducto) {
+        setProductoEditando(null)
+        setBorrador(null)
+      }
+    } catch (errorEliminar) {
+      setErrorAccion(errorEliminar.message || 'No se pudo desactivar el producto.')
+    } finally {
+      setIdEliminando(null)
     }
   }
 
   const iniciarEdicion = (producto) => {
     setProductoEditando(producto.idProducto)
     setBorrador({ ...producto })
+    setErrorAccion('')
   }
 
   const cancelarEdicion = () => {
     setProductoEditando(null)
     setBorrador(null)
+    setErrorAccion('')
   }
 
-  const guardarEdicion = () => {
+  const guardarEdicion = async () => {
     const tieneErrores =
       obtenerErrorNumero(borrador.precio, 'precio') ||
       obtenerErrorNumero(borrador.stock, 'stock') ||
@@ -142,9 +154,18 @@ const TablaProductos = ({ productos, onActualizarProducto, onEliminarProducto })
       return
     }
 
-    onActualizarProducto(borrador)
-    setProductoEditando(null)
-    setBorrador(null)
+    setIdGuardando(borrador.idProducto)
+    setErrorAccion('')
+
+    try {
+      await onActualizarProducto(borrador)
+      setProductoEditando(null)
+      setBorrador(null)
+    } catch (errorActualizar) {
+      setErrorAccion(errorActualizar.message || 'No se pudo actualizar el producto.')
+    } finally {
+      setIdGuardando(null)
+    }
   }
 
   const cambiarCampo = (campo, valor) => {
@@ -165,25 +186,47 @@ const TablaProductos = ({ productos, onActualizarProducto, onEliminarProducto })
           </p>
         </div>
 
-        <Button
-          className="bg-transparent text-sm font-bold text-[#0b2b88]"
-          radius="sm"
-          size="sm"
-          onPress={() => {
-            setMostrarTodos(!mostrarTodos)
-            setProductoAbierto(null)
-            cancelarEdicion()
-          }}
-        >
-          {mostrarTodos ? 'Ver menos productos' : 'Ver todos los productos'}
-        </Button>
+        {puedeVerTodos && (
+          <Button
+            className="bg-transparent text-sm font-bold text-[#0b2b88]"
+            radius="sm"
+            size="sm"
+            onPress={() => {
+              setMostrarTodos(!mostrarTodos)
+              setProductoAbierto(null)
+              cancelarEdicion()
+            }}
+          >
+            {mostrarTodos ? 'Ver menos productos' : 'Ver todos los productos'}
+          </Button>
+        )}
       </div>
 
+      {(error || errorAccion) && (
+        <div className="mx-8 mb-6 rounded-md border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
+          {errorAccion || error}
+        </div>
+      )}
+
       <div className="grid gap-4 px-8 pb-8 xl:grid-cols-2">
-        {productosVisibles.map((producto) => {
+        {cargando && (
+          <div className="rounded-md border border-slate-200 bg-slate-50 px-6 py-10 text-center font-semibold text-slate-500 xl:col-span-2">
+            Cargando productos publicados...
+          </div>
+        )}
+
+        {!cargando && productosVisibles.length === 0 && (
+          <div className="rounded-md border border-slate-200 bg-slate-50 px-6 py-10 text-center font-semibold text-slate-500 xl:col-span-2">
+            Todavia no tenes productos publicados.
+          </div>
+        )}
+
+        {!cargando && productosVisibles.map((producto) => {
           const estado = obtenerEstado(producto)
           const estaAbierto = productoAbierto === producto.idProducto
           const estaEditando = productoEditando === producto.idProducto
+          const estaGuardando = idGuardando === producto.idProducto
+          const estaEliminando = idEliminando === producto.idProducto
           const productoMostrado = estaEditando ? borrador : producto
           const estadoMostrado = obtenerEstado(productoMostrado)
           const descuentoMostrado = Number(productoMostrado.descuento)
@@ -236,8 +279,10 @@ const TablaProductos = ({ productos, onActualizarProducto, onEliminarProducto })
                   </Button>
                   <Button
                     isIconOnly
-                    aria-label={`Eliminar ${producto.nombre}`}
+                    aria-label={`Desactivar ${producto.nombre}`}
                     className="bg-red-50 text-red-700"
+                    isDisabled={Boolean(idGuardando) || Boolean(idEliminando)}
+                    isLoading={estaEliminando}
                     radius="sm"
                     size="sm"
                     onPress={() => eliminarProducto(producto.idProducto)}
@@ -255,7 +300,7 @@ const TablaProductos = ({ productos, onActualizarProducto, onEliminarProducto })
                         Detalle del producto
                       </h3>
                       <p className="mt-1 text-sm text-slate-500">
-                        Estos datos son editables para simular la gestión del vendedor.
+                        Estos datos se actualizan contra el backend del vendedor.
                       </p>
                     </div>
 
@@ -263,7 +308,8 @@ const TablaProductos = ({ productos, onActualizarProducto, onEliminarProducto })
                       <div className="flex gap-2">
                         <Button
                           isIconOnly
-                          isDisabled={Boolean(hayErrores)}
+                          isDisabled={Boolean(hayErrores) || Boolean(idEliminando)}
+                          isLoading={estaGuardando}
                           aria-label="Guardar cambios"
                           className="bg-green-100 text-green-700"
                           radius="sm"

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@heroui/react";
 import { ShoppingCart, Minus, Plus } from "lucide-react";
+import { agregarProductoAlCarrito } from "../../lib/carritoStorage";
 
 export const AccionesProducto = ({ producto }) => {
   const [cantidad, setCantidad] = useState(1);
@@ -86,6 +87,10 @@ export const AccionesProducto = ({ producto }) => {
       >
         Agregar al carrito
       </Button>
+
+      {mensaje && (
+        <p className="text-sm font-semibold text-green-600">{mensaje}</p>
+      )}
 
     </div>
   );

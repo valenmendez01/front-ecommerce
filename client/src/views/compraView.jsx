@@ -12,6 +12,8 @@ import AccordionPago from "../components/compra/pago";
 import ResumenPago from "../components/compra/resumenPago";
 
 import copaMundo from "../assets/copa-mundo.png";
+import { apiRequest } from "../lib/api";
+import { vaciarCarrito } from "../lib/carritoStorage";
 
 const PASOS = [
   "Carrito",

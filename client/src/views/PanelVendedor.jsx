@@ -12,12 +12,24 @@ const formatearPesos = (monto) => `$${monto.toLocaleString('es-AR')}`
 
 const calcularPrecioFinal = (precio, descuento) => Math.round(precio * (1 - descuento / 100))
 
+const calcularVendidosProducto = (ventas, idProducto) =>
+  ventas.reduce(
+    (total, venta) =>
+      total +
+      (venta.items || [])
+        .filter((item) => item.idProducto === idProducto)
+        .reduce((subtotal, item) => subtotal + item.cantidad, 0),
+    0,
+  )
+
 const PanelVendedor = ({
   metaMensualUnidades,
-  productosBaseActuales,
-  ventas,
+  cargandoProductos = false,
+  errorProductos = '',
+  productosBaseActuales = [],
+  ventas = [],
   usuario,
-  onActualizarUsuario,
+  onCerrarSesion,
   onActualizarMetaMensual,
   onActualizarProducto,
   onEliminarProducto,
@@ -25,9 +37,7 @@ const PanelVendedor = ({
 }) => {
   const productos = productosBaseActuales.map((producto) => ({
     ...producto,
-    vendidos: ventas
-      .filter((venta) => venta.idProducto === producto.idProducto)
-      .reduce((total, venta) => total + venta.cantidad, 0),
+    vendidos: calcularVendidosProducto(ventas, producto.idProducto),
     precioTexto: formatearPesos(producto.precio),
     precioFinal: calcularPrecioFinal(producto.precio, producto.descuento),
     precioFinalTexto: formatearPesos(calcularPrecioFinal(producto.precio, producto.descuento)),
@@ -71,7 +81,7 @@ const PanelVendedor = ({
       <BarraSuperior />
 
       <div className="flex min-h-[calc(100vh-4rem)]">
-        <MenuLateral usuario={usuario} />
+        <MenuLateral usuario={usuario} onCerrarSesion={onCerrarSesion} />
 
         <main className="flex-1">
           <div className="mx-auto max-w-7xl px-8 py-10">
@@ -98,10 +108,7 @@ const PanelVendedor = ({
             </section>
 
             <div className="mt-10">
-              <InformacionPersonal
-                usuario={usuario}
-                onActualizarUsuario={onActualizarUsuario}
-              />
+              <InformacionPersonal usuario={usuario} />
             </div>
 
             <section className="mt-10 grid gap-5 xl:grid-cols-4 md:grid-cols-2">
@@ -119,6 +126,8 @@ const PanelVendedor = ({
 
             <div className="mt-12">
               <TablaProductos
+                cargando={cargandoProductos}
+                error={errorProductos}
                 productos={productos}
                 onActualizarProducto={onActualizarProducto}
                 onEliminarProducto={onEliminarProducto}
