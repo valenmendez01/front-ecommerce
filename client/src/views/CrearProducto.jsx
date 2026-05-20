@@ -38,10 +38,10 @@ const obtenerErroresProducto = (producto) => {
 
   return {
     nombre: producto.nombre.trim() ? '' : 'El nombre es obligatorio.',
-    description: producto.description.trim() ? '' : 'La descripción es obligatoria.',
+    description: producto.description.trim() ? '' : 'La descripcion es obligatoria.',
     categoria: valoresCategoriasProducto.includes(producto.categoria)
       ? ''
-      : 'Seleccioná una categoría válida.',
+      : 'Selecciona una categoria valida.',
     stock:
       producto.stock !== '' && !Number.isNaN(stock) && stock >= 0
         ? ''
@@ -57,10 +57,13 @@ const obtenerErroresProducto = (producto) => {
   }
 }
 
-const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
+const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProducto }) => {
   const [producto, setProducto] = useState(estadoInicial)
   const [imagenes, setImagenes] = useState([])
   const [mensaje, setMensaje] = useState('')
+  const [tipoMensaje, setTipoMensaje] = useState('exito')
+  const [mostrarErrores, setMostrarErrores] = useState(false)
+  const [publicando, setPublicando] = useState(false)
 
   const precio = Number(producto.precio)
   const descuento = Number(producto.descuento)
@@ -68,6 +71,7 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
   const tieneDescuento = descuento > 0
   const erroresProducto = obtenerErroresProducto(producto)
   const puedePublicar = Object.values(erroresProducto).every((error) => !error)
+  const mostrarError = (campo) => mostrarErrores && erroresProducto[campo]
 
   const cambiarCampo = (campo, valor) => {
     const camposNumericos = ['stock', 'precio', 'descuento']
@@ -79,35 +83,65 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
   }
 
   const cargarImagenes = (event) => {
-    const archivos = Array.from(event.target.files)
-    const nuevasImagenes = archivos.map((archivo) => ({
+    const archivos = Array.from(event.target.files || [])
+    const nuevasImagenes = archivos.map((archivo, indice) => ({
+      archivo,
+      id: `${archivo.name}-${archivo.lastModified}-${archivo.size}-${imagenes.length + indice}`,
       nombre: archivo.name,
       url: URL.createObjectURL(archivo),
     }))
 
     setImagenes((imagenesActuales) => [...imagenesActuales, ...nuevasImagenes])
     setMensaje('')
+    event.target.value = ''
   }
 
-  const quitarImagen = (nombre) => {
-    setImagenes((imagenesActuales) => imagenesActuales.filter((imagen) => imagen.nombre !== nombre))
+  const quitarImagen = (idImagen) => {
+    setImagenes((imagenesActuales) => {
+      const imagenEliminada = imagenesActuales.find((imagen) => imagen.id === idImagen)
+
+      if (imagenEliminada) {
+        URL.revokeObjectURL(imagenEliminada.url)
+      }
+
+      return imagenesActuales.filter((imagen) => imagen.id !== idImagen)
+    })
   }
 
-  const publicarProducto = () => {
+  const liberarImagenes = () => {
+    imagenes.forEach((imagen) => URL.revokeObjectURL(imagen.url))
+  }
+
+  const publicarProducto = async () => {
+    setMostrarErrores(true)
+
     if (!puedePublicar) {
-      setMensaje('Revisá los campos obligatorios antes de publicar el producto.')
+      setTipoMensaje('error')
+      setMensaje('Revisa los campos obligatorios antes de publicar el producto.')
       return
     }
 
-    onPublicarProducto({
-      ...producto,
-      idUsuario: usuario.idUsuario,
-      imagenUrl: imagenes[0]?.url || '',
-    })
+    setPublicando(true)
+    setMensaje('')
 
-    setProducto(estadoInicial)
-    setImagenes([])
-    setMensaje('Producto publicado correctamente. Ya podés verlo en el panel vendedor.')
+    try {
+      await onPublicarProducto({
+        ...producto,
+        imagenes: imagenes.map((imagen) => imagen.archivo),
+      })
+
+      liberarImagenes()
+      setProducto(estadoInicial)
+      setImagenes([])
+      setMostrarErrores(false)
+      setTipoMensaje('exito')
+      setMensaje('Producto publicado correctamente con datos del backend.')
+    } catch (error) {
+      setTipoMensaje('error')
+      setMensaje(error.message || 'No se pudo publicar el producto.')
+    } finally {
+      setPublicando(false)
+    }
   }
 
   return (
@@ -115,7 +149,7 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
       <BarraSuperior />
 
       <div className="flex min-h-[calc(100vh-4rem)]">
-        <MenuLateral usuario={usuario} />
+        <MenuLateral usuario={usuario} onCerrarSesion={onCerrarSesion} />
 
         <main className="flex-1">
           <div className="mx-auto max-w-7xl px-8 py-10">
@@ -135,7 +169,7 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                   producto
                 </h2>
                 <p className="mt-5 max-w-2xl text-xl leading-relaxed text-slate-700">
-                  Cargá la información principal, definí stock, precio, descuento e imágenes.
+                  Carga la informacion principal, defini stock, precio, descuento e imagenes.
                 </p>
               </div>
 
@@ -152,7 +186,7 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                       <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-700 text-white">
                         <Info size={18} />
                       </div>
-                      <h3 className="text-2xl font-black text-slate-950">Información principal</h3>
+                      <h3 className="text-2xl font-black text-slate-950">Informacion principal</h3>
                     </div>
 
                     <div className="space-y-6">
@@ -162,26 +196,26 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                         </span>
                         <input
                           className={`${inputClasses} mt-2`}
-                          placeholder="Ej: Pack Leyendas Premium"
+                          placeholder="Nombre del producto"
                           value={producto.nombre}
                           onChange={(event) => cambiarCampo('nombre', event.target.value)}
                         />
-                        {erroresProducto.nombre && (
+                        {mostrarError('nombre') && (
                           <p className={errorClasses}>{erroresProducto.nombre}</p>
                         )}
                       </label>
 
                       <label className="block">
                         <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
-                          Descripción
+                          Descripcion
                         </span>
                         <textarea
                           className={`${inputClasses} mt-2 min-h-40 resize-y`}
-                          placeholder="Describí el producto, su estado y sus características principales..."
+                          placeholder="Describi el producto, su estado y sus caracteristicas principales..."
                           value={producto.description}
                           onChange={(event) => cambiarCampo('description', event.target.value)}
                         />
-                        {erroresProducto.description && (
+                        {mostrarError('description') && (
                           <p className={errorClasses}>{erroresProducto.description}</p>
                         )}
                       </label>
@@ -189,7 +223,7 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                       <div className="grid gap-6 md:grid-cols-2">
                         <label className="block">
                           <span className="text-xs font-bold uppercase tracking-widest text-slate-500">
-                            Categoría
+                            Categoria
                           </span>
                           <select
                             className={`${inputClasses} mt-2`}
@@ -202,7 +236,7 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                               </option>
                             ))}
                           </select>
-                          {erroresProducto.categoria && (
+                          {mostrarError('categoria') && (
                             <p className={errorClasses}>{erroresProducto.categoria}</p>
                           )}
                         </label>
@@ -218,7 +252,7 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                             value={producto.stock}
                             onChange={(event) => cambiarCampo('stock', event.target.value)}
                           />
-                          {erroresProducto.stock && (
+                          {mostrarError('stock') && (
                             <p className={errorClasses}>{erroresProducto.stock}</p>
                           )}
                         </label>
@@ -244,12 +278,12 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                         <input
                           className={`${inputClasses} mt-2`}
                           min="0"
-                          placeholder="Ej: 45000"
+                          placeholder="Precio base"
                           type="number"
                           value={producto.precio}
                           onChange={(event) => cambiarCampo('precio', event.target.value)}
                         />
-                        {erroresProducto.precio && (
+                        {mostrarError('precio') && (
                           <p className={errorClasses}>{erroresProducto.precio}</p>
                         )}
                       </label>
@@ -266,7 +300,7 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                           value={producto.descuento}
                           onChange={(event) => cambiarCampo('descuento', event.target.value)}
                         />
-                        {erroresProducto.descuento && (
+                        {mostrarError('descuento') && (
                           <p className={errorClasses}>{erroresProducto.descuento}</p>
                         )}
                       </label>
@@ -299,16 +333,16 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                 <Card className="shadow-lg" radius="sm">
                   <CardBody className="px-7 py-8">
                     <h3 className="text-center text-sm font-bold uppercase tracking-widest text-slate-700">
-                      Imágenes del producto
+                      Imagenes del producto
                     </h3>
 
                     <label className="mt-6 flex min-h-56 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition hover:border-[#0b2b88] hover:bg-blue-50">
                       <UploadCloud className="text-[#0b2b88]" size={42} strokeWidth={2.5} />
                       <span className="mt-4 text-xl font-black text-slate-950">
-                        Subir imágenes
+                        Subir imagenes
                       </span>
                       <span className="mt-2 text-sm text-slate-500">
-                        PNG, JPG o WEBP. Máximo 5MB.
+                        PNG, JPG o WEBP. Maximo 5MB.
                       </span>
                       <input
                         multiple
@@ -321,7 +355,10 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
 
                     <div className="mt-5 grid grid-cols-2 gap-3">
                       {imagenes.map((imagen) => (
-                        <div className="relative overflow-hidden rounded-md border border-slate-200" key={imagen.nombre}>
+                        <div
+                          className="relative overflow-hidden rounded-md border border-slate-200"
+                          key={imagen.id}
+                        >
                           <img
                             alt={imagen.nombre}
                             className="h-28 w-full object-cover"
@@ -330,7 +367,7 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
                           <button
                             className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-white text-red-700 shadow"
                             type="button"
-                            onClick={() => quitarImagen(imagen.nombre)}
+                            onClick={() => quitarImagen(imagen.id)}
                           >
                             <X size={16} />
                           </button>
@@ -353,17 +390,29 @@ const CrearProducto = ({ usuario, onVolverPanel, onPublicarProducto }) => {
 
                 <Button
                   className="w-full bg-green-600 py-8 text-2xl font-black italic text-white shadow-xl"
-                  isDisabled={!puedePublicar}
+                  isDisabled={publicando}
+                  isLoading={publicando}
                   radius="sm"
-                  startContent={<CheckCircle2 size={28} strokeWidth={2.5} />}
+                  startContent={!publicando && <CheckCircle2 size={28} strokeWidth={2.5} />}
                   onPress={publicarProducto}
                 >
                   Publicar producto
                 </Button>
 
                 {mensaje && (
-                  <Card className="border border-green-100 bg-white shadow-md" radius="sm">
-                    <CardBody className="text-sm font-bold text-green-700">{mensaje}</CardBody>
+                  <Card
+                    className={`border bg-white shadow-md ${
+                      tipoMensaje === 'error' ? 'border-red-100' : 'border-green-100'
+                    }`}
+                    radius="sm"
+                  >
+                    <CardBody
+                      className={`text-sm font-bold ${
+                        tipoMensaje === 'error' ? 'text-red-700' : 'text-green-700'
+                      }`}
+                    >
+                      {mensaje}
+                    </CardBody>
                   </Card>
                 )}
               </aside>

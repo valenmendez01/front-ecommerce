@@ -1,101 +1,240 @@
+import { useEffect, useState } from "react"
 import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom"
 import Navigation from "./components/Navigation"
+import { useAuth } from "./context/useAuth"
+import {
+  actualizarProducto as actualizarProductoBackend,
+  crearProducto,
+  desactivarProducto,
+  normalizarProductoVendedor,
+  obtenerProductoPorId,
+  obtenerProductosMios,
+  subirImagenesProducto,
+} from "./lib/productosApi"
+import { obtenerPedidosMios } from "./lib/pedidosApi"
+import { obtenerVentasMias } from "./lib/ventasApi"
 import { Catalogo } from "./views/Catalogo"
-import { DetalleCatalogo } from "./views/DetalleCatalogo"
 import CrearProducto from "./views/CrearProducto"
+import { DetalleCatalogo } from "./views/DetalleCatalogo"
+import IniciarSesion from "./views/IniciarSesion"
 import MiCuenta from "./views/MiCuenta"
 import PanelVendedor from "./views/PanelVendedor"
 import VentasVendedor from "./views/VentasVendedor"
 import CarritoView from "./views/carritoView"
 import CompraView from "./views/compraView"
-import { productosIniciales } from "./data/productosMock"
-import { usuarioInicial } from "./data/usuarioMock"
-import { ventasIniciales } from "./data/ventasMock"
-import { useState } from "react"
 
-const rutasPantallaCompleta = ['/mi-cuenta', '/panel-vendedor', '/crear-producto', '/ventas', '/carrito', '/compra']
+const rutasPantallaCompleta = [
+  '/mi-cuenta',
+  '/panel-vendedor',
+  '/crear-producto',
+  '/ventas',
+  '/carrito',
+  '/compra',
+  '/iniciar-sesion',
+]
 
-const crearIniciales = (nombre) => {
-  const iniciales = nombre
-    .trim()
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((palabra) => palabra[0])
-    .join('')
-    .toUpperCase()
-
-  return iniciales || 'PR'
-}
-
-const crearIdProducto = (productos) => {
-  const ultimoNumero = productos.reduce((mayorId, producto) => {
-    const numero = Number(String(producto.idProducto).replace(/\D/g, ''))
-    return Number.isNaN(numero) ? mayorId : Math.max(mayorId, numero)
-  }, 0)
-
-  return `PROD-${String(ultimoNumero + 1).padStart(4, '0')}`
-}
+const PantallaCargandoSesion = () => (
+  <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6 text-slate-950">
+    <div className="text-center">
+      <p className="text-sm font-black uppercase tracking-widest text-green-700">FIGULLECT</p>
+      <h1 className="mt-3 text-3xl font-black text-[#061d58]">Cargando sesion...</h1>
+    </div>
+  </div>
+)
 
 function App() {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const [usuario, setUsuario] = useState(usuarioInicial)
-  const [productos, setProductos] = useState(productosIniciales)
-  const [ventas] = useState(ventasIniciales)
-  const [metaMensualUnidades, setMetaMensualUnidades] = useState(100)
+  const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
+  const [productos, setProductos] = useState([])
+  const [cargandoProductos, setCargandoProductos] = useState(false)
+  const [errorProductos, setErrorProductos] = useState('')
+  const [ventas, setVentas] = useState([])
+  const [cargandoVentas, setCargandoVentas] = useState(false)
+  const [errorVentas, setErrorVentas] = useState('')
+  const [pedidos, setPedidos] = useState([])
+  const [cargandoPedidos, setCargandoPedidos] = useState(false)
+  const [errorPedidos, setErrorPedidos] = useState('')
+  const [metaMensualUnidades, setMetaMensualUnidades] = useState(0)
 
-  const publicarProducto = (productoNuevo) => {
+  useEffect(() => {
+    let sigueActivo = true
+    const esVendedor = usuario?.rol === 'VENDEDOR'
+
+    Promise.resolve().then(async () => {
+      if (!sigueActivo) return
+
+      if (!esVendedor) {
+        setProductos([])
+        setErrorProductos('')
+        setCargandoProductos(false)
+        return
+      }
+
+      setCargandoProductos(true)
+      setErrorProductos('')
+
+      try {
+        const productosDelVendedor = await obtenerProductosMios()
+
+        if (sigueActivo) {
+          setProductos(productosDelVendedor)
+        }
+      } catch (error) {
+        if (sigueActivo) {
+          setErrorProductos(error.message || 'No se pudieron cargar tus productos.')
+        }
+      } finally {
+        if (sigueActivo) {
+          setCargandoProductos(false)
+        }
+      }
+    })
+
+    return () => {
+      sigueActivo = false
+    }
+  }, [usuario?.idUsuario, usuario?.rol])
+
+  useEffect(() => {
+    let sigueActivo = true
+    const esVendedor = usuario?.rol === 'VENDEDOR'
+
+    Promise.resolve().then(async () => {
+      if (!sigueActivo) return
+
+      if (!esVendedor) {
+        setVentas([])
+        setErrorVentas('')
+        setCargandoVentas(false)
+        return
+      }
+
+      setCargandoVentas(true)
+      setErrorVentas('')
+
+      try {
+        const ventasDelVendedor = await obtenerVentasMias()
+
+        if (sigueActivo) {
+          setVentas(ventasDelVendedor)
+        }
+      } catch (error) {
+        if (sigueActivo) {
+          setErrorVentas(error.message || 'No se pudieron cargar tus ventas.')
+        }
+      } finally {
+        if (sigueActivo) {
+          setCargandoVentas(false)
+        }
+      }
+    })
+
+    return () => {
+      sigueActivo = false
+    }
+  }, [usuario?.idUsuario, usuario?.rol])
+
+  useEffect(() => {
+    let sigueActivo = true
+    const esComprador = usuario?.rol === 'COMPRADOR'
+
+    Promise.resolve().then(async () => {
+      if (!sigueActivo) return
+
+      if (!esComprador) {
+        setPedidos([])
+        setErrorPedidos('')
+        setCargandoPedidos(false)
+        return
+      }
+
+      setCargandoPedidos(true)
+      setErrorPedidos('')
+
+      try {
+        const pedidosDelUsuario = await obtenerPedidosMios()
+
+        if (sigueActivo) {
+          setPedidos(pedidosDelUsuario)
+        }
+      } catch (error) {
+        if (sigueActivo) {
+          setErrorPedidos(error.message || 'No se pudieron cargar tus pedidos.')
+        }
+      } finally {
+        if (sigueActivo) {
+          setCargandoPedidos(false)
+        }
+      }
+    })
+
+    return () => {
+      sigueActivo = false
+    }
+  }, [usuario?.idUsuario, usuario?.rol])
+
+  const publicarProducto = async (productoNuevo) => {
+    const { imagenes = [], ...datosProducto } = productoNuevo
+    const productoCreado = await crearProducto(datosProducto)
+    let productoFinal = productoCreado
+
+    if (imagenes.length) {
+      await subirImagenesProducto(productoCreado.idProducto, imagenes)
+      productoFinal = await obtenerProductoPorId(productoCreado.idProducto)
+    }
+
+    const productoNormalizado = normalizarProductoVendedor(productoFinal)
+
     setProductos((productosActuales) => [
-      {
-        idProducto: crearIdProducto(productosActuales),
-        idUsuario: productoNuevo.idUsuario,
-        nombre: productoNuevo.nombre,
-        description: productoNuevo.description,
-        imagen: crearIniciales(productoNuevo.nombre),
-        imagenUrl: productoNuevo.imagenUrl,
-        categoria: productoNuevo.categoria,
-        precio: Number(productoNuevo.precio),
-        stock: Number(productoNuevo.stock),
-        descuento: Number(productoNuevo.descuento),
-        activo: true,
-      },
-      ...productosActuales,
+      productoNormalizado,
+      ...productosActuales.filter(
+        (producto) => producto.idProducto !== productoNormalizado.idProducto,
+      ),
     ])
+
+    return productoNormalizado
   }
 
-  const actualizarProducto = (productoActualizado) => {
+  const actualizarProducto = async (productoActualizado) => {
+    const productoGuardado = await actualizarProductoBackend(productoActualizado)
+
     setProductos((productosActuales) =>
       productosActuales.map((producto) =>
-        producto.idProducto === productoActualizado.idProducto
-          ? {
-              ...producto,
-              categoria: productoActualizado.categoria,
-              precio: Number(productoActualizado.precio),
-              stock: Number(productoActualizado.stock),
-              descuento: Number(productoActualizado.descuento),
-              activo: productoActualizado.activo,
-            }
-          : producto,
+        producto.idProducto === productoGuardado.idProducto ? productoGuardado : producto,
+      ),
+    )
+
+    return productoGuardado
+  }
+
+  const eliminarProducto = async (idProducto) => {
+    await desactivarProducto(idProducto)
+
+    setProductos((productosActuales) =>
+      productosActuales.map((producto) =>
+        producto.idProducto === idProducto ? { ...producto, activo: false } : producto,
       ),
     )
   }
 
-  const eliminarProducto = (idProducto) => {
-    setProductos((productosActuales) =>
-      productosActuales.filter((producto) => producto.idProducto !== idProducto),
-    )
+  const requerirSesion = (elemento, { requiereVendedor = false } = {}) => {
+    if (cargandoUsuario) {
+      return <PantallaCargandoSesion />
+    }
+
+    if (!usuario) {
+      return <Navigate replace state={{ from: pathname }} to="/iniciar-sesion" />
+    }
+
+    if (requiereVendedor && usuario.rol !== 'VENDEDOR') {
+      return <Navigate replace to="/mi-cuenta" />
+    }
+
+    return elemento
   }
 
-  const actualizarUsuario = (usuarioActualizado) => {
-    setUsuario((usuarioActual) => ({
-      ...usuarioActual,
-      email: usuarioActualizado.email,
-    }))
-  }
-
-  const usuarioCliente = { ...usuario, idUsuarioVisual: usuario.idCliente, rol: 'CLIENTE' }
-  const usuarioVendedor = { ...usuario, idUsuarioVisual: usuario.idVendedor, rol: 'VENDEDOR' }
+  const destinoUsuarioAutenticado = usuario?.rol === 'VENDEDOR' ? '/panel-vendedor' : '/mi-cuenta'
 
   if (rutasPantallaCompleta.some((ruta) => pathname.startsWith(ruta))) {
     return (
@@ -103,52 +242,80 @@ function App() {
         <Route path="/carrito" element={<CarritoView />} />
         <Route path="/compra" element={<CompraView />} />
         <Route
-          path="/mi-cuenta"
+          path="/iniciar-sesion"
           element={
-            <MiCuenta
-              usuario={usuarioCliente}
-              onActualizarUsuario={actualizarUsuario}
-            />
+            cargandoUsuario ? (
+              <PantallaCargandoSesion />
+            ) : usuario ? (
+              <Navigate replace to={destinoUsuarioAutenticado} />
+            ) : (
+              <IniciarSesion />
+            )
           }
+        />
+        <Route
+          path="/mi-cuenta"
+          element={requerirSesion(
+            <MiCuenta
+              cargandoPedidos={cargandoPedidos}
+              errorPedidos={errorPedidos}
+              pedidos={pedidos}
+              usuario={usuario}
+              onCerrarSesion={cerrarSesion}
+            />,
+          )}
         />
         <Route
           path="/panel-vendedor"
-          element={
+          element={requerirSesion(
             <PanelVendedor
               metaMensualUnidades={metaMensualUnidades}
+              cargandoProductos={cargandoProductos}
+              errorProductos={errorProductos}
               productosBaseActuales={productos}
               ventas={ventas}
-              usuario={usuarioVendedor}
-              onActualizarUsuario={actualizarUsuario}
+              usuario={usuario}
               onActualizarMetaMensual={setMetaMensualUnidades}
               onActualizarProducto={actualizarProducto}
-              onEliminarProducto={eliminarProducto}
+              onCerrarSesion={cerrarSesion}
               onCrearProducto={() => navigate('/crear-producto')}
-            />
-          }
+              onEliminarProducto={eliminarProducto}
+            />,
+            { requiereVendedor: true },
+          )}
         />
         <Route
           path="/crear-producto"
-          element={
+          element={requerirSesion(
             <CrearProducto
-              usuario={usuarioVendedor}
+              usuario={usuario}
+              onCerrarSesion={cerrarSesion}
               onPublicarProducto={publicarProducto}
               onVolverPanel={() => navigate('/panel-vendedor')}
-            />
-          }
+            />,
+            { requiereVendedor: true },
+          )}
         />
         <Route
           path="/ventas"
-          element={<VentasVendedor usuario={usuarioVendedor} ventas={ventas} />}
+          element={requerirSesion(
+            <VentasVendedor
+              cargandoVentas={cargandoVentas}
+              errorVentas={errorVentas}
+              usuario={usuario}
+              ventas={ventas}
+              onCerrarSesion={cerrarSesion}
+            />,
+            { requiereVendedor: true },
+          )}
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate replace to="/" />} />
       </Routes>
     )
   }
 
   return (
-    <div className="min-h-screen flex flex-col max-w-400 mx-auto">
-
+    <div className="mx-auto flex min-h-screen max-w-400 flex-col">
       <Navigation />
 
       <main className="w-full px-6">
@@ -156,8 +323,8 @@ function App() {
           <Route path="/" element={<h1>Vista Home</h1>} />
           <Route path="/productos" element={<Catalogo />} />
           <Route path="/productos/:id" element={<DetalleCatalogo />} />
-          <Route path="/catalogo" element={<Navigate to="/productos" replace />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="/catalogo" element={<Navigate replace to="/productos" />} />
+          <Route path="*" element={<Navigate replace to="/" />} />
         </Routes>
       </main>
     </div>

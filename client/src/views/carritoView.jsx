@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navigation from "../components/Navigation"
 import { ShoppingBag, ArrowRight } from "lucide-react";
 import ArticuloCarrito from "../components/carrito/itemCarrito";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
@@ -30,7 +29,7 @@ export default function CarritoView() {
         setError("No se pudo cargar el carrito");
       })
       .finally(() => setCargando(false));
-  }, []);
+  }, [idUsuario]);
 
   const actualizarCantidad = (id, nuevaCantidad) => {
     if (nuevaCantidad < 1) return eliminarArticulo(id);

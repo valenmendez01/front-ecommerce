@@ -21,9 +21,9 @@ const opcionesVendedor = [
   { texto: 'Ventas', ruta: '/ventas', Icono: WalletCards },
 ]
 
-const MenuLateral = ({ usuario }) => {
+const MenuLateral = ({ usuario, onCerrarSesion }) => {
   const rolCuenta = usuario.rol === 'VENDEDOR' ? 'vendedor' : 'cliente'
-  const iniciales = `${usuario.nombre[0]}${usuario.apellido[0]}`.toUpperCase()
+  const iniciales = `${usuario.nombre?.[0] || ''}${usuario.apellido?.[0] || ''}`.toUpperCase()
   const esVendedor = usuario.rol === 'VENDEDOR'
   const opciones = esVendedor ? opcionesVendedor : opcionesCliente
 
@@ -76,10 +76,14 @@ const MenuLateral = ({ usuario }) => {
       </nav>
 
       <div className="border-t border-slate-200 px-5 py-6">
-        <Link className="flex items-center gap-4 text-lg font-medium text-red-700" to="/iniciar-sesion">
+        <button
+          className="flex items-center gap-4 text-lg font-medium text-red-700"
+          type="button"
+          onClick={onCerrarSesion}
+        >
           <LogOut size={24} strokeWidth={2.2} />
           Cerrar sesión
-        </Link>
+        </button>
       </div>
     </aside>
   )

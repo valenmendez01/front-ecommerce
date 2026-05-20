@@ -1,10 +1,11 @@
 import { Button, Card } from '@heroui/react'
 import { Fragment, useState } from 'react'
 
-const TablaPedidos = ({ pedidos }) => {
+const TablaPedidos = ({ cargando = false, error = '', pedidos }) => {
   const [mostrarHistorial, setMostrarHistorial] = useState(false)
   const [pedidoAbierto, setPedidoAbierto] = useState(null)
   const pedidosVisibles = mostrarHistorial ? pedidos : pedidos.slice(0, 3)
+  const puedeVerHistorial = pedidos.length > 3
 
   const cambiarPedidoAbierto = (idPedido) => {
     setPedidoAbierto(pedidoAbierto === idPedido ? null : idPedido)
@@ -24,18 +25,26 @@ const TablaPedidos = ({ pedidos }) => {
           )}
         </div>
 
-        <Button
-          className="bg-transparent text-sm font-bold text-[#0b2b88]"
-          radius="sm"
-          size="sm"
-          onPress={() => {
-            setMostrarHistorial(!mostrarHistorial)
-            setPedidoAbierto(null)
-          }}
-        >
-          {mostrarHistorial ? 'Ver pedidos recientes' : 'Ver todo el historial'}
-        </Button>
+        {puedeVerHistorial && (
+          <Button
+            className="bg-transparent text-sm font-bold text-[#0b2b88]"
+            radius="sm"
+            size="sm"
+            onPress={() => {
+              setMostrarHistorial(!mostrarHistorial)
+              setPedidoAbierto(null)
+            }}
+          >
+            {mostrarHistorial ? 'Ver pedidos recientes' : 'Ver todo el historial'}
+          </Button>
+        )}
       </div>
+
+      {error && (
+        <div className="mx-8 mb-6 rounded-md border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
+          {error}
+        </div>
+      )}
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
@@ -44,18 +53,34 @@ const TablaPedidos = ({ pedidos }) => {
               <th className="px-8 py-4">ID pedido</th>
               <th className="px-8 py-4">Fecha</th>
               <th className="px-8 py-4">Total</th>
-              <th className="px-8 py-4 text-right">Acción</th>
+              <th className="px-8 py-4 text-right">Accion</th>
             </tr>
           </thead>
           <tbody>
-            {pedidosVisibles.map((pedido) => {
+            {cargando && (
+              <tr className="border-t border-slate-100">
+                <td className="px-8 py-10 text-center font-semibold text-slate-500" colSpan="4">
+                  Cargando pedidos...
+                </td>
+              </tr>
+            )}
+
+            {!cargando && pedidosVisibles.length === 0 && (
+              <tr className="border-t border-slate-100">
+                <td className="px-8 py-10 text-center font-semibold text-slate-500" colSpan="4">
+                  Todavia no hay pedidos para mostrar.
+                </td>
+              </tr>
+            )}
+
+            {!cargando && pedidosVisibles.map((pedido) => {
               const estaAbierto = pedidoAbierto === pedido.idPedido
 
               return (
                 <Fragment key={pedido.idPedido}>
                   <tr className="border-t border-slate-100">
                     <td className="px-8 py-5">
-                      <p className="text-lg font-black text-[#0b2b88]">#{pedido.idPedido}</p>
+                      <p className="text-lg font-black text-[#0b2b88]">#{pedido.idPedidoTexto}</p>
                       <p className="text-xs text-slate-400">{pedido.detalle}</p>
                     </td>
                     <td className="px-8 py-5 font-medium">{pedido.fecha}</td>
@@ -93,8 +118,22 @@ const TablaPedidos = ({ pedidos }) => {
                                   </tr>
                                 </thead>
                                 <tbody>
+                                  {pedido.productos.length === 0 && (
+                                    <tr className="border-t border-slate-100">
+                                      <td
+                                        className="px-4 py-5 text-center font-semibold text-slate-500"
+                                        colSpan="4"
+                                      >
+                                        No hay productos asociados a este pedido.
+                                      </td>
+                                    </tr>
+                                  )}
+
                                   {pedido.productos.map((producto) => (
-                                    <tr className="border-t border-slate-100" key={producto.nombre}>
+                                    <tr
+                                      className="border-t border-slate-100"
+                                      key={`${pedido.idPedido}-${producto.idProducto || producto.nombre}`}
+                                    >
                                       <td className="px-4 py-3 font-semibold text-slate-800">
                                         {producto.nombre}
                                       </td>
@@ -112,21 +151,27 @@ const TablaPedidos = ({ pedidos }) => {
 
                           <div className="rounded-md border border-blue-100 bg-white p-5">
                             <h3 className="text-sm font-black uppercase tracking-widest text-[#0b2b88]">
-                              Información del pedido
+                              Informacion del pedido
                             </h3>
                             <div className="mt-4 space-y-4 text-sm">
-                              <div>
-                                <p className="font-bold uppercase tracking-widest text-slate-400">
-                                  Método de pago
-                                </p>
-                                <p className="mt-1 font-semibold text-slate-800">{pedido.metodoPago}</p>
-                              </div>
-                              <div>
-                                <p className="font-bold uppercase tracking-widest text-slate-400">
-                                  Entrega
-                                </p>
-                                <p className="mt-1 font-semibold text-slate-800">{pedido.entrega}</p>
-                              </div>
+                              {pedido.metodoPago && (
+                                <div>
+                                  <p className="font-bold uppercase tracking-widest text-slate-400">
+                                    Metodo de pago
+                                  </p>
+                                  <p className="mt-1 font-semibold text-slate-800">
+                                    {pedido.metodoPago}
+                                  </p>
+                                </div>
+                              )}
+                              {pedido.entrega && (
+                                <div>
+                                  <p className="font-bold uppercase tracking-widest text-slate-400">
+                                    Entrega
+                                  </p>
+                                  <p className="mt-1 font-semibold text-slate-800">{pedido.entrega}</p>
+                                </div>
+                              )}
                               <div>
                                 <p className="font-bold uppercase tracking-widest text-slate-400">
                                   Total del pedido

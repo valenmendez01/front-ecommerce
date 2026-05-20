@@ -2,7 +2,7 @@ import { CircleUserRound, ShoppingCart } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 
 const enlaces = [
-  { texto: 'Catálogo', ruta: '/productos' },
+  { texto: 'Catálogo', ruta: '/productos', principal: true },
   { texto: 'Figuritas', ruta: '/productos' },
   { texto: 'Álbumes', ruta: '/productos' },
   { texto: 'Combos', ruta: '/productos' },
@@ -24,9 +24,11 @@ const BarraSuperior = () => {
       <nav className="hidden items-center gap-10 text-base font-semibold text-slate-500 md:flex">
         {enlaces.map((enlace) => (
           <NavLink
-            className={claseEnlace}
+            className={({ isActive }) =>
+              claseEnlace({ isActive: enlace.principal && isActive })
+            }
             end={enlace.ruta === '/productos'}
-            key={enlace.ruta}
+            key={enlace.texto}
             to={enlace.ruta}
           >
             {enlace.texto}

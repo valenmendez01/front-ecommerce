@@ -2,8 +2,6 @@ import { Button, Card, CardBody } from '@heroui/react'
 import { Check, Pencil, X } from 'lucide-react'
 import { useState } from 'react'
 
-const metasSugeridas = [25, 30, 50, 100]
-
 const MetaVentas = ({ unidadesVendidas, metaMensual, onActualizarMetaMensual }) => {
   const [estaEditando, setEstaEditando] = useState(false)
   const [borradorMeta, setBorradorMeta] = useState(metaMensual)
@@ -37,7 +35,9 @@ const MetaVentas = ({ unidadesVendidas, metaMensual, onActualizarMetaMensual }) 
           <div>
             <h2 className="text-2xl font-black">META MENSUAL DE UNIDADES</h2>
             <p className="mt-2 text-blue-100">
-              Vendiste {unidadesVendidas} de {metaMensual} unidades este mes.
+              {metaMensual > 0
+                ? `Vendiste ${unidadesVendidas} de ${metaMensual} unidades este mes.`
+                : 'Aun no hay una meta mensual definida.'}
             </p>
           </div>
 
@@ -84,22 +84,6 @@ const MetaVentas = ({ unidadesVendidas, metaMensual, onActualizarMetaMensual }) 
             <p className="text-3xl font-black text-yellow-300">{porcentaje}%</p>
           </div>
         </div>
-
-        {estaEditando && (
-          <div className="mt-5 flex flex-wrap gap-2">
-            {metasSugeridas.map((meta) => (
-              <Button
-                className="bg-white/15 text-sm font-bold text-white"
-                key={meta}
-                radius="sm"
-                size="sm"
-                onPress={() => setBorradorMeta(meta)}
-              >
-                {meta} unidades
-              </Button>
-            ))}
-          </div>
-        )}
 
         <div className="mt-6 h-4 overflow-hidden rounded-full bg-white/25">
           <div className="h-full rounded-full bg-green-500" style={{ width: `${porcentaje}%` }} />

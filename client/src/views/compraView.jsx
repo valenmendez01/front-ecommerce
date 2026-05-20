@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navigation from "../components/Navigation"
 import { ArrowLeft, PackageCheck } from "lucide-react";
 import PanelPedido from "../components/compra/panelPedido";
 import AccordionEnvio from "../components/compra/envio";

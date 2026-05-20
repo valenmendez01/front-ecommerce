@@ -40,6 +40,7 @@ const obtenerErrorEmail = (email) => {
 const InformacionPersonal = ({ usuario, onActualizarUsuario }) => {
   const [estaEditando, setEstaEditando] = useState(false)
   const [borrador, setBorrador] = useState({ email: usuario.email })
+  const puedeEditar = Boolean(onActualizarUsuario)
   const errorEmail = estaEditando ? obtenerErrorEmail(borrador.email) : ''
 
   const iniciarEdicion = () => {
@@ -65,7 +66,7 @@ const InformacionPersonal = ({ usuario, onActualizarUsuario }) => {
     <Card className="overflow-hidden shadow-xl" radius="sm">
       <div className="flex items-center justify-between bg-[#263f98] px-8 py-4">
         <h2 className="text-xl font-black text-white">INFORMACIÓN PERSONAL</h2>
-        {estaEditando ? (
+        {puedeEditar && estaEditando ? (
           <div className="flex gap-2">
             <Button
               isDisabled={Boolean(errorEmail)}
@@ -87,7 +88,7 @@ const InformacionPersonal = ({ usuario, onActualizarUsuario }) => {
               Cancelar
             </Button>
           </div>
-        ) : (
+        ) : puedeEditar ? (
           <Button
             className="bg-white/15 text-sm font-bold text-white"
             radius="sm"
@@ -96,7 +97,7 @@ const InformacionPersonal = ({ usuario, onActualizarUsuario }) => {
           >
             Editar perfil
           </Button>
-        )}
+        ) : null}
       </div>
 
       <CardBody className="grid gap-8 px-8 py-8 md:grid-cols-3">
@@ -146,7 +147,7 @@ const InformacionPersonal = ({ usuario, onActualizarUsuario }) => {
             Rol de cuenta
           </p>
           <Chip className="mt-2 bg-green-100 font-bold text-green-700" radius="full" size="sm">
-            {usuario.rol}
+            {usuario.rolVisible || usuario.rol}
           </Chip>
         </div>
         <div>
