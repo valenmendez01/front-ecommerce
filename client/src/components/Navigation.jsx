@@ -30,51 +30,65 @@ export default function Navigation() {
       </NavbarBrand>
 
       <NavbarContent className="hidden gap-4 sm:flex" justify="center">
-        <NavbarItem isActive={pathname === "/"}>
-          <Link color="foreground" to="/">
-            Home
-          </Link>
-        </NavbarItem>
-
-        <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
-
-        <NavbarItem isActive={pathname.startsWith("/productos")}>
-          <Link aria-current="page" to="/productos">
-            Catalogo
-          </Link>
-        </NavbarItem>
-
-        {usuario && (
+        {esVendedor ? (
           <>
-            <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
-
-            <NavbarItem isActive={pathname.startsWith("/mi-cuenta")}>
-              <Link color="foreground" to="/mi-cuenta">
-                Mi cuenta
-              </Link>
-            </NavbarItem>
-          </>
-        )}
-
-        {esVendedor && (
-          <>
-            <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
-
             <NavbarItem isActive={pathname.startsWith("/panel-vendedor")}>
               <Link color="foreground" to="/panel-vendedor">
                 Panel vendedor
               </Link>
             </NavbarItem>
+            <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
+            <NavbarItem isActive={pathname.startsWith("/crear-producto")}>
+              <Link color="foreground" to="/crear-producto">
+                Crear producto
+              </Link>
+            </NavbarItem>
+            <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
+            <NavbarItem isActive={pathname.startsWith("/ventas")}>
+              <Link color="foreground" to="/ventas">
+                Ventas
+              </Link>
+            </NavbarItem>
+          </>
+        ) : (
+          <>
+            <NavbarItem isActive={pathname === "/"}>
+              <Link color="foreground" to="/">
+                Home
+              </Link>
+            </NavbarItem>
+
+            <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
+
+            <NavbarItem isActive={pathname.startsWith("/productos")}>
+              <Link aria-current="page" to="/productos">
+                Catalogo
+              </Link>
+            </NavbarItem>
+
+            {usuario && (
+              <>
+                <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
+
+                <NavbarItem isActive={pathname.startsWith("/mi-cuenta")}>
+                  <Link color="foreground" to="/mi-cuenta">
+                    Mi cuenta
+                  </Link>
+                </NavbarItem>
+              </>
+            )}
           </>
         )}
       </NavbarContent>
 
       <NavbarContent justify="end">
-        <NavbarItem>
-          <Button as={Link} to="/carrito" variant="light" isIconOnly aria-label="Carrito">
-            <ShoppingCart size={20} />
-          </Button>
-        </NavbarItem>
+        {!esVendedor && (
+          <NavbarItem>
+            <Button as={Link} to="/carrito" variant="light" isIconOnly aria-label="Carrito">
+              <ShoppingCart size={20} />
+            </Button>
+          </NavbarItem>
+        )}
 
         <NavbarItem>
           {usuario ? (

@@ -33,6 +33,15 @@ const rutasPantallaCompleta = [
   '/iniciar-sesion',
 ]
 
+const rutasPermitidasVendedor = [
+  '/panel-vendedor',
+  '/crear-producto',
+  '/ventas',
+]
+
+const esRutaPermitidaParaVendedor = (pathname) =>
+  rutasPermitidasVendedor.some((ruta) => pathname === ruta || pathname.startsWith(`${ruta}/`))
+
 const PantallaCargandoSesion = () => (
   <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6 text-slate-950">
     <div className="text-center">
@@ -55,7 +64,6 @@ function App() {
   const [pedidos, setPedidos] = useState([])
   const [cargandoPedidos, setCargandoPedidos] = useState(false)
   const [errorPedidos, setErrorPedidos] = useState('')
-  const [metaMensualUnidades, setMetaMensualUnidades] = useState(0)
 
   useEffect(() => {
     let sigueActivo = true
@@ -236,6 +244,14 @@ function App() {
 
   const destinoUsuarioAutenticado = usuario?.rol === 'VENDEDOR' ? '/panel-vendedor' : '/mi-cuenta'
 
+  if (cargandoUsuario) {
+    return <PantallaCargandoSesion />
+  }
+
+  if (usuario?.rol === 'VENDEDOR' && !esRutaPermitidaParaVendedor(pathname)) {
+    return <Navigate replace to="/panel-vendedor" />
+  }
+
   if (rutasPantallaCompleta.some((ruta) => pathname.startsWith(ruta))) {
     return (
       <Routes>
@@ -269,16 +285,13 @@ function App() {
           path="/panel-vendedor"
           element={requerirSesion(
             <PanelVendedor
-              metaMensualUnidades={metaMensualUnidades}
               cargandoProductos={cargandoProductos}
               errorProductos={errorProductos}
               productosBaseActuales={productos}
               ventas={ventas}
               usuario={usuario}
-              onActualizarMetaMensual={setMetaMensualUnidades}
               onActualizarProducto={actualizarProducto}
               onCerrarSesion={cerrarSesion}
-              onCrearProducto={() => navigate('/crear-producto')}
               onEliminarProducto={eliminarProducto}
             />,
             { requiereVendedor: true },

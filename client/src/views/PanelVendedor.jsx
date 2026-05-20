@@ -1,10 +1,8 @@
-import { Button } from '@heroui/react'
-import { Package, PackageCheck, PackageX, Plus, TriangleAlert } from 'lucide-react'
+import { Package, PackageCheck, PackageX, TriangleAlert } from 'lucide-react'
 import InformacionPersonal from '../components/cuenta/InformacionPersonal'
 import BarraSuperior from '../components/layout/BarraSuperior'
 import Footer from '../components/layout/Footer'
 import MenuLateral from '../components/layout/MenuLateral'
-import MetaVentas from '../components/vendedor/MetaVentas'
 import TablaProductos from '../components/vendedor/TablaProductos'
 import TarjetaMetrica from '../components/vendedor/TarjetaMetrica'
 
@@ -23,17 +21,14 @@ const calcularVendidosProducto = (ventas, idProducto) =>
   )
 
 const PanelVendedor = ({
-  metaMensualUnidades,
   cargandoProductos = false,
   errorProductos = '',
   productosBaseActuales = [],
   ventas = [],
   usuario,
   onCerrarSesion,
-  onActualizarMetaMensual,
   onActualizarProducto,
   onEliminarProducto,
-  onCrearProducto,
 }) => {
   const productos = productosBaseActuales.map((producto) => ({
     ...producto,
@@ -46,7 +41,6 @@ const PanelVendedor = ({
   const productosActivos = productos.filter((producto) => producto.activo)
   const productosConStockBajo = productosActivos.filter((producto) => producto.stock > 0 && producto.stock <= 5)
   const productosSinStock = productosActivos.filter((producto) => producto.stock === 0)
-  const unidadesVendidas = ventas.reduce((total, venta) => total + venta.cantidad, 0)
 
   const metricas = [
     {
@@ -93,18 +87,10 @@ const PanelVendedor = ({
                   vendedor
                 </h2>
                 <p className="mt-5 max-w-2xl text-xl leading-relaxed text-slate-700">
-                  Revisá tus productos publicados, controlá el stock y ajustá tu meta mensual.
+                  Revisá tus productos publicados y controlá el stock con datos del backend.
                 </p>
               </div>
 
-              <Button
-                className="w-fit bg-[#031039] px-8 py-7 text-lg font-black text-white shadow-lg"
-                radius="sm"
-                startContent={<Plus size={22} strokeWidth={2.5} />}
-                onPress={onCrearProducto}
-              >
-                Crear producto
-              </Button>
             </section>
 
             <div className="mt-10">
@@ -134,13 +120,6 @@ const PanelVendedor = ({
               />
             </div>
 
-            <div className="mt-10">
-              <MetaVentas
-                metaMensual={metaMensualUnidades}
-                unidadesVendidas={unidadesVendidas}
-                onActualizarMetaMensual={onActualizarMetaMensual}
-              />
-            </div>
           </div>
 
           <Footer />

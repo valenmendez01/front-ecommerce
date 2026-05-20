@@ -1,4 +1,3 @@
-import { Button } from '@heroui/react'
 import {
   CircleUserRound,
   Grid2X2,
@@ -7,7 +6,7 @@ import {
   ShoppingCart,
   WalletCards,
 } from 'lucide-react'
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 const opcionesCliente = [
   { texto: 'Mi cuenta', ruta: '/mi-cuenta', Icono: CircleUserRound },
@@ -41,17 +40,6 @@ const MenuLateral = ({ usuario, onCerrarSesion }) => {
             <p className="text-sm text-slate-500">Cuenta de {rolCuenta}</p>
           </div>
         </div>
-
-        {esVendedor && (
-          <Button
-            as={Link}
-            className="mt-5 w-full bg-[#031039] py-6 text-base font-bold text-white shadow-md"
-            radius="sm"
-            to="/crear-producto"
-          >
-            Crear producto
-          </Button>
-        )}
       </div>
 
       <nav className="flex-1 px-4 py-6">
