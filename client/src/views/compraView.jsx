@@ -6,6 +6,8 @@ import AccordionEnvio from "../components/compra/envio";
 import AccordionPago from "../components/compra/pago";
 import ResumenPago from "../components/compra/resumenPago";
 import copaMundo from "../assets/copa-mundo.png";
+import { apiRequest } from "../lib/api";
+import { vaciarCarrito } from "../lib/carritoStorage";
 
 const PASOS = ["Carrito", "Información", "Confirmación"];
 
@@ -20,32 +22,32 @@ export default function CompraView() {
 
   const puedeConfirmar = envioGuardado && pagoGuardado;
 
-  const confirmarPedido = () => {
+  const confirmarPedido = async () => {
     setCargandoConfirmar(true);
     setErrorConfirmar(null);
 
-    fetch('/pedidos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify({
-        items: articulosIniciales.map((a) => ({
-          idProducto: a.idProducto,
-          cantidad: a.cantidad,
-        })),
-      }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.data) setConfirmado(true);
-      })
-      .catch((error) => {
-        console.error("Error al confirmar pedido:", error);
-        setErrorConfirmar("No se pudo confirmar el pedido. Intentá de nuevo.");
-      })
-      .finally(() => setCargandoConfirmar(false));
+    try {
+      const pedido = await apiRequest('/pedidos', {
+        method: 'POST',
+        body: {
+          items: articulosIniciales.map((a) => ({
+            idProducto: a.idProducto,
+            cantidad: a.cantidad,
+          })),
+        },
+      });
+
+      if (pedido) {
+        vaciarCarrito();
+        localStorage.removeItem("articulosCompra");
+        setConfirmado(true);
+      }
+    } catch (error) {
+      console.error("Error al confirmar pedido:", error);
+      setErrorConfirmar("No se pudo confirmar el pedido. Iniciá sesión como comprador e intentá de nuevo.");
+    } finally {
+      setCargandoConfirmar(false);
+    }
   };
 
   if (confirmado) {

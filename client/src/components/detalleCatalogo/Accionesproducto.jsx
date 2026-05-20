@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button } from "@heroui/react";
 import { ShoppingCart, Minus, Plus } from "lucide-react";
+import { agregarProductoAlCarrito } from "../../lib/carritoStorage";
 
-export const AccionesProducto = ({ stock }) => {
+export const AccionesProducto = ({ producto, stock }) => {
   const [cantidad, setCantidad] = useState(1);
+  const [mensaje, setMensaje] = useState("");
 
   function incrementar() {
     setCantidad((prev) => prev + 1);
@@ -11,6 +13,11 @@ export const AccionesProducto = ({ stock }) => {
 
   function decrementar() {
     setCantidad((prev) => (prev > 1 ? prev - 1 : 1));
+  }
+
+  function agregarAlCarrito() {
+    agregarProductoAlCarrito(producto, cantidad);
+    setMensaje("Producto agregado al carrito");
   }
 
   return (
@@ -37,10 +44,14 @@ export const AccionesProducto = ({ stock }) => {
         isDisabled={!stock}
         startContent={<ShoppingCart size={18} />}
         className="w-full font-semibold"
-        onPress={() => console.log("Agregar al carrito", cantidad)}
+        onPress={agregarAlCarrito}
       >
         Agregar al carrito
       </Button>
+
+      {mensaje && (
+        <p className="text-sm font-semibold text-green-600">{mensaje}</p>
+      )}
 
     </div>
   );

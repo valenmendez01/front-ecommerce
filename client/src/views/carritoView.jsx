@@ -1,52 +1,47 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShoppingBag, ArrowRight } from "lucide-react";
 import ArticuloCarrito from "../components/carrito/itemCarrito";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
 import ProductosRecomendados from "../components/carrito/itemsRecomendados";
 import copaMundo from "../assets/copa-mundo.png";
+import {
+  obtenerArticulosCarrito,
+  reemplazarArticulosCarrito,
+} from "../lib/carritoStorage";
 
 const PROGRESO_COLECCION = 85;
 
 export default function CarritoView() {
-  const [articulos, setArticulos] = useState([]);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState(null);
+  const [articulos, setArticulos] = useState(() => obtenerArticulosCarrito());
   const navigate = useNavigate();
-
-  const idUsuario = localStorage.getItem("idUsuario");
-
-  useEffect(() => {
-    fetch(`/pedidos/usuario/${idUsuario}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((json) => setArticulos(json.data.content))
-      .catch((error) => {
-        console.error("Error al cargar carrito:", error);
-        setError("No se pudo cargar el carrito");
-      })
-      .finally(() => setCargando(false));
-  }, [idUsuario]);
 
   const actualizarCantidad = (id, nuevaCantidad) => {
     if (nuevaCantidad < 1) return eliminarArticulo(id);
-    setArticulos((prev) =>
-      prev.map((a) => (a.id === id ? { ...a, cantidad: nuevaCantidad } : a))
-    );
+    setArticulos((prev) => {
+      const actualizados = prev.map((a) => (a.id === id ? { ...a, cantidad: nuevaCantidad } : a));
+      reemplazarArticulosCarrito(actualizados);
+      return actualizados;
+    });
   };
 
   const eliminarArticulo = (id) => {
-    setArticulos((prev) => prev.filter((a) => a.id !== id));
+    setArticulos((prev) => {
+      const actualizados = prev.filter((a) => a.id !== id);
+      reemplazarArticulosCarrito(actualizados);
+      return actualizados;
+    });
   };
 
   const agregarArticulo = (articulo) => {
     setArticulos((prev) => {
       const existe = prev.find((a) => a.id === articulo.id);
-      if (existe) return prev.map((a) => (a.id === articulo.id ? { ...a, cantidad: a.cantidad + 1 } : a));
-      return [...prev, { ...articulo, cantidad: 1, subtitulo: "RECOMENDADO" }];
+      const actualizados = existe
+        ? prev.map((a) => (a.id === articulo.id ? { ...a, cantidad: a.cantidad + 1 } : a))
+        : [...prev, { ...articulo, idProducto: articulo.id, cantidad: 1, subtitulo: "RECOMENDADO" }];
+
+      reemplazarArticulosCarrito(actualizados);
+      return actualizados;
     });
   };
 
@@ -56,18 +51,6 @@ export default function CarritoView() {
   };
 
   const subtotal = articulos.reduce((acc, a) => acc + a.precio * a.cantidad, 0);
-
-  if (cargando) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <p className="text-gray-400 font-semibold">Cargando tu carrito...</p>
-    </div>
-  );
-
-  if (error) return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <p className="text-red-400 font-semibold">{error}</p>
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
