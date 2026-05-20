@@ -5,6 +5,7 @@ import { agregarProductoAlCarrito } from "../../lib/carritoStorage";
 
 export const AccionesProducto = ({ producto }) => {
   const [cantidad, setCantidad] = useState(1);
+  const [mensaje, setMensaje] = useState("");
   const stock = producto?.stock ?? 0;
 
   function incrementar() {
@@ -15,44 +16,9 @@ export const AccionesProducto = ({ producto }) => {
     setCantidad((prev) => (prev > 1 ? prev - 1 : 1));
   }
 
-  function obtenerImagenPrincipal() {
-    const imagen = producto?.imagenes?.[0];
-
-    if (!imagen?.contenidoBase64) return null;
-
-    return `data:image/jpeg;base64,${imagen.contenidoBase64}`;
-  }
-
   function agregarAlCarrito() {
-    const carritoActual = JSON.parse(localStorage.getItem("carrito") || "[]");
-    const id = producto.idProducto ?? producto.id;
-    const precioFinal = producto.descuento > 0
-      ? producto.precio * (1 - producto.descuento / 100)
-      : producto.precio;
-
-    const articulo = {
-      id,
-      nombre: producto.nombre,
-      precio: precioFinal,
-      precioOriginal: producto.descuento > 0 ? producto.precio : undefined,
-      imagen: obtenerImagenPrincipal(),
-      subtitulo: producto.categoria,
-      cantidad,
-    };
-
-    const existe = carritoActual.find((item) => item.id === id);
-    const carritoActualizado = existe
-      ? carritoActual.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                cantidad: Math.min(item.cantidad + cantidad, stock),
-              }
-            : item
-        )
-      : [...carritoActual, articulo];
-
-    localStorage.setItem("carrito", JSON.stringify(carritoActualizado));
+    agregarProductoAlCarrito(producto, cantidad);
+    setMensaje("Producto agregado al carrito");
   }
 
   return (
