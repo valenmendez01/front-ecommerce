@@ -13,6 +13,10 @@ import BarraSuperior from '../components/layout/BarraSuperior'
 import Footer from '../components/layout/Footer'
 import MenuLateral from '../components/layout/MenuLateral'
 import { apiRequest } from '../lib/api'
+import {
+  MAXIMO_IMAGENES_PRODUCTO,
+  obtenerErrorCantidadImagenesProducto,
+} from '../data/reglasImagenesProducto'
 
 const estadoInicial = {
   nombre: '',
@@ -117,8 +121,10 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
   const descuento = Number(producto.descuento)
   const precioFinal = calcularPrecioFinal(precio, descuento)
   const tieneDescuento = descuento > 0
-  const erroresProducto = obtenerErroresProducto(producto, categoriasProducto)
-  const puedePublicar = Object.values(erroresProducto).every((error) => !error)
+  const erroresProducto = obtenerErroresProducto(producto)
+  const errorImagenes = obtenerErrorCantidadImagenesProducto(imagenes.length)
+  const puedePublicar = Object.values(erroresProducto).every((error) => !error) && !errorImagenes
+  const alcanzoMaximoImagenes = imagenes.length >= MAXIMO_IMAGENES_PRODUCTO
   const mostrarError = (campo) => mostrarErrores && erroresProducto[campo]
 
   const cambiarCampo = (campo, valor) => {
@@ -132,7 +138,22 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
 
   const cargarImagenes = (event) => {
     const archivos = Array.from(event.target.files || [])
-    const nuevasImagenes = archivos.map((archivo, indice) => ({
+
+    if (!archivos.length) {
+      return
+    }
+
+    const espaciosDisponibles = MAXIMO_IMAGENES_PRODUCTO - imagenes.length
+
+    if (espaciosDisponibles <= 0) {
+      setTipoMensaje('error')
+      setMensaje(`Solo podes cargar hasta ${MAXIMO_IMAGENES_PRODUCTO} imagenes por producto.`)
+      event.target.value = ''
+      return
+    }
+
+    const archivosPermitidos = archivos.slice(0, espaciosDisponibles)
+    const nuevasImagenes = archivosPermitidos.map((archivo, indice) => ({
       archivo,
       id: `${archivo.name}-${archivo.lastModified}-${archivo.size}-${imagenes.length + indice}`,
       nombre: archivo.name,
@@ -140,7 +161,12 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
     }))
 
     setImagenes((imagenesActuales) => [...imagenesActuales, ...nuevasImagenes])
-    setMensaje('')
+    if (archivos.length > espaciosDisponibles) {
+      setTipoMensaje('error')
+      setMensaje(`Se agregaron ${archivosPermitidos.length} imagenes. El maximo es ${MAXIMO_IMAGENES_PRODUCTO}.`)
+    } else {
+      setMensaje('')
+    }
     event.target.value = ''
   }
 
@@ -154,6 +180,7 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
 
       return imagenesActuales.filter((imagen) => imagen.id !== idImagen)
     })
+    setMensaje('')
   }
 
   const liberarImagenes = () => {
@@ -165,7 +192,7 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
 
     if (!puedePublicar) {
       setTipoMensaje('error')
-      setMensaje('Revisa los campos obligatorios antes de publicar el producto.')
+      setMensaje(errorImagenes || 'Revisa los campos obligatorios antes de publicar el producto.')
       return
     }
 
@@ -194,7 +221,7 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950">
-      <BarraSuperior />
+      <BarraSuperior esVendedor />
 
       <div className="flex min-h-[calc(100vh-4rem)]">
         <MenuLateral usuario={usuario} onCerrarSesion={onCerrarSesion} />
@@ -384,32 +411,47 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
                       Imagenes del producto
                     </h3>
 
-                    <label className="mt-6 flex min-h-56 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition hover:border-[#0b2b88] hover:bg-blue-50">
+                    <label
+                      className={`mt-6 flex min-h-56 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition hover:border-[#0b2b88] hover:bg-blue-50 ${
+                        alcanzoMaximoImagenes ? 'pointer-events-none opacity-50' : ''
+                      }`}
+                    >
                       <UploadCloud className="text-[#0b2b88]" size={42} strokeWidth={2.5} />
                       <span className="mt-4 text-xl font-black text-slate-950">
                         Subir imagenes
                       </span>
                       <span className="mt-2 text-sm text-slate-500">
-                        PNG, JPG o WEBP. Maximo 5MB.
+                        PNG, JPG o WEBP. Maximo 5MB cada una. Entre 1 y{' '}
+                        {MAXIMO_IMAGENES_PRODUCTO} imagenes.
                       </span>
                       <input
                         multiple
                         accept="image/png,image/jpeg,image/webp"
                         className="hidden"
+                        disabled={alcanzoMaximoImagenes}
                         type="file"
                         onChange={cargarImagenes}
                       />
                     </label>
 
+                    <div className="mt-4 flex items-center justify-between gap-3 text-sm font-bold">
+                      <span className="text-slate-500">
+                        {imagenes.length}/{MAXIMO_IMAGENES_PRODUCTO} imagenes cargadas
+                      </span>
+                      {mostrarErrores && errorImagenes && (
+                        <span className="text-right text-red-700">{errorImagenes}</span>
+                      )}
+                    </div>
+
                     <div className="mt-5 grid grid-cols-2 gap-3">
                       {imagenes.map((imagen) => (
                         <div
-                          className="relative overflow-hidden rounded-md border border-slate-200"
+                          className="relative overflow-hidden rounded-md border border-slate-200 bg-slate-100"
                           key={imagen.id}
                         >
                           <img
                             alt={imagen.nombre}
-                            className="h-28 w-full object-cover"
+                            className="h-28 w-full object-contain p-1"
                             src={imagen.url}
                           />
                           <button
@@ -422,12 +464,17 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
                         </div>
                       ))}
 
-                      <label className="flex h-28 cursor-pointer items-center justify-center rounded-md border border-dashed border-slate-300 bg-slate-100 text-slate-500">
+                      <label
+                        className={`flex h-28 cursor-pointer items-center justify-center rounded-md border border-dashed border-slate-300 bg-slate-100 text-slate-500 ${
+                          alcanzoMaximoImagenes ? 'pointer-events-none opacity-50' : ''
+                        }`}
+                      >
                         <ImagePlus size={28} />
                         <input
                           multiple
                           accept="image/png,image/jpeg,image/webp"
                           className="hidden"
+                          disabled={alcanzoMaximoImagenes}
                           type="file"
                           onChange={cargarImagenes}
                         />
