@@ -26,10 +26,8 @@ const PanelVendedor = ({
   productosBaseActuales = [],
   ventas = [],
   usuario,
-  onAgregarImagenesProducto,
   onCerrarSesion,
   onActualizarProducto,
-  onEliminarImagenProducto,
   onEliminarProducto,
 }) => {
   const productos = productosBaseActuales.map((producto) => ({
@@ -74,7 +72,7 @@ const PanelVendedor = ({
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950">
-      <BarraSuperior esVendedor />
+      <BarraSuperior />
 
       <div className="flex min-h-[calc(100vh-4rem)]">
         <MenuLateral usuario={usuario} onCerrarSesion={onCerrarSesion} />
@@ -117,9 +115,7 @@ const PanelVendedor = ({
                 cargando={cargandoProductos}
                 error={errorProductos}
                 productos={productos}
-                onAgregarImagenesProducto={onAgregarImagenesProducto}
                 onActualizarProducto={onActualizarProducto}
-                onEliminarImagenProducto={onEliminarImagenProducto}
                 onEliminarProducto={onEliminarProducto}
               />
             </div>

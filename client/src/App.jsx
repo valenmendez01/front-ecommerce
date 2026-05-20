@@ -6,7 +6,6 @@ import {
   actualizarProducto as actualizarProductoBackend,
   crearProducto,
   desactivarProducto,
-  eliminarImagenProducto as eliminarImagenProductoBackend,
   normalizarProductoVendedor,
   obtenerProductoPorId,
   obtenerProductosMios,
@@ -217,29 +216,6 @@ function App() {
     return productoGuardado
   }
 
-  const refrescarProducto = async (idProducto) => {
-    const productoActualizado = await obtenerProductoPorId(idProducto)
-    const productoNormalizado = normalizarProductoVendedor(productoActualizado)
-
-    setProductos((productosActuales) =>
-      productosActuales.map((producto) =>
-        producto.idProducto === productoNormalizado.idProducto ? productoNormalizado : producto,
-      ),
-    )
-
-    return productoNormalizado
-  }
-
-  const agregarImagenesProducto = async (idProducto, archivos) => {
-    await subirImagenesProducto(idProducto, archivos)
-    return refrescarProducto(idProducto)
-  }
-
-  const eliminarImagenProducto = async (idProducto, idImagen) => {
-    await eliminarImagenProductoBackend(idProducto, idImagen)
-    return refrescarProducto(idProducto)
-  }
-
   const eliminarProducto = async (idProducto) => {
     await desactivarProducto(idProducto)
 
@@ -314,10 +290,8 @@ function App() {
               productosBaseActuales={productos}
               ventas={ventas}
               usuario={usuario}
-              onAgregarImagenesProducto={agregarImagenesProducto}
               onActualizarProducto={actualizarProducto}
               onCerrarSesion={cerrarSesion}
-              onEliminarImagenProducto={eliminarImagenProducto}
               onEliminarProducto={eliminarProducto}
             />,
             { requiereVendedor: true },
