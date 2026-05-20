@@ -1,3 +1,5 @@
+import { formatearPesos } from "../../lib/formatters";
+
 export default function PanelPedido({ articulos }) {
   return (
     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
@@ -30,7 +32,7 @@ export default function PanelPedido({ articulos }) {
             </div>
 
             <p className="text-sm font-bold text-gray-900 w-16 text-right">
-              ${(articulo.precio * articulo.cantidad).toFixed(2)}
+              {formatearPesos(articulo.precio * articulo.cantidad)}
             </p>
           </div>
         ))}

@@ -1,56 +1,96 @@
-import { useState } from "react";
+// CarritoView.jsx
+
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShoppingBag, ArrowRight } from "lucide-react";
+
+import Navigation from "../components/Navigation";
 import ArticuloCarrito from "../components/carrito/itemCarrito";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
 import ProductosRecomendados from "../components/carrito/itemsRecomendados";
+
 import copaMundo from "../assets/copa-mundo.png";
-import {
-  obtenerArticulosCarrito,
-  reemplazarArticulosCarrito,
-} from "../lib/carritoStorage";
+import { formatearPesos } from "../lib/formatters";
 
 const PROGRESO_COLECCION = 85;
 
 export default function CarritoView() {
-  const [articulos, setArticulos] = useState(() => obtenerArticulosCarrito());
+  const [articulos, setArticulos] = useState([]);
+  const [carritoCargado, setCarritoCargado] = useState(false);
   const navigate = useNavigate();
 
+  // Cargar carrito desde localStorage
+  useEffect(() => {
+    const carritoGuardado = JSON.parse(
+      localStorage.getItem("carrito") || "[]"
+    );
+
+    setArticulos(carritoGuardado);
+    setCarritoCargado(true);
+  }, []);
+
+  // Guardar carrito automáticamente
+  useEffect(() => {
+    if (!carritoCargado) return;
+
+    localStorage.setItem("carrito", JSON.stringify(articulos));
+  }, [articulos, carritoCargado]);
+
   const actualizarCantidad = (id, nuevaCantidad) => {
-    if (nuevaCantidad < 1) return eliminarArticulo(id);
-    setArticulos((prev) => {
-      const actualizados = prev.map((a) => (a.id === id ? { ...a, cantidad: nuevaCantidad } : a));
-      reemplazarArticulosCarrito(actualizados);
-      return actualizados;
-    });
+    if (nuevaCantidad < 1) {
+      eliminarArticulo(id);
+      return;
+    }
+
+    setArticulos((prev) =>
+      prev.map((a) =>
+        a.id === id
+          ? { ...a, cantidad: nuevaCantidad }
+          : a
+      )
+    );
   };
 
   const eliminarArticulo = (id) => {
-    setArticulos((prev) => {
-      const actualizados = prev.filter((a) => a.id !== id);
-      reemplazarArticulosCarrito(actualizados);
-      return actualizados;
-    });
+    setArticulos((prev) =>
+      prev.filter((a) => a.id !== id)
+    );
   };
 
   const agregarArticulo = (articulo) => {
     setArticulos((prev) => {
       const existe = prev.find((a) => a.id === articulo.id);
-      const actualizados = existe
-        ? prev.map((a) => (a.id === articulo.id ? { ...a, cantidad: a.cantidad + 1 } : a))
-        : [...prev, { ...articulo, idProducto: articulo.id, cantidad: 1, subtitulo: "RECOMENDADO" }];
 
-      reemplazarArticulosCarrito(actualizados);
-      return actualizados;
+      if (existe) {
+        return prev.map((a) =>
+          a.id === articulo.id
+            ? {
+                ...a,
+                cantidad: a.cantidad + 1,
+              }
+            : a
+        );
+      }
+
+      return [
+        ...prev,
+        {
+          ...articulo,
+          cantidad: 1,
+          subtitulo: "RECOMENDADO",
+        },
+      ];
     });
   };
 
   const irAlPago = () => {
-    localStorage.setItem("articulosCompra", JSON.stringify(articulos));
     navigate("/compra");
   };
 
-  const subtotal = articulos.reduce((acc, a) => acc + a.precio * a.cantidad, 0);
+  const subtotal = articulos.reduce(
+    (acc, a) => acc + a.precio * a.cantidad,
+    0
+  );
 
   return (
     <div className="min-h-screen bg-gray-50 relative overflow-hidden">
@@ -65,9 +105,20 @@ export default function CarritoView() {
           <span className="font-black text-blue-700 text-xl italic tracking-tight">
             FIGULLECT
           </span>
+
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
-            {["Stickers", "Albums", "Rare Items", "Packs", "Marketplace"].map((item) => (
-              <a key={item} href="#" className="hover:text-blue-600 transition-colors">
+            {[
+              "Stickers",
+              "Albums",
+              "Rare Items",
+              "Packs",
+              "Marketplace",
+            ].map((item) => (
+              <a
+                key={item}
+                href="#"
+                className="hover:text-blue-600 transition-colors"
+              >
                 {item}
               </a>
             ))}
@@ -81,14 +132,24 @@ export default function CarritoView() {
             <ShoppingBag size={28} className="text-blue-600" />
             Tu Bolsa de Colección
           </h1>
+
           <div className="h-1 w-16 bg-green-400 rounded-full mt-2" />
         </div>
 
         {articulos.length === 0 ? (
           <div className="text-center py-24 text-gray-400">
-            <ShoppingBag size={48} className="mx-auto mb-4 opacity-30" />
-            <p className="text-lg font-semibold">Tu bolsa está vacía</p>
-            <p className="text-sm mt-1">Agregá productos para continuar</p>
+            <ShoppingBag
+              size={48}
+              className="mx-auto mb-4 opacity-30"
+            />
+
+            <p className="text-lg font-semibold">
+              Tu bolsa está vacía
+            </p>
+
+            <p className="text-sm mt-1">
+              Agregá productos para continuar
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -98,14 +159,18 @@ export default function CarritoView() {
                   <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
                     Progreso colección: Edición Gold
                   </p>
+
                   <span className="text-sm font-black text-green-500">
                     {PROGRESO_COLECCION}% COMPLETO
                   </span>
                 </div>
+
                 <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                   <div
                     className="h-full bg-green-400 rounded-full transition-all"
-                    style={{ width: `${PROGRESO_COLECCION}%` }}
+                    style={{
+                      width: `${PROGRESO_COLECCION}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -119,12 +184,17 @@ export default function CarritoView() {
                 />
               ))}
 
-              <ProductosRecomendados alAgregar={agregarArticulo} />
+              <ProductosRecomendados
+                alAgregar={agregarArticulo}
+              />
             </div>
 
             <div className="lg:col-span-1">
               <div className="sticky top-24">
-                <ResumenCarrito subtotal={subtotal} alProcederAlPago={() => irAlPago(articulos)} />
+                <ResumenCarrito
+                  subtotal={subtotal}
+                  alProcederAlPago={irAlPago}
+                />
               </div>
             </div>
           </div>
@@ -134,10 +204,11 @@ export default function CarritoView() {
       {articulos.length > 0 && (
         <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-100 shadow-lg">
           <button
-            onClick={() => irAlPago(articulos)}
+            onClick={irAlPago}
             className="w-full py-3 bg-yellow-400 text-gray-900 font-black rounded-xl flex items-center justify-center gap-2 text-sm uppercase tracking-wider"
           >
-            Ir al Pago · ${subtotal.toFixed(2)}
+            Ir al Pago - {formatearPesos(subtotal)}
+
             <ArrowRight size={16} />
           </button>
         </div>
@@ -145,13 +216,30 @@ export default function CarritoView() {
 
       <footer className="bg-gray-900 text-gray-400 text-xs py-8 mt-16">
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <span className="font-black text-white italic">FIGULLECT</span>
+          <span className="font-black text-white italic">
+            FIGULLECT
+          </span>
+
           <div className="flex gap-6">
-            {["Política de Privacidad", "Términos", "Envíos", "Contacto"].map((l) => (
-              <a key={l} href="#" className="hover:text-white transition-colors">{l}</a>
+            {[
+              "Política de Privacidad",
+              "Términos",
+              "Envíos",
+              "Contacto",
+            ].map((l) => (
+              <a
+                key={l}
+                href="#"
+                className="hover:text-white transition-colors"
+              >
+                {l}
+              </a>
             ))}
           </div>
-          <span>© 2026 FIFA WORLD CUP COLLECTIBLES</span>
+
+          <span>
+            © 2026 FIFA WORLD CUP COLLECTIBLES
+          </span>
         </div>
       </footer>
     </div>

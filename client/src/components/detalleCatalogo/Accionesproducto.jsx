@@ -3,21 +3,56 @@ import { Button } from "@heroui/react";
 import { ShoppingCart, Minus, Plus } from "lucide-react";
 import { agregarProductoAlCarrito } from "../../lib/carritoStorage";
 
-export const AccionesProducto = ({ producto, stock }) => {
+export const AccionesProducto = ({ producto }) => {
   const [cantidad, setCantidad] = useState(1);
-  const [mensaje, setMensaje] = useState("");
+  const stock = producto?.stock ?? 0;
 
   function incrementar() {
-    setCantidad((prev) => prev + 1);
+    setCantidad((prev) => Math.min(prev + 1, stock));
   }
 
   function decrementar() {
     setCantidad((prev) => (prev > 1 ? prev - 1 : 1));
   }
 
+  function obtenerImagenPrincipal() {
+    const imagen = producto?.imagenes?.[0];
+
+    if (!imagen?.contenidoBase64) return null;
+
+    return `data:image/jpeg;base64,${imagen.contenidoBase64}`;
+  }
+
   function agregarAlCarrito() {
-    agregarProductoAlCarrito(producto, cantidad);
-    setMensaje("Producto agregado al carrito");
+    const carritoActual = JSON.parse(localStorage.getItem("carrito") || "[]");
+    const id = producto.idProducto ?? producto.id;
+    const precioFinal = producto.descuento > 0
+      ? producto.precio * (1 - producto.descuento / 100)
+      : producto.precio;
+
+    const articulo = {
+      id,
+      nombre: producto.nombre,
+      precio: precioFinal,
+      precioOriginal: producto.descuento > 0 ? producto.precio : undefined,
+      imagen: obtenerImagenPrincipal(),
+      subtitulo: producto.categoria,
+      cantidad,
+    };
+
+    const existe = carritoActual.find((item) => item.id === id);
+    const carritoActualizado = existe
+      ? carritoActual.map((item) =>
+          item.id === id
+            ? {
+                ...item,
+                cantidad: Math.min(item.cantidad + cantidad, stock),
+              }
+            : item
+        )
+      : [...carritoActual, articulo];
+
+    localStorage.setItem("carrito", JSON.stringify(carritoActualizado));
   }
 
   return (
@@ -31,7 +66,11 @@ export const AccionesProducto = ({ producto, stock }) => {
             <Minus size={16} />
           </button>
           <span className="w-6 text-center font-medium">{cantidad}</span>
-          <button onClick={incrementar} className="text-gray-500 hover:text-gray-900 transition-colors">
+          <button
+            onClick={incrementar}
+            disabled={cantidad >= stock}
+            className="text-gray-500 hover:text-gray-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+          >
             <Plus size={16} />
           </button>
         </div>

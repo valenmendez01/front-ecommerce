@@ -37,7 +37,7 @@ export const DetalleCatalogo = () => {
           <div className="flex flex-col gap-6 px-8">
             <InfoProducto producto={producto} />
             <Divider />
-            <AccionesProducto producto={producto} stock={producto.stock} />
+            <AccionesProducto producto={producto} />
           </div>
 
         </div>
