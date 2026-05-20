@@ -1,10 +1,9 @@
 // CarritoView.jsx
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ShoppingBag, ArrowRight } from "lucide-react";
+import { ArrowRight, ShoppingBag } from "lucide-react";
 
-import Navigation from "../components/Navigation";
 import ArticuloCarrito from "../components/carrito/itemCarrito";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
 import ProductosRecomendados from "../components/carrito/itemsRecomendados";
@@ -19,22 +18,13 @@ import { formatearPesos } from "../lib/formatters";
 const PROGRESO_COLECCION = 85;
 
 export default function CarritoView() {
-  const [articulos, setArticulos] = useState([]);
-  const [carritoCargado, setCarritoCargado] = useState(false);
+  const [articulos, setArticulos] = useState(() => obtenerArticulosCarrito());
   const navigate = useNavigate();
-
-  // Cargar carrito desde localStorage
-  useEffect(() => {
-    setArticulos(obtenerArticulosCarrito());
-    setCarritoCargado(true);
-  }, []);
 
   // Guardar carrito automáticamente
   useEffect(() => {
-    if (!carritoCargado) return;
-
     reemplazarArticulosCarrito(articulos);
-  }, [articulos, carritoCargado]);
+  }, [articulos]);
 
   const actualizarCantidad = (id, nuevaCantidad) => {
     if (nuevaCantidad < 1) {

@@ -108,6 +108,41 @@ export const AuthProvider = ({ children }) => {
     }
   }, [cargarUsuarioActual])
 
+  const registrarComprador = useCallback(async ({ nombre, apellido, email, contrasena }) => {
+    setCargandoUsuario(true)
+
+    try {
+      const respuesta = await apiRequest('/api/v1/auth/register', {
+        auth: false,
+        method: 'POST',
+        body: { nombre, apellido, email, contrasena },
+      })
+
+      setStoredToken(respuesta.access_token)
+      setToken(respuesta.access_token)
+
+      const usuarioNormalizado = respuesta.usuario
+        ? normalizarUsuario(respuesta.usuario)
+        : await cargarUsuarioActual()
+
+      if (!usuarioNormalizado) {
+        throw new Error('No se pudo obtener el usuario registrado.')
+      }
+
+      setUsuario(usuarioNormalizado)
+      setErrorSesion('')
+      return usuarioNormalizado
+    } catch (error) {
+      clearStoredToken()
+      setToken(null)
+      setUsuario(null)
+      setErrorSesion(error.message)
+      throw error
+    } finally {
+      setCargandoUsuario(false)
+    }
+  }, [cargarUsuarioActual])
+
   useEffect(() => {
     const tokenActual = getStoredToken()
 
@@ -151,10 +186,20 @@ export const AuthProvider = ({ children }) => {
       errorSesion,
       iniciarSesion,
       recargarUsuario: cargarUsuarioActual,
+      registrarComprador,
       token,
       usuario,
     }),
-    [cargandoUsuario, cerrarSesion, errorSesion, iniciarSesion, cargarUsuarioActual, token, usuario],
+    [
+      cargandoUsuario,
+      cerrarSesion,
+      errorSesion,
+      iniciarSesion,
+      cargarUsuarioActual,
+      registrarComprador,
+      token,
+      usuario,
+    ],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
