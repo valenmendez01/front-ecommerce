@@ -10,6 +10,10 @@ import ResumenCarrito from "../components/carrito/resumenCarrito";
 import ProductosRecomendados from "../components/carrito/itemsRecomendados";
 
 import copaMundo from "../assets/copa-mundo.png";
+import {
+  obtenerArticulosCarrito,
+  reemplazarArticulosCarrito,
+} from "../lib/carritoStorage";
 import { formatearPesos } from "../lib/formatters";
 
 const PROGRESO_COLECCION = 85;
@@ -21,11 +25,7 @@ export default function CarritoView() {
 
   // Cargar carrito desde localStorage
   useEffect(() => {
-    const carritoGuardado = JSON.parse(
-      localStorage.getItem("carrito") || "[]"
-    );
-
-    setArticulos(carritoGuardado);
+    setArticulos(obtenerArticulosCarrito());
     setCarritoCargado(true);
   }, []);
 
@@ -33,7 +33,7 @@ export default function CarritoView() {
   useEffect(() => {
     if (!carritoCargado) return;
 
-    localStorage.setItem("carrito", JSON.stringify(articulos));
+    reemplazarArticulosCarrito(articulos);
   }, [articulos, carritoCargado]);
 
   const actualizarCantidad = (id, nuevaCantidad) => {

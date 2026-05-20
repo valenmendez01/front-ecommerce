@@ -12,8 +12,9 @@ import AccordionPago from "../components/compra/pago";
 import ResumenPago from "../components/compra/resumenPago";
 
 import copaMundo from "../assets/copa-mundo.png";
+import { useAuth } from "../context/useAuth";
 import { apiRequest } from "../lib/api";
-import { vaciarCarrito } from "../lib/carritoStorage";
+import { obtenerArticulosCarrito, vaciarCarrito } from "../lib/carritoStorage";
 
 const PASOS = [
   "Carrito",
@@ -38,50 +39,42 @@ export default function CompraView() {
     useState(null);
 
   const navigate = useNavigate();
+  const { usuario } = useAuth();
 
-  const articulosIniciales = JSON.parse(
-    localStorage.getItem("carrito") || "[]"
-  );
+  const articulosIniciales = obtenerArticulosCarrito();
+  const esComprador = usuario?.rol === "COMPRADOR";
 
   const puedeConfirmar =
-    envioGuardado && pagoGuardado && articulosIniciales.length > 0;
+    envioGuardado && pagoGuardado && articulosIniciales.length > 0 && esComprador;
 
   const confirmarPedido = () => {
-    const token = localStorage.getItem("token");
-    const idUsuario = Number(localStorage.getItem("idUsuario") || 1);
+    if (!usuario) {
+      setErrorConfirmar("Tenés que iniciar sesión para confirmar el pedido.");
+      return;
+    }
+
+    if (!esComprador) {
+      setErrorConfirmar("Solo una cuenta compradora puede confirmar pedidos.");
+      return;
+    }
 
     setCargandoConfirmar(true);
 
     setErrorConfirmar(null);
 
-    fetch("/pedidos", {
+    apiRequest("/pedidos", {
       method: "POST",
-
-      headers: {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      },
-
-      body: JSON.stringify({
-        idUsuario,
+      body: {
+        idUsuario: usuario.idUsuario,
         items: articulosIniciales.map((a) => ({
           idProducto: a.id,
           cantidad: a.cantidad,
         })),
-      }),
+      },
     })
-      .then(async (res) => {
-        const json = await res.json().catch(() => null);
-
-        if (!res.ok) {
-          throw new Error(json?.message || json?.mensaje || `Error ${res.status}`);
-        }
-
-        return json;
-      })
       .then((json) => {
         if (json) {
-          localStorage.removeItem("carrito");
+          vaciarCarrito();
 
           setConfirmado(true);
         }
@@ -204,6 +197,12 @@ export default function CompraView() {
         {errorConfirmar && (
           <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600 font-semibold">
             {errorConfirmar}
+          </div>
+        )}
+
+        {usuario && !esComprador && (
+          <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-700 font-semibold">
+            Estás logueado como vendedor. Para confirmar un pedido necesitás iniciar sesión con una cuenta compradora.
           </div>
         )}
 
