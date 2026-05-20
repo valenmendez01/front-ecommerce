@@ -1,5 +1,6 @@
 import { ShieldCheck, BadgeCheck, Tag } from "lucide-react";
 import { useState } from "react";
+import { Button, Input } from "@heroui/react";
 import { formatearPesos } from "../../lib/formatters";
 
 const DESCUENTO_PROMO = 1000;
@@ -52,12 +53,12 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
           </span>
         </div>
 
-        <button
-          onClick={alProcederAlPago}
-          className="w-full bg-yellow-400 text-gray-900 font-black text-sm uppercase tracking-wider rounded-xl py-3 hover:bg-yellow-300 transition-colors"
+        <Button
+          onPress={alProcederAlPago}
+          className="w-full bg-yellow-400 text-gray-900 font-black text-sm uppercase tracking-wider rounded-xl"
         >
           Proceder al Pago
-        </button>
+        </Button>
 
         <div className="flex flex-col gap-2 mt-4">
           <div className="flex items-center gap-2 text-xs text-gray-400">
@@ -76,18 +77,21 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
           <Tag size={13} /> Codigo Promocional
         </p>
         <div className="flex gap-2">
-          <input
+          <Input
             value={codigoPromo}
-            onChange={(e) => setCodigoPromo(e.target.value)}
+            onValueChange={setCodigoPromo}
             placeholder="Ej. CHAMPIONS2026"
-            className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm uppercase outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-100 transition-colors"
+            variant="bordered"
+            radius="sm"
+            classNames={{ input: "uppercase" }}
+            className="flex-1"
           />
-          <button
-            onClick={aplicarPromo}
-            className="bg-gray-900 text-white font-bold rounded-lg px-4 text-sm shrink-0 hover:bg-gray-800 transition-colors"
+          <Button
+            onPress={aplicarPromo}
+            className="bg-gray-900 text-white font-bold rounded-lg px-4 text-sm shrink-0"
           >
             Aplicar
-          </button>
+          </Button>
         </div>
         {errorPromo && <p className="text-xs text-red-500 mt-1">{errorPromo}</p>}
         {promoAplicada && <p className="text-xs text-green-600 mt-1">Codigo aplicado</p>}

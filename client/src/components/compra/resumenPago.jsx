@@ -1,4 +1,5 @@
 import { ShieldCheck, Rocket } from "lucide-react";
+import { Button } from "@heroui/react";
 import { formatearPesos } from "../../lib/formatters";
 
 const UMBRAL_PACK_GRATIS = 15000;
@@ -63,18 +64,18 @@ export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, ca
           <span className="text-yellow-400 font-black text-xl">{formatearPesos(total)}</span>
         </div>
 
-        <button
-          onClick={alConfirmar}
-          disabled={!puedeConfirmar || cargando}
-          className={`w-full py-3 rounded-xl font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2 transition-all ${
+        <Button
+          onPress={alConfirmar}
+          isDisabled={!puedeConfirmar || cargando}
+          startContent={!cargando && <Rocket size={16} />}
+          className={`w-full rounded-xl font-black text-sm uppercase tracking-wider ${
             puedeConfirmar && !cargando
               ? "bg-green-400 text-gray-900 hover:bg-green-300"
-              : "bg-gray-700 text-gray-500 cursor-not-allowed"
+              : "bg-gray-700 text-gray-500"
           }`}
         >
-          <Rocket size={16} />
           {cargando ? "Confirmando..." : puedeConfirmar ? "Confirmar Pedido" : "Completa los datos"}
-        </button>
+        </Button>
 
         {!puedeConfirmar && (
           <p className="text-xs text-gray-500 text-center mt-2">
