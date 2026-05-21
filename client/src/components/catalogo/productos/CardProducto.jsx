@@ -27,13 +27,17 @@ export const CardProducto = ({ producto }) => {
           height={320}
         />
       </CardBody>
-      <CardFooter className="text-small justify-between">
-        <b>{producto.nombre}</b>
-        <p className="text-default-500">
+      <CardFooter className="text-small justify-between items-start gap-2">
+        <b className="wrap-break-word min-w-0">{producto.nombre}</b>
+        <p className="text-default-500 shrink-0">
           {new Intl.NumberFormat("es-AR", {
             style: "currency",
             currency: "ARS",
-          }).format(producto.precio)}
+          }).format(
+            producto.descuento > 0
+              ? producto.precio * (1 - producto.descuento / 100)
+              : producto.precio
+          )}
         </p>
       </CardFooter>
     </Card>
