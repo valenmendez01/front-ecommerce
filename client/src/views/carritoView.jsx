@@ -2,12 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
 import { ArrowRight, ShoppingBag } from "lucide-react";
-=======
-import { ShoppingBag, ArrowRight } from "lucide-react";
 import { Button } from "@heroui/react";
->>>>>>> c203222112ea8abebb5a223b4b2c12b982e06a57
 
 import ArticuloCarrito from "../components/carrito/itemCarrito";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
