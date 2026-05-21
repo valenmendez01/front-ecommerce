@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import BarraSuperior from '../components/layout/BarraSuperior'
 import Footer from '../components/layout/Footer'
 import MenuLateral from '../components/layout/MenuLateral'
+import { obtenerErrorCantidadImagenesProducto } from '../data/reglasImagenesProducto'
 import { apiRequest } from '../lib/api'
 
 const estadoInicial = {
@@ -120,7 +121,6 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
   const erroresProducto = obtenerErroresProducto(producto, categoriasProducto)
   const errorImagenes = obtenerErrorCantidadImagenesProducto(imagenes.length)
   const puedePublicar = Object.values(erroresProducto).every((error) => !error) && !errorImagenes
-  const alcanzoMaximoImagenes = imagenes.length >= MAXIMO_IMAGENES_PRODUCTO
   const mostrarError = (campo) => mostrarErrores && erroresProducto[campo]
 
   const cambiarCampo = (campo, valor) => {
