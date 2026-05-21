@@ -1,12 +1,9 @@
 import { CircleUserRound, ShoppingCart } from 'lucide-react'
 import { Link, NavLink } from 'react-router-dom'
 
-const enlaces = [
-  { texto: 'Catálogo', ruta: '/productos', principal: true },
-  { texto: 'Figuritas', ruta: '/productos' },
-  { texto: 'Álbumes', ruta: '/productos' },
-  { texto: 'Combos', ruta: '/productos' },
-  { texto: 'Marketplace', ruta: '/productos' },
+const enlacesCliente = [
+  { texto: 'Home', ruta: '/' },
+  { texto: 'Catálogo', ruta: '/productos' },
 ]
 
 const claseEnlace = ({ isActive }) =>
@@ -14,7 +11,10 @@ const claseEnlace = ({ isActive }) =>
     isActive ? 'border-[#0b2b88] text-[#0b2b88]' : 'border-transparent text-slate-500'
   }`
 
-const BarraSuperior = () => {
+const BarraSuperior = ({ usuario }) => {
+  const esVendedor = usuario?.rol === 'VENDEDOR'
+  const rutaCuenta = esVendedor ? '/panel-vendedor' : '/mi-cuenta'
+
   return (
     <header className="flex h-16 items-center justify-between border-b-2 border-[#0b2b88] bg-white px-8">
       <Link className="text-2xl font-black italic text-[#0b2b88]" to="/">
@@ -22,12 +22,10 @@ const BarraSuperior = () => {
       </Link>
 
       <nav className="hidden items-center gap-10 text-base font-semibold text-slate-500 md:flex">
-        {enlaces.map((enlace) => (
+        {!esVendedor && enlacesCliente.map((enlace) => (
           <NavLink
-            className={({ isActive }) =>
-              claseEnlace({ isActive: enlace.principal && isActive })
-            }
-            end={enlace.ruta === '/productos'}
+            className={claseEnlace}
+            end={enlace.ruta === '/'}
             key={enlace.texto}
             to={enlace.ruta}
           >
@@ -37,13 +35,15 @@ const BarraSuperior = () => {
       </nav>
 
       <div className="flex items-center gap-4 text-[#0b2b88]">
-        <Link
-          aria-label="Carrito"
-          className="flex h-10 w-10 items-center justify-center rounded-md transition hover:bg-blue-50"
-          to="/carrito"
-        >
-          <ShoppingCart size={26} strokeWidth={2.5} />
-        </Link>
+        {!esVendedor && (
+          <Link
+            aria-label="Carrito"
+            className="flex h-10 w-10 items-center justify-center rounded-md transition hover:bg-blue-50"
+            to="/carrito"
+          >
+            <ShoppingCart size={26} strokeWidth={2.5} />
+          </Link>
+        )}
         <NavLink
           aria-label="Mi cuenta"
           className={({ isActive }) =>
@@ -51,7 +51,7 @@ const BarraSuperior = () => {
               isActive ? 'border-[#0b2b88]' : 'border-transparent'
             }`
           }
-          to="/mi-cuenta"
+          to={rutaCuenta}
         >
           <CircleUserRound size={28} strokeWidth={2.5} />
         </NavLink>

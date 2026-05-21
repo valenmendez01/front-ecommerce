@@ -18,7 +18,7 @@ const FormularioCrearProducto = ({
   publicando,
   tipoMensaje,
 }) => (
-  <div className="mt-10 grid gap-8 xl:grid-cols-[1fr_380px]">
+  <div className="mt-10 grid gap-8 xl:grid-cols-[minmax(0,1fr)_440px]">
     <div className="space-y-8">
       <SeccionInformacionProducto categorias={categorias} errores={errores} mostrarErrores={mostrarErrores} onCambiar={onCambiar} producto={producto} />
       <SeccionPrecioProducto errores={errores} mostrarErrores={mostrarErrores} onCambiar={onCambiar} precioFinal={precioFinal} producto={producto} />

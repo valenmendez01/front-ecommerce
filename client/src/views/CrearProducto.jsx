@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import PaginaGestion from '../components/layout/PaginaGestion'
 import EncabezadoCrearProducto from '../components/vendedor/crearProducto/EncabezadoCrearProducto'
 import FormularioCrearProducto from '../components/vendedor/crearProducto/FormularioCrearProducto'
+import { guardarProducto } from '../components/vendedor/crearProducto/guardarProducto'
 import { crearImagenesLocales, liberarImagenesLocales, quitarImagenLocal } from '../data/imagenesProducto'
-import { obtenerErrorCantidadImagenesProducto } from '../data/reglasImagenesProducto'
+import { MAXIMO_IMAGENES_PRODUCTO, obtenerErrorCantidadImagenesProducto } from '../data/reglasImagenesProducto'
 import { calcularPrecioFinal, estadoInicialProducto, normalizarCategorias, obtenerErroresProducto } from '../data/reglasProducto'
-const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProducto }) => {
+const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
   const [producto, setProducto] = useState(estadoInicialProducto)
   const [imagenes, setImagenes] = useState([])
   const [mensaje, setMensaje] = useState('')
@@ -13,10 +14,8 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
   const [mostrarErrores, setMostrarErrores] = useState(false)
   const [publicando, setPublicando] = useState(false)
   const [categorias, setCategorias] = useState([])
-
   useEffect(() => {
     let sigueActivo = true
-
     fetch('/categorias')
       .then((respuesta) => respuesta.json())
       .then((json) => {
@@ -30,29 +29,30 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
         )
       })
       .catch(() => sigueActivo && setCategorias([]))
-
     return () => {
       sigueActivo = false
     }
   }, [])
-
   const errores = obtenerErroresProducto(producto, categorias)
   const errorImagenes = obtenerErrorCantidadImagenesProducto(imagenes.length)
   const puedePublicar = Object.values(errores).every((error) => !error) && !errorImagenes
-
   const cambiarCampo = (campo, valor) => {
     const esNumero = ['stock', 'precio', 'descuento'].includes(campo) && valor !== ''
     setProducto((actual) => ({ ...actual, [campo]: esNumero ? Number(valor) : valor }))
     setMensaje('')
   }
-
   const cargarImagenes = (event) => {
     const archivos = Array.from(event.target.files || [])
+    if (imagenes.length + archivos.length > MAXIMO_IMAGENES_PRODUCTO) {
+      setTipoMensaje('error')
+      setMensaje(`Podes cargar como maximo ${MAXIMO_IMAGENES_PRODUCTO} imagenes por producto.`)
+      event.target.value = ''
+      return
+    }
     setImagenes((actuales) => [...actuales, ...crearImagenesLocales(archivos, actuales.length)])
     setMensaje('')
     event.target.value = ''
   }
-
   const publicarProducto = async () => {
     setMostrarErrores(true)
     if (!puedePublicar) {
@@ -64,7 +64,7 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
     setMensaje('')
 
     try {
-      await onPublicarProducto({ ...producto, imagenes: imagenes.map((imagen) => imagen.archivo) })
+      await guardarProducto(producto, imagenes, token)
       liberarImagenesLocales(imagenes)
       setProducto(estadoInicialProducto)
       setImagenes([])
@@ -78,10 +78,9 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
       setPublicando(false)
     }
   }
-
   return (
     <PaginaGestion usuario={usuario} onCerrarSesion={onCerrarSesion}>
-      <EncabezadoCrearProducto onVolverPanel={onVolverPanel} />
+      <EncabezadoCrearProducto />
       <FormularioCrearProducto
         categorias={categorias}
         errores={errores}
