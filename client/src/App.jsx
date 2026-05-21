@@ -22,6 +22,7 @@ import PanelVendedor from "./views/PanelVendedor"
 import VentasVendedor from "./views/VentasVendedor"
 import CarritoView from "./views/carritoView"
 import CompraView from "./views/compraView"
+import { Home } from "./views/Home"
 
 const rutasPantallaCompleta = [
   '/mi-cuenta',
@@ -328,19 +329,22 @@ function App() {
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-400 flex-col">
+    <>
       <Navigation />
 
-      <main className="w-full px-6">
-        <Routes>
-          <Route path="/" element={<h1>Vista Home</h1>} />
-          <Route path="/productos" element={<Catalogo />} />
-          <Route path="/productos/:id" element={<DetalleCatalogo />} />
-          <Route path="/catalogo" element={<Navigate replace to="/productos" />} />
-          <Route path="*" element={<Navigate replace to="/" />} />
-        </Routes>
-      </main>
-    </div>
+      <div className="mx-auto flex min-h-screen max-w-400 flex-col">
+        
+        <main className="w-full px-6 pt-16">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/productos" element={<Catalogo />} />
+            <Route path="/productos/:id" element={<DetalleCatalogo />} />
+            <Route path="/catalogo" element={<Navigate replace to="/productos" />} />
+            <Route path="*" element={<Navigate replace to="/" />} />
+          </Routes>
+        </main>
+      </div>
+    </>
   )
 }
 
