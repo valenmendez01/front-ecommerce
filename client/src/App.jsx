@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import Navigation from "./components/Navigation"
+import { StickyBanner } from "./components/ui/sticky-banner"
 import { useAuth } from "./context/useAuth"
 import { Catalogo } from "./views/Catalogo"
 import CrearProducto from "./views/CrearProducto"
@@ -165,7 +166,14 @@ function App() {
 
   return (
     <>
-      <Navigation />
+      <div className="sticky top-0 z-50 grid" style={{ gridTemplateRows: "auto auto" }}>
+        <StickyBanner className="bg-linear-to-b from-dorado-primary to-dorado-primary/90">
+          <p className="text-white text-sm drop-shadow-md">
+            🎉 20% de descuento. Usá el código <b>PROMO20</b>
+          </p>
+        </StickyBanner>
+        <Navigation />
+      </div>
 
       <div className="mx-auto flex min-h-screen max-w-400 flex-col">
         
