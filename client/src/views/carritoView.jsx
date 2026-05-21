@@ -38,9 +38,13 @@ export default function CarritoView() {
     }
 
     setArticulos((prev) =>
-      prev.map((articulo) =>
-        articulo.id === id ? { ...articulo, cantidad: nuevaCantidad } : articulo,
-      ),
+      prev.map((articulo) => {
+        if (articulo.id !== id) return articulo;
+
+        const stock = Number(articulo.stock ?? nuevaCantidad);
+        const cantidad = Math.min(nuevaCantidad, stock);
+        return { ...articulo, cantidad };
+      }),
     );
   };
 
@@ -50,6 +54,8 @@ export default function CarritoView() {
 
   const agregarArticulo = (articulo) => {
     setArticulos((prev) => {
+      if (Number(articulo.stock ?? 0) <= 0) return prev;
+
       const existe = prev.find((actual) => actual.id === articulo.id);
 
       if (!existe) {
@@ -58,7 +64,7 @@ export default function CarritoView() {
 
       return prev.map((actual) =>
         actual.id === articulo.id
-          ? { ...actual, cantidad: actual.cantidad + 1 }
+          ? { ...actual, cantidad: Math.min(actual.cantidad + 1, Number(actual.stock ?? articulo.stock ?? actual.cantidad + 1)) }
           : actual,
       );
     });
@@ -70,7 +76,7 @@ export default function CarritoView() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden">
       <img src={copaMundo} alt="" className="absolute -right-48 top-16 w-[900px] opacity-5 pointer-events-none select-none" />
       <HeaderCarrito alVolverInicio={() => navigate("/")} />
 

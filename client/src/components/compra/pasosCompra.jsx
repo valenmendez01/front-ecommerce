@@ -7,21 +7,21 @@ export default function PasosCompra() {
         <div key={paso} className="flex items-center gap-2">
           <div
             className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${
-              indice === 2 ? "bg-green-500 text-white" : "bg-gray-900 text-white"
+              indice === 2 ? "bg-yellow-400 text-black" : "bg-emerald-950 text-white"
             }`}
           >
             {indice + 1}
           </div>
 
-          <span className={`text-xs font-semibold ${indice === 2 ? "text-gray-900" : "text-gray-400"}`}>
+          <span className={`text-xs font-semibold ${indice === 2 ? "text-black" : "text-emerald-900/60"}`}>
             {paso}
           </span>
 
-          {indice < PASOS.length - 1 && <div className="w-8 h-px bg-gray-200" />}
+          {indice < PASOS.length - 1 && <div className="w-8 h-px bg-yellow-400/50" />}
         </div>
       ))}
 
-      <p className="ml-2 text-xs text-gray-400">
+      <p className="ml-2 text-xs text-emerald-900/60">
         Paso 3 de 3: Confirmacion segura
       </p>
     </div>

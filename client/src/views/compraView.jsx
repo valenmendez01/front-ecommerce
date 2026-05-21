@@ -66,7 +66,7 @@ export default function CompraView() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden">
       <img src={copaMundo} alt="" className="absolute -right-48 top-16 w-[900px] opacity-5 pointer-events-none select-none z-0" />
       <HeaderCompra alVolverCarrito={() => navigate("/carrito")} />
 

@@ -5,7 +5,7 @@ export default function TituloCompra() {
         Revisar Pedido
       </h1>
 
-      <div className="h-1 w-16 bg-green-400 rounded-full mt-2" />
+      <div className="h-1 w-16 bg-yellow-400 rounded-full mt-2" />
     </div>
   );
 }

@@ -62,8 +62,8 @@ export default function Pago({ alGuardar }) {
       <CabeceraAcordeon
         abierto={abierto}
         guardado={guardado}
-        iconoPendiente={<CreditCard size={18} className="text-blue-600" />}
-        iconoGuardado={<CheckCircle2 size={18} className="text-green-600" />}
+        iconoPendiente={<CreditCard size={18} className="text-emerald-950" />}
+        iconoGuardado={<CheckCircle2 size={18} className="text-emerald-950" />}
         titulo="Metodo de Pago"
         subtitulo="Tarjeta de credito / debito"
         subtituloGuardado={`**** **** **** ${digitosTarjeta.slice(-4)} - Vence ${formulario.vencimiento}`}

@@ -11,7 +11,7 @@ export default function FormularioEnvio({
   alGuardar,
 }) {
   return (
-    <div className="p-4 pt-0 bg-white border-t border-gray-100 flex flex-col gap-3">
+    <div className="p-4 pt-0 bg-white border-t border-yellow-400/30 flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-3 pt-4">
         <Input
           isInvalid={intentoGuardar && !formulario.nombre.trim()}
@@ -80,7 +80,7 @@ export default function FormularioEnvio({
         </Select>
       </div>
 
-      <Button onPress={alGuardar} className="w-full bg-gray-900 text-white text-sm font-bold rounded-lg mt-1">
+      <Button onPress={alGuardar} className="w-full bg-yellow-400 text-black text-sm font-bold rounded-lg mt-1">
         Guardar direccion
       </Button>
     </div>
