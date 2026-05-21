@@ -8,11 +8,11 @@ import {
   UploadCloud,
   X,
 } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import BarraSuperior from '../components/layout/BarraSuperior'
 import Footer from '../components/layout/Footer'
 import MenuLateral from '../components/layout/MenuLateral'
-import { categoriasProducto, valoresCategoriasProducto } from '../data/categoriasProducto'
+import { apiRequest } from '../lib/api'
 
 const estadoInicial = {
   nombre: '',
@@ -31,10 +31,24 @@ const inputClasses =
 
 const errorClasses = 'mt-2 text-sm font-semibold text-red-700'
 
-const obtenerErroresProducto = (producto) => {
+const formatearEtiquetaCategoria = (categoria = '') =>
+  categoria
+    .toString()
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (letra) => letra.toUpperCase())
+
+const normalizarCategorias = (categorias) =>
+  (Array.isArray(categorias) ? categorias : []).map((categoria) => ({
+    valor: categoria,
+    etiqueta: formatearEtiquetaCategoria(categoria),
+  }))
+
+const obtenerErroresProducto = (producto, categoriasProducto) => {
   const precio = Number(producto.precio)
   const stock = Number(producto.stock)
   const descuento = Number(producto.descuento)
+  const valoresCategoriasProducto = categoriasProducto.map((categoria) => categoria.valor)
 
   return {
     nombre: producto.nombre.trim() ? '' : 'El nombre es obligatorio.',
@@ -64,12 +78,46 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
   const [tipoMensaje, setTipoMensaje] = useState('exito')
   const [mostrarErrores, setMostrarErrores] = useState(false)
   const [publicando, setPublicando] = useState(false)
+  const [categoriasProducto, setCategoriasProducto] = useState([])
+
+  useEffect(() => {
+    let sigueActivo = true
+
+    apiRequest('/categorias', { auth: false })
+      .then((categorias) => {
+        if (!sigueActivo) return
+
+        const categoriasNormalizadas = normalizarCategorias(categorias)
+        setCategoriasProducto(categoriasNormalizadas)
+
+        if (categoriasNormalizadas.length > 0) {
+          setProducto((productoActual) => {
+            const categoriaActualExiste = categoriasNormalizadas.some(
+              (categoria) => categoria.valor === productoActual.categoria,
+            )
+
+            return categoriaActualExiste
+              ? productoActual
+              : { ...productoActual, categoria: categoriasNormalizadas[0].valor }
+          })
+        }
+      })
+      .catch(() => {
+        if (sigueActivo) {
+          setCategoriasProducto([])
+        }
+      })
+
+    return () => {
+      sigueActivo = false
+    }
+  }, [])
 
   const precio = Number(producto.precio)
   const descuento = Number(producto.descuento)
   const precioFinal = calcularPrecioFinal(precio, descuento)
   const tieneDescuento = descuento > 0
-  const erroresProducto = obtenerErroresProducto(producto)
+  const erroresProducto = obtenerErroresProducto(producto, categoriasProducto)
   const puedePublicar = Object.values(erroresProducto).every((error) => !error)
   const mostrarError = (campo) => mostrarErrores && erroresProducto[campo]
 

@@ -13,6 +13,7 @@ import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
 import { apiRequest } from "../lib/api";
 import { obtenerArticulosCarrito, vaciarCarrito } from "../lib/carritoStorage";
+import { Button } from "@heroui/react";
 
 const PASOS = [
   "Carrito",
@@ -111,12 +112,12 @@ export default function CompraView() {
             compra!
           </p>
 
-          <button
+          <Button
             onClick={() => navigate("/")}
             className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors"
           >
             Volver al inicio
-          </button>
+          </Button>
         </div>
       </div>
     );
@@ -136,13 +137,14 @@ export default function CompraView() {
             FIGULLECT
           </span>
 
-          <button
-            onClick={() => navigate("/carrito")}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
+          <Button
+            variant="light"
+            startContent={<ArrowLeft size={16} />}
+            onPress={() => navigate("/carrito")}
+            className="text-sm text-gray-500"
           >
-            <ArrowLeft size={16} />
             Volver al carrito
-          </button>
+          </Button>
         </div>
       </header>
 

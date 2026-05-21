@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@heroui/react": "^3.0.3",
-    "react-router-dom": "^7.15.1"
-  }
-}
