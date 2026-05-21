@@ -19,6 +19,7 @@ import { DetalleCatalogo } from "./views/DetalleCatalogo"
 import IniciarSesion from "./views/IniciarSesion"
 import MiCuenta from "./views/MiCuenta"
 import PanelVendedor from "./views/PanelVendedor"
+import RegistroComprador from "./views/RegistroComprador"
 import VentasVendedor from "./views/VentasVendedor"
 import CarritoView from "./views/carritoView"
 import CompraView from "./views/compraView"
@@ -31,6 +32,7 @@ const rutasPantallaCompleta = [
   '/carrito',
   '/compra',
   '/iniciar-sesion',
+  '/registro',
 ]
 
 const rutasPermitidasVendedor = [
@@ -226,7 +228,10 @@ function App() {
     )
   }
 
-  const requerirSesion = (elemento, { requiereVendedor = false } = {}) => {
+  const requerirSesion = (
+    elemento,
+    { requiereComprador = false, requiereVendedor = false } = {},
+  ) => {
     if (cargandoUsuario) {
       return <PantallaCargandoSesion />
     }
@@ -237,6 +242,10 @@ function App() {
 
     if (requiereVendedor && usuario.rol !== 'VENDEDOR') {
       return <Navigate replace to="/mi-cuenta" />
+    }
+
+    if (requiereComprador && usuario.rol !== 'COMPRADOR') {
+      return <Navigate replace to="/panel-vendedor" />
     }
 
     return elemento
@@ -255,8 +264,14 @@ function App() {
   if (rutasPantallaCompleta.some((ruta) => pathname.startsWith(ruta))) {
     return (
       <Routes>
-        <Route path="/carrito" element={<CarritoView />} />
-        <Route path="/compra" element={<CompraView />} />
+        <Route
+          path="/carrito"
+          element={requerirSesion(<CarritoView />, { requiereComprador: true })}
+        />
+        <Route
+          path="/compra"
+          element={requerirSesion(<CompraView />, { requiereComprador: true })}
+        />
         <Route
           path="/iniciar-sesion"
           element={
@@ -266,6 +281,18 @@ function App() {
               <Navigate replace to={destinoUsuarioAutenticado} />
             ) : (
               <IniciarSesion />
+            )
+          }
+        />
+        <Route
+          path="/registro"
+          element={
+            cargandoUsuario ? (
+              <PantallaCargandoSesion />
+            ) : usuario ? (
+              <Navigate replace to={destinoUsuarioAutenticado} />
+            ) : (
+              <RegistroComprador />
             )
           }
         />

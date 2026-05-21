@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { Button } from "@heroui/react";
 import { ShoppingCart, Minus, Plus } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 import { agregarProductoAlCarrito } from "../../lib/carritoStorage";
 
 export const AccionesProducto = ({ producto }) => {
   const [cantidad, setCantidad] = useState(1);
   const [mensaje, setMensaje] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { usuario } = useAuth();
   const stock = producto?.stock ?? 0;
 
   function incrementar() {
@@ -17,6 +22,16 @@ export const AccionesProducto = ({ producto }) => {
   }
 
   function agregarAlCarrito() {
+    if (!usuario) {
+      navigate("/iniciar-sesion", { state: { from: location.pathname } });
+      return;
+    }
+
+    if (usuario.rol !== "COMPRADOR") {
+      setMensaje("Solo una cuenta compradora puede agregar productos al carrito");
+      return;
+    }
+
     agregarProductoAlCarrito(producto, cantidad);
     setMensaje("Producto agregado al carrito");
   }
