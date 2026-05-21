@@ -11,10 +11,12 @@ export const AccionesProducto = ({ producto }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { usuario } = useAuth();
-  const stock = producto?.stock ?? 0;
+  const stock = producto?.stock == null ? undefined : Number(producto.stock);
+  const sinStock = stock !== undefined && stock <= 0;
+  const llegoAlStock = stock !== undefined && cantidad >= stock;
 
   function incrementar() {
-    setCantidad((prev) => Math.min(prev + 1, stock));
+    setCantidad((prev) => (stock === undefined ? prev + 1 : Math.min(prev + 1, stock)));
   }
 
   function decrementar() {
@@ -49,7 +51,7 @@ export const AccionesProducto = ({ producto }) => {
           <span className="w-6 text-center font-medium">{cantidad}</span>
           <button
             onClick={incrementar}
-            disabled={cantidad >= stock}
+            disabled={llegoAlStock}
             className="text-gray-500 hover:text-gray-900 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <Plus size={16} />
@@ -60,7 +62,7 @@ export const AccionesProducto = ({ producto }) => {
       {/* Botones */}
       <Button
         size="lg"
-        isDisabled={!stock}
+        isDisabled={sinStock}
         startContent={<ShoppingCart size={18} />}
         className="w-full font-semibold bg-green-primary hover:bg-green-primary/90 disabled:bg-gray-300 disabled:text-gray-500 text-white"
         onPress={agregarAlCarrito}
