@@ -1,4 +1,4 @@
-import {CheckboxGroup, Checkbox, Divider} from "@heroui/react";
+import { CheckboxGroup, Checkbox, Divider } from "@heroui/react";
 
 export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
 
@@ -9,19 +9,21 @@ export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
       <h2>Categoría</h2>
 
       <Divider className="my-2" />
-    
-      <CheckboxGroup>
+
+      <CheckboxGroup
+        value={seleccionadas}
+        onChange={(valoresSeleccionados) => {
+          const agregada = valoresSeleccionados.find((v) => !seleccionadas.includes(v));
+          const eliminada = seleccionadas.find((v) => !valoresSeleccionados.includes(v));
+          onCambiar(agregada ?? eliminada);
+        }}
+      >
         {categorias.map((cat) => (
-          <Checkbox
-            key={cat}
-            value={cat}
-            isSelected={seleccionadas.includes(cat)}
-            onChange={() => onCambiar(cat)}
-          >
+          <Checkbox key={cat} value={cat}>
             {capitalizar(cat)}
           </Checkbox>
         ))}
       </CheckboxGroup>
     </>
   );
-}
+};

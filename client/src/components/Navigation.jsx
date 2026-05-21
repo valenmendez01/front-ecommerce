@@ -1,119 +1,113 @@
 import {
-  Button,
-  Divider,
-  Image,
   Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-} from "@heroui/react"
+  NavBody
+} from "./ui/resizable-navbar"
 import { LogIn, LogOut, ShoppingCart } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import logo from "../assets/logoHorizontal.png"
 import { useAuth } from "../context/useAuth"
+import { motion } from "framer-motion"
+import { Button } from "@heroui/react"
 
-export default function Navigation() {
+export default function Navigation2() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
-  const esVendedor = usuario?.rol === 'VENDEDOR'
+  const esVendedor = usuario?.rol === "VENDEDOR"
 
   const manejarCierreSesion = () => {
     cerrarSesion()
-    navigate('/iniciar-sesion')
+    navigate("/iniciar-sesion")
   }
 
+  const navItemsVendedor = [
+    { name: "Panel vendedor", link: "/panel-vendedor" },
+    { name: "Crear producto", link: "/crear-producto" },
+    { name: "Ventas", link: "/ventas" },
+  ]
+
+  const navItemsComprador = [
+    { name: "Home", link: "/" },
+    { name: "Catálogo", link: "/productos" },
+    ...(usuario ? [{ name: "Mi cuenta", link: "/mi-cuenta" }] : []),
+  ]
+
+  const navItems = esVendedor ? navItemsVendedor : navItemsComprador
+
   return (
-    <Navbar maxWidth="full">
-      <NavbarBrand>
-        <Image src={logo} width={150} />
-      </NavbarBrand>
+    <div className="relative z-50 w-full">
+      <Navbar>
+        {/* Desktop */}
+        <NavBody className="bg-green-primary">
+          {/* Logo */}
+          <Link to="/" className="relative z-20 mr-4 flex items-center px-2 py-1 transition-all duration-300 hover:filter-[drop-shadow(0_0_6px_rgba(184,134,11,0.6))_drop-shadow(0_0_12px_rgba(184,134,11,0.3))]">
+            <img src={logo} alt="Logo" width={150} />
+          </Link>
 
-      <NavbarContent className="hidden gap-4 sm:flex" justify="center">
-        {esVendedor ? (
-          <>
-            <NavbarItem isActive={pathname.startsWith("/panel-vendedor")}>
-              <Link color="foreground" to="/panel-vendedor">
-                Panel vendedor
-              </Link>
-            </NavbarItem>
-            <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
-            <NavbarItem isActive={pathname.startsWith("/crear-producto")}>
-              <Link color="foreground" to="/crear-producto">
-                Crear producto
-              </Link>
-            </NavbarItem>
-            <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
-            <NavbarItem isActive={pathname.startsWith("/ventas")}>
-              <Link color="foreground" to="/ventas">
-                Ventas
-              </Link>
-            </NavbarItem>
-          </>
-        ) : (
-          <>
-            <NavbarItem isActive={pathname === "/"}>
-              <Link color="foreground" to="/">
-                Home
-              </Link>
-            </NavbarItem>
+          {/* Nav links con React Router */}
+          <div className="absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium lg:flex">
+            {navItems.map((item) => {
+              const isActive = pathname === item.link || pathname.startsWith(item.link + "/")
+              return (
+                <Link
+                  key={item.link}
+                  to={item.link}
+                  className="relative px-4 py-2 transition-colors duration-200 text-white/80 hover:text-white"
+                >
+                  <span className={isActive ? "font-semibold text-white" : ""}>
+                    {item.name}
+                  </span>
+                  <motion.span
+                    className="absolute bottom-0 left-1/2 h-0.5 bg-dorado-primary rounded-full"
+                    initial={{ width: "0%", x: "-50%" }}
+                    animate={{
+                      width: isActive ? "100%" : "0%",
+                      x: "-50%",
+                      filter: isActive
+                        ? "drop-shadow(0 0 4px #b8860b) drop-shadow(0 0 8px #b8860b)"
+                        : "drop-shadow(0 0 0px transparent)",
+                    }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                  />
+                </Link>
+              )
+            })}
+          </div>
 
-            <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
-
-            <NavbarItem isActive={pathname.startsWith("/productos")}>
-              <Link aria-current="page" to="/productos">
-                Catalogo
-              </Link>
-            </NavbarItem>
-
-            {usuario && (
-              <>
-                <Divider orientation="vertical" className="mx-2 h-5 self-center opacity-50" />
-
-                <NavbarItem isActive={pathname.startsWith("/mi-cuenta")}>
-                  <Link color="foreground" to="/mi-cuenta">
-                    Mi cuenta
-                  </Link>
-                </NavbarItem>
-              </>
+          {/* Acciones */}
+          <div className="flex items-center gap-2">
+            {!esVendedor && (
+              <Button as={Link} to="/carrito" className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white" variant="outline" isIconOnly aria-label="Carrito">
+                <ShoppingCart size={20} />
+              </Button>
             )}
-          </>
-        )}
-      </NavbarContent>
 
-      <NavbarContent justify="end">
-        {!esVendedor && (
-          <NavbarItem>
-            <Button as={Link} to="/carrito" variant="light" isIconOnly aria-label="Carrito">
-              <ShoppingCart size={20} />
-            </Button>
-          </NavbarItem>
-        )}
-
-        <NavbarItem>
-          {usuario ? (
-            <Button
-              variant="light"
-              isIconOnly
-              aria-label="Cerrar sesion"
-              onPress={manejarCierreSesion}
-            >
-              <LogOut size={20} />
-            </Button>
-          ) : (
-            <Button
-              as={Link}
-              className="font-semibold"
-              isDisabled={cargandoUsuario}
-              startContent={<LogIn size={18} />}
-              to="/iniciar-sesion"
-              variant="light"
-            >
-              Iniciar sesion
-            </Button>
-          )}
-        </NavbarItem>
-      </NavbarContent>
-    </Navbar>
+            {usuario ? (
+              <Button
+                as={Link}
+                variant="outline"
+                className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white"
+                isIconOnly
+                aria-label="Cerrar sesion"
+                onPress={manejarCierreSesion}
+              >
+                <LogOut size={20} />
+              </Button>
+            ) : (
+              <Button
+                as={Link}
+                className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white"
+                isDisabled={cargandoUsuario}
+                startContent={<LogIn size={18} />}
+                to="/iniciar-sesion"
+                variant="outline"
+              >
+                Iniciar sesion
+              </Button>
+            )}
+          </div>
+        </NavBody>
+      </Navbar>
+    </div>
   )
 }
