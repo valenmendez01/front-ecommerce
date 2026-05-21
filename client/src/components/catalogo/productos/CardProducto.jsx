@@ -20,7 +20,7 @@ export const CardProducto = ({ producto }) => {
         <Image
           alt={producto.nombre}
           src={imagenSrc}
-          className="object-cover"
+          className="object-contain"
           radius="lg"
           shadow="sm"
           width={240}

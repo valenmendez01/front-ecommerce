@@ -29,7 +29,7 @@ export const GaleriaProducto = ({ imagenes, nombre }) => {
                   : `data:image/jpeg;base64,${imagenes[imagenActiva]?.contenidoBase64}`
               }
               alt={nombre}
-              className="w-full object-cover"
+              className="w-full object-contain"
               width={340}
               height={450}
               radius="lg"
@@ -57,7 +57,7 @@ export const GaleriaProducto = ({ imagenes, nombre }) => {
               radius="lg"
               width={72}
               height={92}
-              className="object-cover"
+              className="object-contain"
             />
           </button>
         ))}
