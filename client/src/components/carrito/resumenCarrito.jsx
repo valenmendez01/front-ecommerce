@@ -1,7 +1,7 @@
 import { ShieldCheck, BadgeCheck, Tag } from "lucide-react";
 import { useState } from "react";
 import { Button, Input } from "@heroui/react";
-import { formatearPesos } from "../../lib/formatters";
+import { formatearPesos } from "../../data/reglasProducto";
 
 const DESCUENTO_PROMO = 1000;
 

@@ -1,4 +1,4 @@
-import { formatearPesos } from "../../lib/formatters";
+import { formatearPesos } from "../../data/reglasProducto";
 
 export default function PanelPedido({ articulos }) {
   return (

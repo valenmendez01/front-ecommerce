@@ -13,7 +13,7 @@ import copaMundo from "../assets/copa-mundo.png";
 import {
   obtenerArticulosCarrito,
   reemplazarArticulosCarrito,
-} from "../lib/carritoStorage";
+} from "../data/reglasCarrito";
 
 export default function CarritoView() {
   const [articulos, setArticulos] = useState([]);

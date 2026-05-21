@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { apiRequest, clearStoredToken, getStoredToken, setStoredToken } from '../lib/api'
-import { vaciarCarrito } from '../lib/carritoStorage'
+import { vaciarCarrito } from '../data/reglasCarrito'
 import { AuthContext } from './useAuth'
 
 const formatearFecha = (fecha) => {

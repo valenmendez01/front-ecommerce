@@ -13,8 +13,7 @@ import ResumenPago from "../components/compra/resumenPago";
 import TituloCompra from "../components/compra/tituloCompra";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
-import { apiRequest } from "../lib/api";
-import { obtenerArticulosCarrito, vaciarCarrito } from "../lib/carritoStorage";
+import { obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
 
 export default function CompraView() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
@@ -23,7 +22,7 @@ export default function CompraView() {
   const [cargandoConfirmar, setCargandoConfirmar] = useState(false);
   const [errorConfirmar, setErrorConfirmar] = useState(null);
   const navigate = useNavigate();
-  const { usuario } = useAuth();
+  const { usuario, token } = useAuth();
 
   const articulos = obtenerArticulosCarrito();
   const esComprador = usuario?.rol === "COMPRADOR";
@@ -43,17 +42,26 @@ export default function CompraView() {
     setCargandoConfirmar(true);
     setErrorConfirmar(null);
 
-    apiRequest("/pedidos", {
+    fetch("/pedidos", {
       method: "POST",
-      body: {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
         idUsuario: usuario.idUsuario,
         items: articulos.map((articulo) => ({
           idProducto: articulo.id,
           cantidad: articulo.cantidad,
         })),
-      },
+      }),
     })
-      .then(() => {
+      .then(async (respuesta) => {
+        if (!respuesta.ok) {
+          const texto = await respuesta.text();
+          throw new Error(texto || respuesta.statusText);
+        }
+
         vaciarCarrito();
         setConfirmado(true);
       })

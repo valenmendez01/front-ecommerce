@@ -1,6 +1,6 @@
 import { ShieldCheck, Rocket } from "lucide-react";
 import { Button } from "@heroui/react";
-import { formatearPesos } from "../../lib/formatters";
+import { formatearPesos } from "../../data/reglasProducto";
 
 export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, cargando }) {
   const subtotal = articulos.reduce((acc, a) => acc + a.precio * a.cantidad, 0);
