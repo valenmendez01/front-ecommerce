@@ -12,6 +12,7 @@ import VentasVendedor from "./views/VentasVendedor"
 import CarritoView from "./views/carritoView"
 import CompraView from "./views/compraView"
 import { Home } from "./views/Home"
+import { Footer } from "./components/Footer"
 
 const rutasPantallaCompleta = [
   '/mi-cuenta',
@@ -178,6 +179,8 @@ function App() {
           </Routes>
         </main>
       </div>
+
+      <Footer />
     </>
   )
 }
