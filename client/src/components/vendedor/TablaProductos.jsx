@@ -9,6 +9,11 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
+import {
+  MAXIMO_IMAGENES_PRODUCTO,
+  MINIMO_IMAGENES_PRODUCTO,
+  obtenerErrorCantidadImagenesProducto,
+} from '../../data/reglasImagenesProducto'
 import { useEffect, useState } from 'react'
 import { apiRequest } from '../../lib/api'
 
