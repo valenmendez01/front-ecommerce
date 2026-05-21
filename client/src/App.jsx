@@ -1,18 +1,6 @@
-import { useEffect, useState } from "react"
-import { Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom"
+import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import Navigation from "./components/Navigation"
 import { useAuth } from "./context/useAuth"
-import {
-  actualizarProducto as actualizarProductoBackend,
-  crearProducto,
-  desactivarProducto,
-  normalizarProductoVendedor,
-  obtenerProductoPorId,
-  obtenerProductosMios,
-  subirImagenesProducto,
-} from "./lib/productosApi"
-import { obtenerPedidosMios } from "./lib/pedidosApi"
-import { obtenerVentasMias } from "./lib/ventasApi"
 import { Catalogo } from "./views/Catalogo"
 import CrearProducto from "./views/CrearProducto"
 import { DetalleCatalogo } from "./views/DetalleCatalogo"
@@ -55,179 +43,8 @@ const PantallaCargandoSesion = () => (
 )
 
 function App() {
-  const navigate = useNavigate()
   const { pathname } = useLocation()
-  const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
-  const [productos, setProductos] = useState([])
-  const [cargandoProductos, setCargandoProductos] = useState(false)
-  const [errorProductos, setErrorProductos] = useState('')
-  const [ventas, setVentas] = useState([])
-  const [cargandoVentas, setCargandoVentas] = useState(false)
-  const [errorVentas, setErrorVentas] = useState('')
-  const [pedidos, setPedidos] = useState([])
-  const [cargandoPedidos, setCargandoPedidos] = useState(false)
-  const [errorPedidos, setErrorPedidos] = useState('')
-
-  useEffect(() => {
-    let sigueActivo = true
-    const esVendedor = usuario?.rol === 'VENDEDOR'
-
-    Promise.resolve().then(async () => {
-      if (!sigueActivo) return
-
-      if (!esVendedor) {
-        setProductos([])
-        setErrorProductos('')
-        setCargandoProductos(false)
-        return
-      }
-
-      setCargandoProductos(true)
-      setErrorProductos('')
-
-      try {
-        const productosDelVendedor = await obtenerProductosMios()
-
-        if (sigueActivo) {
-          setProductos(productosDelVendedor)
-        }
-      } catch (error) {
-        if (sigueActivo) {
-          setErrorProductos(error.message || 'No se pudieron cargar tus productos.')
-        }
-      } finally {
-        if (sigueActivo) {
-          setCargandoProductos(false)
-        }
-      }
-    })
-
-    return () => {
-      sigueActivo = false
-    }
-  }, [usuario?.idUsuario, usuario?.rol])
-
-  useEffect(() => {
-    let sigueActivo = true
-    const esVendedor = usuario?.rol === 'VENDEDOR'
-
-    Promise.resolve().then(async () => {
-      if (!sigueActivo) return
-
-      if (!esVendedor) {
-        setVentas([])
-        setErrorVentas('')
-        setCargandoVentas(false)
-        return
-      }
-
-      setCargandoVentas(true)
-      setErrorVentas('')
-
-      try {
-        const ventasDelVendedor = await obtenerVentasMias()
-
-        if (sigueActivo) {
-          setVentas(ventasDelVendedor)
-        }
-      } catch (error) {
-        if (sigueActivo) {
-          setErrorVentas(error.message || 'No se pudieron cargar tus ventas.')
-        }
-      } finally {
-        if (sigueActivo) {
-          setCargandoVentas(false)
-        }
-      }
-    })
-
-    return () => {
-      sigueActivo = false
-    }
-  }, [usuario?.idUsuario, usuario?.rol])
-
-  useEffect(() => {
-    let sigueActivo = true
-    const esComprador = usuario?.rol === 'COMPRADOR'
-
-    Promise.resolve().then(async () => {
-      if (!sigueActivo) return
-
-      if (!esComprador) {
-        setPedidos([])
-        setErrorPedidos('')
-        setCargandoPedidos(false)
-        return
-      }
-
-      setCargandoPedidos(true)
-      setErrorPedidos('')
-
-      try {
-        const pedidosDelUsuario = await obtenerPedidosMios()
-
-        if (sigueActivo) {
-          setPedidos(pedidosDelUsuario)
-        }
-      } catch (error) {
-        if (sigueActivo) {
-          setErrorPedidos(error.message || 'No se pudieron cargar tus pedidos.')
-        }
-      } finally {
-        if (sigueActivo) {
-          setCargandoPedidos(false)
-        }
-      }
-    })
-
-    return () => {
-      sigueActivo = false
-    }
-  }, [usuario?.idUsuario, usuario?.rol])
-
-  const publicarProducto = async (productoNuevo) => {
-    const { imagenes = [], ...datosProducto } = productoNuevo
-    const productoCreado = await crearProducto(datosProducto)
-    let productoFinal = productoCreado
-
-    if (imagenes.length) {
-      await subirImagenesProducto(productoCreado.idProducto, imagenes)
-      productoFinal = await obtenerProductoPorId(productoCreado.idProducto)
-    }
-
-    const productoNormalizado = normalizarProductoVendedor(productoFinal)
-
-    setProductos((productosActuales) => [
-      productoNormalizado,
-      ...productosActuales.filter(
-        (producto) => producto.idProducto !== productoNormalizado.idProducto,
-      ),
-    ])
-
-    return productoNormalizado
-  }
-
-  const actualizarProducto = async (productoActualizado) => {
-    const productoGuardado = await actualizarProductoBackend(productoActualizado)
-
-    setProductos((productosActuales) =>
-      productosActuales.map((producto) =>
-        producto.idProducto === productoGuardado.idProducto ? productoGuardado : producto,
-      ),
-    )
-
-    return productoGuardado
-  }
-
-  const eliminarProducto = async (idProducto) => {
-    await desactivarProducto(idProducto)
-
-    setProductos((productosActuales) =>
-      productosActuales.map((producto) =>
-        producto.idProducto === idProducto ? { ...producto, activo: false } : producto,
-      ),
-    )
-  }
+  const { cargandoUsuario, cerrarSesion, token, usuario } = useAuth()
 
   const requerirSesion = (
     elemento,
@@ -301,9 +118,7 @@ function App() {
           path="/mi-cuenta"
           element={requerirSesion(
             <MiCuenta
-              cargandoPedidos={cargandoPedidos}
-              errorPedidos={errorPedidos}
-              pedidos={pedidos}
+              token={token}
               usuario={usuario}
               onCerrarSesion={cerrarSesion}
             />,
@@ -313,14 +128,9 @@ function App() {
           path="/panel-vendedor"
           element={requerirSesion(
             <PanelVendedor
-              cargandoProductos={cargandoProductos}
-              errorProductos={errorProductos}
-              productosBaseActuales={productos}
-              ventas={ventas}
+              token={token}
               usuario={usuario}
-              onActualizarProducto={actualizarProducto}
               onCerrarSesion={cerrarSesion}
-              onEliminarProducto={eliminarProducto}
             />,
             { requiereVendedor: true },
           )}
@@ -329,10 +139,9 @@ function App() {
           path="/crear-producto"
           element={requerirSesion(
             <CrearProducto
+              token={token}
               usuario={usuario}
               onCerrarSesion={cerrarSesion}
-              onPublicarProducto={publicarProducto}
-              onVolverPanel={() => navigate('/panel-vendedor')}
             />,
             { requiereVendedor: true },
           )}
@@ -341,10 +150,8 @@ function App() {
           path="/ventas"
           element={requerirSesion(
             <VentasVendedor
-              cargandoVentas={cargandoVentas}
-              errorVentas={errorVentas}
+              token={token}
               usuario={usuario}
-              ventas={ventas}
               onCerrarSesion={cerrarSesion}
             />,
             { requiereVendedor: true },
