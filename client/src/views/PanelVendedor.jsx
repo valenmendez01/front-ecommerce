@@ -1,14 +1,10 @@
 import { Package, PackageCheck, PackageX, TriangleAlert } from 'lucide-react'
 import InformacionPersonal from '../components/cuenta/InformacionPersonal'
-import BarraSuperior from '../components/layout/BarraSuperior'
-import Footer from '../components/layout/Footer'
-import MenuLateral from '../components/layout/MenuLateral'
+import PaginaGestion from '../components/layout/PaginaGestion'
+import EncabezadoPanelVendedor from '../components/vendedor/EncabezadoPanelVendedor'
+import MetricasPanelVendedor from '../components/vendedor/MetricasPanelVendedor'
 import TablaProductos from '../components/vendedor/TablaProductos'
-import TarjetaMetrica from '../components/vendedor/TarjetaMetrica'
-
-const formatearPesos = (monto) => `$${monto.toLocaleString('es-AR')}`
-
-const calcularPrecioFinal = (precio, descuento) => Math.round(precio * (1 - descuento / 100))
+import { calcularPrecioFinal, formatearPesos } from '../data/reglasProducto'
 
 const calcularVendidosProducto = (ventas, idProducto) =>
   ventas.reduce(
@@ -34,98 +30,31 @@ const PanelVendedor = ({
     ...producto,
     vendidos: calcularVendidosProducto(ventas, producto.idProducto),
     precioTexto: formatearPesos(producto.precio),
-    precioFinal: calcularPrecioFinal(producto.precio, producto.descuento),
     precioFinalTexto: formatearPesos(calcularPrecioFinal(producto.precio, producto.descuento)),
   }))
-
-  const productosActivos = productos.filter((producto) => producto.activo)
-  const productosConStockBajo = productosActivos.filter((producto) => producto.stock > 0 && producto.stock <= 5)
-  const productosSinStock = productosActivos.filter((producto) => producto.stock === 0)
-
+  const activos = productos.filter((producto) => producto.activo)
   const metricas = [
-    {
-      titulo: 'Productos publicados',
-      valor: productos.length,
-      descripcion: 'Total de productos cargados',
-      Icono: Package,
-      destacar: true,
-    },
-    {
-      titulo: 'Productos activos',
-      valor: productosActivos.length,
-      descripcion: 'Publicados aunque alguno no tenga stock',
-      Icono: PackageCheck,
-    },
-    {
-      titulo: 'Stock bajo',
-      valor: productosConStockBajo.length,
-      descripcion: 'Productos activos con 1 a 5 unidades',
-      Icono: TriangleAlert,
-    },
-    {
-      titulo: 'Sin stock',
-      valor: productosSinStock.length,
-      descripcion: 'Productos activos sin unidades',
-      Icono: PackageX,
-    },
+    { titulo: 'Productos publicados', valor: productos.length, descripcion: 'Total de productos cargados', Icono: Package, destacar: true },
+    { titulo: 'Productos activos', valor: activos.length, descripcion: 'Publicados aunque alguno no tenga stock', Icono: PackageCheck },
+    { titulo: 'Stock bajo', valor: activos.filter((producto) => producto.stock > 0 && producto.stock <= 5).length, descripcion: 'Productos activos con 1 a 5 unidades', Icono: TriangleAlert },
+    { titulo: 'Sin stock', valor: activos.filter((producto) => producto.stock === 0).length, descripcion: 'Productos activos sin unidades', Icono: PackageX },
   ]
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-950">
-      <BarraSuperior />
-
-      <div className="flex min-h-[calc(100vh-4rem)]">
-        <MenuLateral usuario={usuario} onCerrarSesion={onCerrarSesion} />
-
-        <main className="flex-1">
-          <div className="mx-auto max-w-7xl px-8 py-10">
-            <section className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <h2 className="text-6xl font-black uppercase leading-none text-[#061d58] md:text-7xl">
-                  Panel de
-                  <br />
-                  vendedor
-                </h2>
-                <p className="mt-5 max-w-2xl text-xl leading-relaxed text-slate-700">
-                  Revisá tus productos publicados y controlá el stock con datos del backend.
-                </p>
-              </div>
-
-            </section>
-
-            <div className="mt-10">
-              <InformacionPersonal usuario={usuario} />
-            </div>
-
-            <section className="mt-10 grid gap-5 xl:grid-cols-4 md:grid-cols-2">
-              {metricas.map((metrica) => (
-                <TarjetaMetrica
-                  Icono={metrica.Icono}
-                  descripcion={metrica.descripcion}
-                  destacar={metrica.destacar}
-                  key={metrica.titulo}
-                  titulo={metrica.titulo}
-                  valor={metrica.valor}
-                />
-              ))}
-            </section>
-
-            <div className="mt-12">
-              <TablaProductos
-                cargando={cargandoProductos}
-                error={errorProductos}
-                productos={productos}
-                onActualizarProducto={onActualizarProducto}
-                onEliminarProducto={onEliminarProducto}
-              />
-            </div>
-
-          </div>
-
-          <Footer />
-        </main>
+    <PaginaGestion usuario={usuario} onCerrarSesion={onCerrarSesion}>
+      <EncabezadoPanelVendedor />
+      <div className="mt-10"><InformacionPersonal usuario={usuario} /></div>
+      <MetricasPanelVendedor metricas={metricas} />
+      <div className="mt-12">
+        <TablaProductos
+          cargando={cargandoProductos}
+          error={errorProductos}
+          productos={productos}
+          onActualizarProducto={onActualizarProducto}
+          onEliminarProducto={onEliminarProducto}
+        />
       </div>
-    </div>
+    </PaginaGestion>
   )
 }
 
