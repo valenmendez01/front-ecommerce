@@ -12,7 +12,7 @@ export const InfoProducto = ({ producto }) => {
     <div className="flex flex-col gap-5">
 
       {/* Categoría */}
-      <p className="text-xs font-semibold tracking-widest text-blue-500 uppercase">
+      <p className="text-xs font-semibold tracking-widest text-dorado-primary uppercase">
         {categoria}
       </p>
 
