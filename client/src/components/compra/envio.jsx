@@ -56,8 +56,8 @@ export default function Envio({ alGuardar }) {
       <CabeceraAcordeon
         abierto={abierto}
         guardado={guardado}
-        iconoPendiente={<Truck size={18} className="text-blue-600" />}
-        iconoGuardado={<CheckCircle2 size={18} className="text-green-600" />}
+        iconoPendiente={<Truck size={18} className="text-emerald-950" />}
+        iconoGuardado={<CheckCircle2 size={18} className="text-emerald-950" />}
         titulo="Direccion de Envio"
         subtitulo="Completa tu direccion"
         subtituloGuardado={`${formulario.nombre} - ${formulario.ciudad}, ${formulario.pais}`}

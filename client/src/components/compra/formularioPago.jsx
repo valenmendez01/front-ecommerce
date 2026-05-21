@@ -11,7 +11,7 @@ export default function FormularioPago({
   alGuardar,
 }) {
   return (
-    <div className="p-4 bg-white border-t border-gray-100 flex flex-col gap-3">
+    <div className="p-4 bg-white border-t border-yellow-400/30 flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-3">
         <Input
           isInvalid={intentoGuardar && !validaciones.numeroValido}
@@ -68,12 +68,12 @@ export default function FormularioPago({
         />
       </div>
 
-      <div className="flex items-center gap-2 text-xs text-gray-400 bg-gray-50 p-2 rounded-lg">
+      <div className="flex items-center gap-2 text-xs text-black bg-yellow-50 p-2 rounded-lg">
         <Lock size={12} />
         Tus datos estan protegidos con encriptacion SSL de 256 bits
       </div>
 
-      <Button onPress={alGuardar} className="w-full bg-gray-900 text-white text-sm font-bold rounded-lg">
+      <Button onPress={alGuardar} className="w-full bg-yellow-400 text-black text-sm font-bold rounded-lg">
         Guardar metodo de pago
       </Button>
     </div>

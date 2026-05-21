@@ -23,6 +23,7 @@ const normalizarArticulo = (articulo) => ({
   idProducto: articulo.idProducto || articulo.id,
   cantidad: Math.max(1, Number(articulo.cantidad || 1)),
   precio: Number(articulo.precio || 0),
+  stock: articulo.stock == null ? undefined : Number(articulo.stock),
 })
 
 const leerCarrito = () => {
@@ -53,9 +54,16 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1) => {
   const precioBase = Number(producto.precio || 0)
   const descuento = Number(producto.descuento || 0)
   const precioFinal = Math.round(precioBase * (1 - descuento / 100))
+  const stock = Number(producto.stock || 0)
+
+  if (stock <= 0) {
+    return obtenerArticulosCarrito()
+  }
+
   const articulos = leerCarrito()
   const idProducto = producto.idProducto || producto.id
   const articuloExistente = articulos.find((articulo) => articulo.idProducto === idProducto)
+  const cantidadPedida = Math.max(1, Number(cantidad || 1))
 
   const articuloProducto = {
     id: idProducto,
@@ -63,7 +71,8 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1) => {
     nombre: producto.nombre,
     precio: precioFinal,
     precioOriginal: descuento > 0 ? precioBase : null,
-    cantidad: Math.max(1, Number(cantidad || 1)),
+    cantidad: Math.min(cantidadPedida, stock),
+    stock,
     subtitulo: producto.categoria,
     imagen: obtenerImagenProducto(producto),
   }
@@ -71,7 +80,7 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1) => {
   const articulosActualizados = articuloExistente
     ? articulos.map((articulo) =>
         articulo.idProducto === idProducto
-          ? { ...articulo, cantidad: articulo.cantidad + articuloProducto.cantidad }
+          ? { ...articulo, stock, cantidad: Math.min(articulo.cantidad + articuloProducto.cantidad, stock) }
           : articulo,
       )
     : [...articulos, articuloProducto]

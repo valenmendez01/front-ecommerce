@@ -3,7 +3,7 @@ import { Button } from "@heroui/react";
 import { ShoppingCart, Minus, Plus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
-import { agregarProductoAlCarrito } from "../../lib/carritoStorage";
+import { agregarProductoAlCarrito } from "../../data/reglasCarrito";
 
 export const AccionesProducto = ({ producto }) => {
   const [cantidad, setCantidad] = useState(1);
