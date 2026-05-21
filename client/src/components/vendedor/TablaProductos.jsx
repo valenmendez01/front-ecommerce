@@ -11,8 +11,6 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
-import { useState } from 'react'
-import { categoriasProducto, obtenerEtiquetaCategoria } from '../../data/categoriasProducto'
 import {
   MAXIMO_IMAGENES_PRODUCTO,
   MINIMO_IMAGENES_PRODUCTO,

@@ -48,7 +48,7 @@ const normalizarCategorias = (categorias) =>
     etiqueta: formatearEtiquetaCategoria(categoria),
   }))
 
-const obtenerErroresProducto = (producto, categoriasProducto) => {
+const obtenerErroresProducto = (producto, categoriasProducto = []) => {
   const precio = Number(producto.precio)
   const stock = Number(producto.stock)
   const descuento = Number(producto.descuento)
@@ -121,7 +121,7 @@ const CrearProducto = ({ usuario, onCerrarSesion, onVolverPanel, onPublicarProdu
   const descuento = Number(producto.descuento)
   const precioFinal = calcularPrecioFinal(precio, descuento)
   const tieneDescuento = descuento > 0
-  const erroresProducto = obtenerErroresProducto(producto)
+  const erroresProducto = obtenerErroresProducto(producto, categoriasProducto)
   const errorImagenes = obtenerErrorCantidadImagenesProducto(imagenes.length)
   const puedePublicar = Object.values(erroresProducto).every((error) => !error) && !errorImagenes
   const alcanzoMaximoImagenes = imagenes.length >= MAXIMO_IMAGENES_PRODUCTO
