@@ -9,8 +9,8 @@ import {
   Trash2,
   X,
 } from 'lucide-react'
-import { useState } from 'react'
-import { categoriasProducto, obtenerEtiquetaCategoria } from '../../data/categoriasProducto'
+import { useEffect, useState } from 'react'
+import { apiRequest } from '../../lib/api'
 
 const coloresEstado = {
   ACTIVO: 'bg-green-100 text-green-700',
@@ -23,6 +23,19 @@ const estadosPublicacion = [
   { key: 'activa', label: 'Activa' },
   { key: 'inactiva', label: 'Inactiva' },
 ]
+
+const formatearEtiquetaCategoria = (categoria = '') =>
+  categoria
+    .toString()
+    .toLowerCase()
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (letra) => letra.toUpperCase())
+
+const normalizarCategorias = (categorias) =>
+  (Array.isArray(categorias) ? categorias : []).map((categoria) => ({
+    valor: categoria,
+    etiqueta: formatearEtiquetaCategoria(categoria),
+  }))
 
 const obtenerEstado = (producto) => {
   if (!producto.activo) return 'INACTIVO'
@@ -104,8 +117,29 @@ const TablaProductos = ({ cargando = false, error = '', productos, onActualizarP
   const [idGuardando, setIdGuardando] = useState(null)
   const [idEliminando, setIdEliminando] = useState(null)
   const [errorAccion, setErrorAccion] = useState('')
+  const [categoriasProducto, setCategoriasProducto] = useState([])
   const productosVisibles = mostrarTodos ? productos : productos.slice(0, 2)
   const puedeVerTodos = productos.length > 2
+
+  useEffect(() => {
+    let sigueActivo = true
+
+    apiRequest('/categorias', { auth: false })
+      .then((categorias) => {
+        if (sigueActivo) {
+          setCategoriasProducto(normalizarCategorias(categorias))
+        }
+      })
+      .catch(() => {
+        if (sigueActivo) {
+          setCategoriasProducto([])
+        }
+      })
+
+    return () => {
+      sigueActivo = false
+    }
+  }, [])
 
   const cambiarProductoAbierto = (idProducto) => {
     setProductoAbierto(productoAbierto === idProducto ? null : idProducto)
@@ -361,7 +395,7 @@ const TablaProductos = ({ cargando = false, error = '', productos, onActualizarP
                           ))}
                         </Select>
                       ) : (
-                        obtenerEtiquetaCategoria(productoMostrado.categoria)
+                        formatearEtiquetaCategoria(productoMostrado.categoria)
                       )}
                     </CampoDetalle>
 
