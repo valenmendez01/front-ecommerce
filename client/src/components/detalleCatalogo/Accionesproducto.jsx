@@ -59,11 +59,10 @@ export const AccionesProducto = ({ producto }) => {
 
       {/* Botones */}
       <Button
-        color="primary"
         size="lg"
         isDisabled={!stock}
         startContent={<ShoppingCart size={18} />}
-        className="w-full font-semibold"
+        className="w-full font-semibold bg-green-primary hover:bg-green-primary/90 disabled:bg-gray-300 disabled:text-gray-500 text-white"
         onPress={agregarAlCarrito}
       >
         Agregar al carrito

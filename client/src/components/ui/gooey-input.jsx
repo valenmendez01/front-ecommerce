@@ -59,7 +59,7 @@ export function GooeyInput({
   placeholder = "Type to search...",
   className,
   classNames,
-  collapsedWidth = 115,
+  collapsedWidth = 145,
   expandedWidth = 200,
   expandedOffset = 50,
   gooeyBlur = 5,
@@ -122,7 +122,7 @@ export function GooeyInput({
   }, [searchText, setExpanded]);
 
   const surfaceClass =
-    "bg-foreground text-background shadow-sm ring-1 ring-border/60";
+    "bg-[#142b10] text-white shadow-sm ring-1 ring-border/60";
 
   return (
     <div
