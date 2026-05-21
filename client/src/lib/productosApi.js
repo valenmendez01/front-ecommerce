@@ -20,7 +20,9 @@ const obtenerMimeImagen = (contenidoBase64) => {
   return 'image/jpeg'
 }
 
-const obtenerUrlImagenBase64 = (contenidoBase64) => {
+const obtenerImagenProducto = (producto) => {
+  const contenidoBase64 = producto.imagenes?.find(Boolean)?.contenidoBase64
+
   if (!contenidoBase64) {
     return ''
   }
@@ -28,43 +30,19 @@ const obtenerUrlImagenBase64 = (contenidoBase64) => {
   return `data:${obtenerMimeImagen(contenidoBase64)};base64,${contenidoBase64}`
 }
 
-const normalizarImagenProducto = (imagen, indice) => {
-  const contenidoBase64 = imagen?.contenidoBase64 || ''
-  const tipo = obtenerMimeImagen(contenidoBase64)
-
-  return {
-    ...imagen,
-    idImagen: imagen?.idImagen,
-    nombre: imagen?.url || `Imagen ${indice + 1}`,
-    tipo,
-    src: obtenerUrlImagenBase64(contenidoBase64),
-  }
-}
-
-const obtenerImagenProducto = (producto) => {
-  const contenidoBase64 = producto.imagenes?.find((imagen) => imagen?.contenidoBase64)?.contenidoBase64
-
-  return obtenerUrlImagenBase64(contenidoBase64)
-}
-
-export const normalizarProductoVendedor = (producto) => {
-  const imagenes = (producto.imagenes || []).filter(Boolean).map(normalizarImagenProducto)
-
-  return {
-    ...producto,
-    idProducto: producto.idProducto,
-    nombre: producto.nombre || '',
-    description: producto.description || '',
-    imagen: crearIniciales(producto.nombre),
-    imagenes,
-    imagenUrl: imagenes.find((imagen) => imagen.src)?.src || obtenerImagenProducto(producto),
-    categoria: producto.categoria,
-    precio: Number(producto.precio || 0),
-    stock: Number(producto.stock || 0),
-    descuento: Number(producto.descuento || 0),
-    activo: producto.activo ?? true,
-  }
-}
+export const normalizarProductoVendedor = (producto) => ({
+  ...producto,
+  idProducto: producto.idProducto,
+  nombre: producto.nombre || '',
+  description: producto.description || '',
+  imagen: crearIniciales(producto.nombre),
+  imagenUrl: obtenerImagenProducto(producto),
+  categoria: producto.categoria,
+  precio: Number(producto.precio || 0),
+  stock: Number(producto.stock || 0),
+  descuento: Number(producto.descuento || 0),
+  activo: producto.activo ?? true,
+})
 
 const obtenerProductosDePagina = (respuesta) => {
   if (Array.isArray(respuesta)) return respuesta
@@ -123,8 +101,3 @@ export const subirImagenesProducto = (idProducto, archivos = []) => {
     body: formData,
   })
 }
-
-export const eliminarImagenProducto = (idProducto, idImagen) =>
-  apiRequest(`/productos/${idProducto}/imagenes/${idImagen}`, {
-    method: 'DELETE',
-  })

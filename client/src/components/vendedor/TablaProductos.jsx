@@ -4,8 +4,6 @@ import {
   ChevronDown,
   ChevronUp,
   DollarSign,
-  ImageOff,
-  ImagePlus,
   Percent,
   Pencil,
   Trash2,
@@ -116,23 +114,13 @@ const obtenerErrorNumero = (valor, tipo) => {
 
 const obtenerPrimerValor = (keys) => Array.from(keys)[0]
 
-const TablaProductos = ({
-  cargando = false,
-  error = '',
-  productos,
-  onAgregarImagenesProducto,
-  onActualizarProducto,
-  onEliminarImagenProducto,
-  onEliminarProducto,
-}) => {
+const TablaProductos = ({ cargando = false, error = '', productos, onActualizarProducto, onEliminarProducto }) => {
   const [mostrarTodos, setMostrarTodos] = useState(false)
   const [productoAbierto, setProductoAbierto] = useState(null)
   const [productoEditando, setProductoEditando] = useState(null)
   const [borrador, setBorrador] = useState(null)
   const [idGuardando, setIdGuardando] = useState(null)
   const [idEliminando, setIdEliminando] = useState(null)
-  const [idSubiendoImagenes, setIdSubiendoImagenes] = useState(null)
-  const [idImagenEliminando, setIdImagenEliminando] = useState(null)
   const [errorAccion, setErrorAccion] = useState('')
   const [categoriasProducto, setCategoriasProducto] = useState([])
   const productosVisibles = mostrarTodos ? productos : productos.slice(0, 2)
@@ -200,12 +188,8 @@ const TablaProductos = ({
       obtenerErrorNumero(borrador.precio, 'precio') ||
       obtenerErrorNumero(borrador.stock, 'stock') ||
       obtenerErrorNumero(borrador.descuento, 'descuento')
-    const errorImagenes = obtenerErrorCantidadImagenesProducto(borrador.imagenes?.length || 0)
 
-    if (tieneErrores || errorImagenes) {
-      if (errorImagenes) {
-        setErrorAccion(errorImagenes)
-      }
+    if (tieneErrores) {
       return
     }
 
@@ -220,89 +204,6 @@ const TablaProductos = ({
       setErrorAccion(errorActualizar.message || 'No se pudo actualizar el producto.')
     } finally {
       setIdGuardando(null)
-    }
-  }
-
-  const sincronizarImagenesEditadas = (productoActualizado) => {
-    if (!productoActualizado) {
-      return
-    }
-
-    setBorrador((productoActual) => {
-      if (!productoActual || productoActual.idProducto !== productoActualizado.idProducto) {
-        return productoActual
-      }
-
-      return {
-        ...productoActual,
-        imagen: productoActualizado.imagen,
-        imagenes: productoActualizado.imagenes,
-        imagenUrl: productoActualizado.imagenUrl,
-      }
-    })
-  }
-
-  const agregarImagenes = async (producto, event) => {
-    const archivos = Array.from(event.target.files || [])
-    event.target.value = ''
-
-    if (!archivos.length) {
-      return
-    }
-
-    const imagenesActuales =
-      borrador?.idProducto === producto.idProducto ? borrador.imagenes || [] : producto.imagenes || []
-    const espaciosDisponibles = MAXIMO_IMAGENES_PRODUCTO - imagenesActuales.length
-
-    if (espaciosDisponibles <= 0) {
-      setErrorAccion(`Solo podes cargar hasta ${MAXIMO_IMAGENES_PRODUCTO} imagenes por producto.`)
-      return
-    }
-
-    const archivosPermitidos = archivos.slice(0, espaciosDisponibles)
-
-    setIdSubiendoImagenes(producto.idProducto)
-    setErrorAccion('')
-
-    try {
-      const productoActualizado = await onAgregarImagenesProducto(producto.idProducto, archivosPermitidos)
-      sincronizarImagenesEditadas(productoActualizado)
-
-      if (archivos.length > espaciosDisponibles) {
-        setErrorAccion(
-          `Se agregaron ${archivosPermitidos.length} imagenes. El maximo es ${MAXIMO_IMAGENES_PRODUCTO}.`,
-        )
-      }
-    } catch (errorAgregarImagenes) {
-      setErrorAccion(errorAgregarImagenes.message || 'No se pudieron agregar las imagenes.')
-    } finally {
-      setIdSubiendoImagenes(null)
-    }
-  }
-
-  const eliminarImagen = async (producto, idImagen) => {
-    if (!idImagen) {
-      return
-    }
-
-    const imagenesActuales =
-      borrador?.idProducto === producto.idProducto ? borrador.imagenes || [] : producto.imagenes || []
-
-    if (imagenesActuales.length <= MINIMO_IMAGENES_PRODUCTO) {
-      setErrorAccion(`El producto debe tener al menos ${MINIMO_IMAGENES_PRODUCTO} imagen.`)
-      return
-    }
-
-    setIdImagenEliminando(idImagen)
-    setErrorAccion('')
-
-    try {
-      const productoActualizado = await onEliminarImagenProducto(producto.idProducto, idImagen)
-      sincronizarImagenesEditadas(productoActualizado)
-    } catch (errorEliminarImagen) {
-      setErrorAccion(errorEliminarImagen.message || 'No se pudo eliminar la imagen.')
-    } finally {
-      setIdImagenEliminando(null)
     }
   }
 
@@ -368,19 +269,11 @@ const TablaProductos = ({
           const productoMostrado = estaEditando ? borrador : producto
           const estadoMostrado = obtenerEstado(productoMostrado)
           const descuentoMostrado = Number(productoMostrado.descuento)
-          const imagenesProducto = productoMostrado.imagenes || []
-          const estaSubiendoImagenes = idSubiendoImagenes === producto.idProducto
-          const errorImagenesProducto = estaEditando
-            ? obtenerErrorCantidadImagenesProducto(imagenesProducto.length)
-            : ''
-          const alcanzoMaximoImagenesProducto =
-            imagenesProducto.length >= MAXIMO_IMAGENES_PRODUCTO
           const hayErrores =
             estaEditando &&
             (obtenerErrorNumero(borrador.precio, 'precio') ||
               obtenerErrorNumero(borrador.stock, 'stock') ||
-              obtenerErrorNumero(borrador.descuento, 'descuento') ||
-              errorImagenesProducto)
+              obtenerErrorNumero(borrador.descuento, 'descuento'))
 
           return (
             <article
@@ -632,120 +525,6 @@ const TablaProductos = ({
                         {estadoMostrado}
                       </Chip>
                     </CampoDetalle>
-                  </div>
-
-                  <div className="mt-5 rounded-md border border-blue-100 bg-white p-4 shadow-sm">
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                      <div>
-                        <h4 className="text-sm font-black uppercase tracking-widest text-[#0b2b88]">
-                          Imagenes del producto
-                        </h4>
-                        <p className="mt-1 text-sm font-semibold text-slate-500">
-                          {estaEditando
-                            ? 'Agrega nuevas imagenes o elimina archivos cargados.'
-                            : 'Archivos cargados actualmente en el producto.'}
-                        </p>
-                      </div>
-                      <Chip className="bg-blue-50 font-bold text-[#0b2b88]" radius="full" size="sm">
-                        {imagenesProducto.length}/{MAXIMO_IMAGENES_PRODUCTO} archivo
-                        {imagenesProducto.length === 1 ? '' : 's'}
-                      </Chip>
-                    </div>
-
-                    {estaEditando && errorImagenesProducto && (
-                      <div className="mt-4 rounded-md border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
-                        {errorImagenesProducto}
-                      </div>
-                    )}
-
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      {imagenesProducto.map((imagen, indice) => (
-                        <div
-                          className="group flex min-w-0 gap-3 rounded-md border border-slate-200 bg-slate-50 p-3 transition hover:border-blue-200 hover:bg-blue-50/40"
-                          key={imagen.idImagen || `${producto.idProducto}-${indice}`}
-                        >
-                          <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-md border border-slate-200 bg-white">
-                            {imagen.src ? (
-                              <img
-                                alt={imagen.nombre}
-                                className="h-full w-full object-contain p-1"
-                                src={imagen.src}
-                              />
-                            ) : (
-                              <ImageOff className="text-slate-400" size={26} />
-                            )}
-                          </div>
-
-                          <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-black text-[#0b2b88]">
-                              {imagen.nombre || `Imagen ${indice + 1}`}
-                            </p>
-                            <p className="mt-1 text-xs font-bold uppercase tracking-widest text-slate-400">
-                              {(imagen.tipo || 'image').replace('image/', '').toUpperCase()}
-                              {imagen.idImagen ? ` - ID ${imagen.idImagen}` : ''}
-                            </p>
-                            <p className="mt-2 text-xs font-semibold text-slate-500">
-                              Vista completa sin recorte.
-                            </p>
-                          </div>
-
-                          {estaEditando && (
-                            <Button
-                              isIconOnly
-                              aria-label={`Eliminar ${imagen.nombre || `imagen ${indice + 1}`}`}
-                              className="shrink-0 bg-red-50 text-red-700"
-                              isDisabled={
-                                estaSubiendoImagenes ||
-                                !imagen.idImagen ||
-                                imagenesProducto.length <= MINIMO_IMAGENES_PRODUCTO
-                              }
-                              isLoading={idImagenEliminando === imagen.idImagen}
-                              radius="sm"
-                              size="sm"
-                              onPress={() => eliminarImagen(producto, imagen.idImagen)}
-                            >
-                              <Trash2 size={16} />
-                            </Button>
-                          )}
-                        </div>
-                      ))}
-
-                      {!imagenesProducto.length && !estaEditando && (
-                        <div className="rounded-md border border-dashed border-slate-300 bg-slate-50 px-4 py-8 text-center text-sm font-bold text-slate-500 sm:col-span-2">
-                          Este producto todavia no tiene imagenes cargadas.
-                        </div>
-                      )}
-
-                      {estaEditando && (
-                        <label
-                          className={`flex min-h-24 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-[#0b2b88] bg-blue-50/70 px-4 py-5 text-center text-[#0b2b88] transition hover:bg-blue-100 ${
-                            estaSubiendoImagenes || alcanzoMaximoImagenesProducto
-                              ? 'pointer-events-none opacity-70'
-                              : ''
-                          }`}
-                        >
-                          <ImagePlus size={26} strokeWidth={2.5} />
-                          <span className="mt-2 text-sm font-black">
-                            {estaSubiendoImagenes
-                              ? 'Subiendo imagenes...'
-                              : alcanzoMaximoImagenesProducto
-                                ? 'Maximo alcanzado'
-                                : 'Agregar imagenes'}
-                          </span>
-                          <span className="mt-1 text-xs font-semibold text-slate-500">
-                            PNG, JPG o WEBP. Entre 1 y {MAXIMO_IMAGENES_PRODUCTO}.
-                          </span>
-                          <input
-                            multiple
-                            accept="image/png,image/jpeg,image/webp"
-                            className="hidden"
-                            disabled={estaSubiendoImagenes || alcanzoMaximoImagenesProducto}
-                            type="file"
-                            onChange={(event) => agregarImagenes(producto, event)}
-                          />
-                        </label>
-                      )}
-                    </div>
                   </div>
                 </div>
               )}

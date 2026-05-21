@@ -47,7 +47,7 @@ const VentasVendedor = ({
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950">
-      <BarraSuperior esVendedor />
+      <BarraSuperior />
 
       <div className="flex min-h-[calc(100vh-4rem)]">
         <MenuLateral usuario={usuario} onCerrarSesion={onCerrarSesion} />
