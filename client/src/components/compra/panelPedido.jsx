@@ -11,8 +11,12 @@ export default function PanelPedido({ articulos }) {
       <div className="divide-y divide-yellow-400/20">
         {articulos.map((articulo) => (
           <div key={articulo.id} className="flex items-center gap-3 p-4">
-            <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center shrink-0">
-              <span className="text-yellow-500 text-lg">*</span>
+            <div className="w-20 h-28 rounded-xl bg-white flex items-center justify-center shrink-0 overflow-hidden">
+              {articulo.imagen ? (
+                <img src={articulo.imagen} alt={articulo.nombre} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-yellow-500 text-2xl">*</span>
+              )}
             </div>
 
             <div className="flex-1 min-w-0">
