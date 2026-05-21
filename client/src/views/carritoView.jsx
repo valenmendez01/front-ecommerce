@@ -1,10 +1,11 @@
 // CarritoView.jsx
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, ShoppingBag } from "lucide-react";
+import { ShoppingBag, ArrowRight, ArrowLeft } from "lucide-react";
 import { Button } from "@heroui/react";
 
+import Navigation from "../components/Navigation";
 import ArticuloCarrito from "../components/carrito/itemCarrito";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
 import ProductosRecomendados from "../components/carrito/itemsRecomendados";
@@ -19,13 +20,22 @@ import { formatearPesos } from "../lib/formatters";
 const PROGRESO_COLECCION = 85;
 
 export default function CarritoView() {
-  const [articulos, setArticulos] = useState(() => obtenerArticulosCarrito());
+  const [articulos, setArticulos] = useState([]);
+  const [carritoCargado, setCarritoCargado] = useState(false);
   const navigate = useNavigate();
+
+  // Cargar carrito desde localStorage
+  useEffect(() => {
+    setArticulos(obtenerArticulosCarrito());
+    setCarritoCargado(true);
+  }, []);
 
   // Guardar carrito automáticamente
   useEffect(() => {
+    if (!carritoCargado) return;
+
     reemplazarArticulosCarrito(articulos);
-  }, [articulos]);
+  }, [articulos, carritoCargado]);
 
   const actualizarCantidad = (id, nuevaCantidad) => {
     if (nuevaCantidad < 1) {
@@ -97,23 +107,14 @@ export default function CarritoView() {
             FIGULLECT
           </span>
 
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-600">
-            {[
-              "Stickers",
-              "Albums",
-              "Rare Items",
-              "Packs",
-              "Marketplace",
-            ].map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="hover:text-blue-600 transition-colors"
-              >
-                {item}
-              </a>
-            ))}
-          </nav>
+          <Button
+            variant="light"
+            startContent={<ArrowLeft size={16} />}
+            onPress={() => navigate("/")}
+            className="text-sm text-gray-500"
+          >
+            Volver inicio
+          </Button>
         </div>
       </header>
 

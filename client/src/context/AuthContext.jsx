@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { apiRequest, clearStoredToken, getStoredToken, setStoredToken } from '../lib/api'
+import { vaciarCarrito } from '../lib/carritoStorage'
 import { AuthContext } from './useAuth'
 
 const formatearFecha = (fecha) => {
@@ -42,6 +43,7 @@ export const AuthProvider = ({ children }) => {
 
   const cerrarSesion = useCallback(() => {
     clearStoredToken()
+    vaciarCarrito()
     setToken(null)
     setUsuario(null)
     setErrorSesion('')
@@ -94,6 +96,10 @@ export const AuthProvider = ({ children }) => {
         throw new Error('No se pudo obtener el usuario autenticado.')
       }
 
+      if (usuario?.idUsuario && usuario.idUsuario !== usuarioNormalizado.idUsuario) {
+        vaciarCarrito()
+      }
+
       setUsuario(usuarioNormalizado)
       setErrorSesion('')
       return usuarioNormalizado
@@ -106,7 +112,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setCargandoUsuario(false)
     }
-  }, [cargarUsuarioActual])
+  }, [cargarUsuarioActual, usuario?.idUsuario])
 
   const registrarComprador = useCallback(async ({ nombre, apellido, email, contrasena }) => {
     setCargandoUsuario(true)
@@ -129,6 +135,10 @@ export const AuthProvider = ({ children }) => {
         throw new Error('No se pudo obtener el usuario registrado.')
       }
 
+      if (usuario?.idUsuario && usuario.idUsuario !== usuarioNormalizado.idUsuario) {
+        vaciarCarrito()
+      }
+
       setUsuario(usuarioNormalizado)
       setErrorSesion('')
       return usuarioNormalizado
@@ -141,7 +151,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setCargandoUsuario(false)
     }
-  }, [cargarUsuarioActual])
+  }, [cargarUsuarioActual, usuario?.idUsuario])
 
   useEffect(() => {
     const tokenActual = getStoredToken()
@@ -164,6 +174,7 @@ export const AuthProvider = ({ children }) => {
         if (!sigueMontado) return
 
         clearStoredToken()
+        vaciarCarrito()
         setToken(null)
         setUsuario(null)
         setErrorSesion(error.message)
