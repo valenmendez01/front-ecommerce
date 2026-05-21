@@ -2,16 +2,11 @@ import { ShieldCheck, Rocket } from "lucide-react";
 import { Button } from "@heroui/react";
 import { formatearPesos } from "../../lib/formatters";
 
-const UMBRAL_PACK_GRATIS = 15000;
-
 export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, cargando }) {
   const subtotal = articulos.reduce((acc, a) => acc + a.precio * a.cantidad, 0);
   const envio = 0;
   const impuesto = 0;
   const total = subtotal + envio + impuesto;
-
-  const progreso = Math.min((subtotal / UMBRAL_PACK_GRATIS) * 100, 100);
-  const restante = Math.max(UMBRAL_PACK_GRATIS - subtotal, 0);
 
   return (
     <div className="flex flex-col gap-4">
@@ -33,30 +28,6 @@ export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, ca
             <span className="text-gray-300">Impuesto estimado</span>
             <span className="font-semibold">{formatearPesos(impuesto)}</span>
           </div>
-        </div>
-
-        <div className="bg-gray-800 rounded-xl p-3 mb-5">
-          <div className="flex justify-between text-xs mb-2">
-            <span className="text-gray-400 font-bold uppercase tracking-wider">
-              Progreso Pack Gratis
-            </span>
-            <span className="text-green-400 font-bold">{Math.round(progreso)}%</span>
-          </div>
-          <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-green-400 rounded-full transition-all duration-500"
-              style={{ width: `${progreso}%` }}
-            />
-          </div>
-          {restante > 0 ? (
-            <p className="text-xs text-gray-400 mt-1.5">
-              Gasta {formatearPesos(restante)} mas para un Pack Premium gratis
-            </p>
-          ) : (
-            <p className="text-xs text-green-400 mt-1.5 font-bold">
-              Pack Premium desbloqueado
-            </p>
-          )}
         </div>
 
         <div className="border-t border-gray-700 pt-4 flex justify-between items-center mb-5">

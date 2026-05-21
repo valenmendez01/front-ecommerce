@@ -7,7 +7,6 @@ import CarritoVacio from "../components/carrito/carritoVacio";
 import FooterCarrito from "../components/carrito/footerCarrito";
 import HeaderCarrito from "../components/carrito/headerCarrito";
 import ProductosRecomendados from "../components/carrito/itemsRecomendados";
-import ProgresoColeccion from "../components/carrito/progresoColeccion";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
 import TituloCarrito from "../components/carrito/tituloCarrito";
 import copaMundo from "../assets/copa-mundo.png";
@@ -83,7 +82,6 @@ export default function CarritoView() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 flex flex-col gap-4">
-              <ProgresoColeccion />
               {articulos.map((articulo) => (
                 <ArticuloCarrito
                   key={articulo.id}
