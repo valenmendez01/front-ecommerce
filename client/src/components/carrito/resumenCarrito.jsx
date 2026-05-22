@@ -83,7 +83,7 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
             placeholder="Ej. CHAMPIONS2026"
             variant="bordered"
             radius="sm"
-            classNames={{ input: "uppercase" }}
+            classNames={{ input: "uppercase text-white placeholder:text-white/45" }}
             className="flex-1"
           />
           <Button

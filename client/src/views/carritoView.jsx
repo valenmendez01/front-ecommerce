@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import ArticuloCarrito from "../components/carrito/itemCarrito";
 import BarraPagoMovil from "../components/carrito/barraPagoMovil";
 import CarritoVacio from "../components/carrito/carritoVacio";
+import { Footer } from "../components/Footer";
 import HeaderCarrito from "../components/carrito/headerCarrito";
 import ProductosRecomendados from "../components/carrito/itemsRecomendados";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
@@ -90,6 +91,7 @@ export default function CarritoView() {
       </main>
 
       {articulos.length > 0 && <BarraPagoMovil subtotal={subtotal} alIrAlPago={() => navigate("/compra")} />}
+      <Footer />
     </div>
   );
 }
