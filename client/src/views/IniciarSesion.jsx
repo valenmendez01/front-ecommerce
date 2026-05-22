@@ -10,7 +10,7 @@ const obtenerMensajeLogin = (error) => {
   }
 
   if (error instanceof TypeError) {
-    return 'No se pudo conectar con el backend. Revisa que este corriendo en el puerto 4002.'
+    return 'No se pudo conectar en este momento. Intenta nuevamente.'
   }
 
   return error?.message || 'No se pudo iniciar sesion.'

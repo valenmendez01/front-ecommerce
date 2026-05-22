@@ -5,6 +5,7 @@ import { obtenerVentasPagina } from '../../data/ventasVendedor'
 import { calcularPrecioFinal, formatearPesos } from '../../data/reglasProducto'
 import MetricasPanelVendedor from './MetricasPanelVendedor'
 import TablaProductos from './TablaProductos'
+import { guardarImagenesProducto } from './productos/guardarImagenesProducto'
 
 const obtenerItems = (ventas, idProducto) =>
   ventas.flatMap((venta) => venta.items || []).filter((item) => item.idProducto === idProducto)
@@ -34,7 +35,7 @@ const ProductosPanelVendedor = ({ token }) => {
     return () => { sigueActivo = false }
   }, [token])
 
-  const actualizarProducto = async (producto) => {
+  const actualizarProducto = async (producto, cambiosImagenes) => {
     const respuesta = await fetch(`/productos/${producto.idProducto}`, {
       method: 'PUT',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -42,19 +43,14 @@ const ProductosPanelVendedor = ({ token }) => {
     })
     const json = await respuesta.json()
     if (!respuesta.ok) throw new Error(json.mensaje || json.message || 'No se pudo actualizar el producto.')
-    const guardado = normalizarProductoVendedor(json.data)
+    const productoConImagenes = await guardarImagenesProducto(producto.idProducto, cambiosImagenes, token)
+    const guardado = normalizarProductoVendedor(productoConImagenes || json.data)
     setProductos((actuales) => actuales.map((actual) => actual.idProducto === guardado.idProducto ? guardado : actual))
     return guardado
   }
 
-  const eliminarProducto = async (idProducto) => {
-    const respuesta = await fetch(`/productos/${idProducto}/desactivar`, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    if (!respuesta.ok) throw new Error('No se pudo desactivar el producto.')
-    setProductos((actuales) => actuales.map((producto) => producto.idProducto === idProducto ? { ...producto, activo: false } : producto))
-  }
+  const cambiarVisibilidadProducto = (producto) =>
+    actualizarProducto({ ...producto, activo: !producto.activo })
 
   const productosConVentas = productos.map((producto) => {
     const vendidos = obtenerItems(ventas, producto.idProducto).reduce((total, item) => total + item.cantidad, 0)
@@ -70,7 +66,7 @@ const ProductosPanelVendedor = ({ token }) => {
 
   return <>
     <MetricasPanelVendedor metricas={metricas} />
-    <div className="mt-12"><TablaProductos cargando={cargando} error={error} productos={productosConVentas} onActualizarProducto={actualizarProducto} onEliminarProducto={eliminarProducto} /></div>
+    <div className="mt-12"><TablaProductos cargando={cargando} error={error} productos={productosConVentas} onActualizarProducto={actualizarProducto} onCambiarVisibilidadProducto={cambiarVisibilidadProducto} /></div>
   </>
 }
 

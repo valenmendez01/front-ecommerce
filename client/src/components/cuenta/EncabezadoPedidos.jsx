@@ -3,7 +3,7 @@ import { Button } from '@heroui/react'
 const EncabezadoPedidos = ({ mostrarHistorial, onCambiarVista, puedeVerHistorial }) => (
   <div className="flex items-center justify-between px-8 py-6">
     <div>
-      <h2 className="text-2xl font-black text-[#0b2b88]">
+      <h2 className="text-2xl font-black text-green-primary">
         {mostrarHistorial ? 'HISTORIAL DE PEDIDOS' : 'PEDIDOS RECIENTES'}
       </h2>
       {mostrarHistorial && (
@@ -13,7 +13,7 @@ const EncabezadoPedidos = ({ mostrarHistorial, onCambiarVista, puedeVerHistorial
 
     {puedeVerHistorial && (
       <Button
-        className="bg-transparent text-sm font-bold text-[#0b2b88]"
+        className="bg-transparent text-sm font-bold text-green-primary"
         radius="sm"
         size="sm"
         onPress={onCambiarVista}

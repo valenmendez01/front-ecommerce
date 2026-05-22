@@ -5,12 +5,12 @@ import TablaItemsVenta from './TablaItemsVenta'
 const DatoVenta = ({ titulo, valor }) => (
   <div className="rounded-md bg-white p-4">
     <p className="text-xs font-bold uppercase tracking-widest text-slate-400">{titulo}</p>
-    <p className="mt-2 font-black text-[#0b2b88]">{valor}</p>
+    <p className="mt-2 font-black text-green-primary">{valor}</p>
   </div>
 )
 
 const DetalleVenta = ({ venta }) => (
-  <CardBody className="border-t border-blue-100 bg-blue-50/50 px-8 py-5">
+  <CardBody className="border-t border-dorado-primary/30 bg-dorado-primary/10 px-8 py-5">
     <div className="grid gap-4 md:grid-cols-3">
       <DatoVenta titulo="Comprador" valor={venta.comprador} />
       <DatoVenta titulo="Cantidad total" valor={`${venta.cantidad} u.`} />

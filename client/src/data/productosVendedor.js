@@ -18,10 +18,12 @@ const obtenerTipoImagen = (contenido) => {
   return 'image/jpeg'
 }
 
-const obtenerImagen = (producto) => {
-  const contenido = producto.imagenes?.find(Boolean)?.contenidoBase64
+export const obtenerUrlImagenProducto = (imagen) => {
+  const contenido = imagen?.contenidoBase64
   return contenido ? `data:${obtenerTipoImagen(contenido)};base64,${contenido}` : ''
 }
+
+const obtenerImagen = (producto) => obtenerUrlImagenProducto(producto.imagenes?.find(Boolean))
 
 export const obtenerProductosPagina = (data) => {
   if (Array.isArray(data)) return data

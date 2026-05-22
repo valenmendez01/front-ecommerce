@@ -3,7 +3,7 @@ import TarjetaResumen from './TarjetaResumen'
 const EncabezadoCuenta = ({ resumen, usuario }) => (
   <section className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
     <div>
-      <h2 className="text-6xl font-black uppercase leading-none text-[#061d58] md:text-7xl">
+      <h2 className="text-6xl font-black uppercase leading-none text-green-primary md:text-7xl">
         Hola,
         <br />
         {usuario.nombre}

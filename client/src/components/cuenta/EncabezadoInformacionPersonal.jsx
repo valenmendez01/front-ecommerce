@@ -9,14 +9,14 @@ const EncabezadoInformacionPersonal = ({
   onGuardar,
   puedeEditar,
 }) => (
-  <div className="flex items-center justify-between bg-[#263f98] px-8 py-4">
+  <div className="flex items-center justify-between bg-green-primary px-8 py-4">
     <h2 className="text-xl font-black text-white">INFORMACION PERSONAL</h2>
 
     {puedeEditar && estaEditando && (
       <div className="flex gap-2">
         <Button
           isDisabled={Boolean(errorEmail)}
-          className="bg-green-100 text-sm font-bold text-green-700"
+          className="bg-dorado-primary/25 text-sm font-bold text-green-primary"
           radius="sm"
           size="sm"
           startContent={<Check size={16} />}

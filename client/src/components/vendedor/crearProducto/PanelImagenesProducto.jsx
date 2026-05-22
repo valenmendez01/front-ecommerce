@@ -27,12 +27,12 @@ const PanelImagenesProducto = ({ imagenes, onCargar, onQuitar }) => {
         </h3>
         <InputImagenes
           className={`mt-6 flex min-h-52 flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition ${
-            alcanzoMaximo ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:border-[#0b2b88] hover:bg-blue-50'
+            alcanzoMaximo ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:border-dorado-primary hover:bg-dorado-primary/10'
           }`}
           deshabilitado={alcanzoMaximo}
           onCargar={onCargar}
         >
-          <UploadCloud className="text-[#0b2b88]" size={42} strokeWidth={2.5} />
+          <UploadCloud className="text-green-primary" size={42} strokeWidth={2.5} />
           <span className="mt-4 text-xl font-black text-slate-950">
             {alcanzoMaximo ? 'Maximo alcanzado' : 'Subir imagenes'}
           </span>

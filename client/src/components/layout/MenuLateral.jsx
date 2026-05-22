@@ -27,14 +27,14 @@ const MenuLateral = ({ usuario, onCerrarSesion }) => {
   const opciones = esVendedor ? opcionesVendedor : opcionesCliente
 
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
-      <div className="border-b border-slate-200 px-5 py-5">
+    <aside className="flex w-64 shrink-0 flex-col border-r border-dorado-primary/35 bg-white">
+      <div className="border-b border-dorado-primary/35 px-5 py-5">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#0b2b88] bg-white text-sm font-black text-[#0b2b88]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-dorado-primary bg-white text-sm font-black text-green-primary">
             {iniciales}
           </div>
           <div>
-            <p className="font-bold text-[#0b2b88]">
+            <p className="font-bold text-green-primary">
               {usuario.nombre} {usuario.apellido}
             </p>
             <p className="text-sm text-slate-500">Cuenta de {rolCuenta}</p>
@@ -49,7 +49,7 @@ const MenuLateral = ({ usuario, onCerrarSesion }) => {
               <NavLink
                 className={({ isActive }) =>
                   `flex items-center gap-4 rounded-md px-5 py-3 text-lg font-medium ${
-                    isActive ? 'bg-[#263f98] text-white shadow-md' : 'text-slate-700'
+                    isActive ? 'bg-green-primary text-white shadow-md ring-1 ring-dorado-primary/70' : 'text-green-primary hover:bg-dorado-primary/15'
                   }`
                 }
                 end={texto === 'Catálogo'}
@@ -63,7 +63,7 @@ const MenuLateral = ({ usuario, onCerrarSesion }) => {
         </ul>
       </nav>
 
-      <div className="border-t border-slate-200 px-5 py-6">
+      <div className="border-t border-dorado-primary/35 px-5 py-6">
         <button
           className="flex items-center gap-4 text-lg font-medium text-red-700"
           type="button"

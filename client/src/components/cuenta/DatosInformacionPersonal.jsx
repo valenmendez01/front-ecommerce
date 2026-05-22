@@ -4,7 +4,7 @@ import CorreoPersonal from './CorreoPersonal'
 const DatoPersonal = ({ children, titulo }) => (
   <div>
     <p className="text-xs font-bold uppercase tracking-widest text-slate-400">{titulo}</p>
-    <div className="mt-2 text-xl font-bold text-[#0b2b88]">{children}</div>
+    <div className="mt-2 text-xl font-bold text-green-primary">{children}</div>
   </div>
 )
 
@@ -20,7 +20,7 @@ const DatosInformacionPersonal = ({ email, errorEmail, estaEditando, onCambiarEm
     />
     <div>
       <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Rol de cuenta</p>
-      <Chip className="mt-2 bg-green-100 font-bold text-green-700" radius="full" size="sm">
+      <Chip className="mt-2 bg-dorado-primary/25 font-bold text-green-primary" radius="full" size="sm">
         {usuario.rolVisible || usuario.rol}
       </Chip>
     </div>

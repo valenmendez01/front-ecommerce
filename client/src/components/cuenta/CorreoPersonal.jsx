@@ -8,7 +8,7 @@ const CorreoPersonal = ({ email, errorEmail, estaEditando, onCambiarEmail }) => 
         <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
           Correo electronico
         </p>
-        <p className="mt-2 text-xl font-bold text-[#0b2b88]">{email}</p>
+        <p className="mt-2 text-xl font-bold text-green-primary">{email}</p>
       </div>
     )
   }
@@ -19,9 +19,9 @@ const CorreoPersonal = ({ email, errorEmail, estaEditando, onCambiarEmail }) => 
       className="mt-1"
       classNames={{
         errorMessage: 'font-semibold',
-        input: 'font-bold text-[#0b2b88]',
+        input: 'font-bold text-green-primary',
         inputWrapper:
-          'border border-slate-200 bg-slate-100 shadow-none data-[hover=true]:bg-slate-100 group-data-[focus=true]:border-[#0b2b88] group-data-[focus=true]:bg-white',
+          'border border-dorado-primary/35 bg-slate-100 shadow-none data-[hover=true]:bg-slate-100 group-data-[focus=true]:border-dorado-primary group-data-[focus=true]:bg-white',
         label: 'font-bold text-slate-500',
       }}
       color={errorEmail ? 'danger' : 'primary'}

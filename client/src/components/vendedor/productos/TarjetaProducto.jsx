@@ -13,13 +13,13 @@ const TarjetaProducto = ({
   categorias,
   onAbrir,
   onActualizarProducto,
-  onEliminarProducto,
+  onCambiarVisibilidadProducto,
   producto,
 }) => {
   const [editando, setEditando] = useState(false)
   const [borrador, setBorrador] = useState({ ...producto })
   const [guardando, setGuardando] = useState(false)
-  const [eliminando, setEliminando] = useState(false)
+  const [cambiandoVisibilidad, setCambiandoVisibilidad] = useState(false)
   const [errorAccion, setErrorAccion] = useState('')
   const hayErrores = editando && tieneErroresNumericos(borrador)
 
@@ -28,29 +28,31 @@ const TarjetaProducto = ({
     setBorrador((actual) => ({ ...actual, [campo]: esNumero ? Number(valor) : valor }))
   }
 
-  const guardarEdicion = async () => {
-    if (tieneErroresNumericos(borrador)) return
+  const guardarEdicion = async (cambiosImagenes) => {
+    if (tieneErroresNumericos(borrador)) return false
     setGuardando(true)
     setErrorAccion('')
     try {
-      await onActualizarProducto(borrador)
+      await onActualizarProducto(borrador, cambiosImagenes)
       setEditando(false)
+      return true
     } catch (error) {
       setErrorAccion(error.message || 'No se pudo actualizar el producto.')
+      return false
     } finally {
       setGuardando(false)
     }
   }
 
-  const eliminarProducto = async () => {
-    setEliminando(true)
+  const cambiarVisibilidadProducto = async () => {
+    setCambiandoVisibilidad(true)
     setErrorAccion('')
     try {
-      await onEliminarProducto(producto.idProducto)
+      await onCambiarVisibilidadProducto(producto)
     } catch (error) {
-      setErrorAccion(error.message || 'No se pudo desactivar el producto.')
+      setErrorAccion(error.message || 'No se pudo cambiar la visibilidad del producto.')
     } finally {
-      setEliminando(false)
+      setCambiandoVisibilidad(false)
     }
   }
 
@@ -66,14 +68,14 @@ const TarjetaProducto = ({
 
   return (
     <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
-      <ResumenProducto abierto={abierto} eliminando={eliminando} guardando={guardando} onAbrir={cambiarDetalle} onEliminar={eliminarProducto} producto={producto} />
+      <ResumenProducto abierto={abierto} cambiandoVisibilidad={cambiandoVisibilidad} guardando={guardando} onAbrir={cambiarDetalle} onCambiarVisibilidad={cambiarVisibilidadProducto} producto={producto} />
       {errorAccion && <p className="mx-5 mb-5 rounded-md bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{errorAccion}</p>}
       {abierto && (
         <DetalleProducto
           borrador={borrador}
           categorias={categorias}
           editando={editando}
-          eliminando={eliminando}
+          eliminando={cambiandoVisibilidad}
           guardando={guardando}
           hayErrores={hayErrores}
           onCambiar={cambiarCampo}

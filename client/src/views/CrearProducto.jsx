@@ -70,7 +70,7 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
       setImagenes([])
       setMostrarErrores(false)
       setTipoMensaje('exito')
-      setMensaje('Producto publicado correctamente con datos del backend.')
+      setMensaje('Producto publicado correctamente.')
     } catch (error) {
       setTipoMensaje('error')
       setMensaje(error.message || 'No se pudo publicar el producto.')

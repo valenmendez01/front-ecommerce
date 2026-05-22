@@ -8,7 +8,7 @@ const enlacesCliente = [
 
 const claseEnlace = ({ isActive }) =>
   `border-b-4 px-1 py-5 transition ${
-    isActive ? 'border-[#0b2b88] text-[#0b2b88]' : 'border-transparent text-slate-500'
+    isActive ? 'border-dorado-primary text-green-primary' : 'border-transparent text-green-primary/70'
   }`
 
 const BarraSuperior = ({ usuario }) => {
@@ -16,12 +16,12 @@ const BarraSuperior = ({ usuario }) => {
   const rutaCuenta = esVendedor ? '/panel-vendedor' : '/mi-cuenta'
 
   return (
-    <header className="flex h-16 items-center justify-between border-b-2 border-[#0b2b88] bg-white px-8">
-      <Link className="text-2xl font-black italic text-[#0b2b88]" to="/">
+    <header className="flex h-16 items-center justify-between border-b-2 border-dorado-primary bg-white px-8">
+      <Link className="text-2xl font-black italic text-green-primary" to="/">
         FIGULLECT
       </Link>
 
-      <nav className="hidden items-center gap-10 text-base font-semibold text-slate-500 md:flex">
+      <nav className="hidden items-center gap-10 text-base font-semibold md:flex">
         {!esVendedor && enlacesCliente.map((enlace) => (
           <NavLink
             className={claseEnlace}
@@ -34,11 +34,11 @@ const BarraSuperior = ({ usuario }) => {
         ))}
       </nav>
 
-      <div className="flex items-center gap-4 text-[#0b2b88]">
+      <div className="flex items-center gap-4 text-green-primary">
         {!esVendedor && (
           <Link
             aria-label="Carrito"
-            className="flex h-10 w-10 items-center justify-center rounded-md transition hover:bg-blue-50"
+            className="flex h-10 w-10 items-center justify-center rounded-md transition hover:bg-dorado-primary/20"
             to="/carrito"
           >
             <ShoppingCart size={26} strokeWidth={2.5} />
@@ -47,8 +47,8 @@ const BarraSuperior = ({ usuario }) => {
         <NavLink
           aria-label="Mi cuenta"
           className={({ isActive }) =>
-            `flex h-12 w-10 items-center justify-center border-b-4 transition hover:bg-blue-50 ${
-              isActive ? 'border-[#0b2b88]' : 'border-transparent'
+            `flex h-12 w-10 items-center justify-center border-b-4 transition hover:bg-dorado-primary/20 ${
+              isActive ? 'border-dorado-primary' : 'border-transparent'
             }`
           }
           to={rutaCuenta}

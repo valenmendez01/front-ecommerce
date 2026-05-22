@@ -2,7 +2,7 @@ import { Card, CardBody } from '@heroui/react'
 import { Info } from 'lucide-react'
 
 const inputClasses =
-  'mt-2 w-full rounded-md border border-slate-200 bg-slate-100 px-5 py-4 text-base font-semibold text-slate-800 outline-none transition focus:border-[#0b2b88] focus:bg-white'
+  'mt-2 w-full rounded-md border border-dorado-primary/35 bg-slate-100 px-5 py-4 text-base font-semibold text-slate-800 outline-none transition focus:border-dorado-primary focus:bg-white'
 
 const EtiquetaCampo = ({ children, titulo }) => (
   <label className="block">
@@ -18,7 +18,7 @@ const SeccionInformacionProducto = ({ categorias, errores, mostrarErrores, onCam
   <Card className="shadow-lg" radius="sm">
     <CardBody className="px-8 py-8">
       <div className="mb-7 flex items-center gap-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-700 text-white">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-primary text-dorado-primary">
           <Info size={18} />
         </div>
         <h3 className="text-2xl font-black text-slate-950">Informacion principal</h3>

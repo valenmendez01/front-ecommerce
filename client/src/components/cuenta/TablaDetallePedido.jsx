@@ -1,9 +1,9 @@
 const TablaDetallePedido = ({ pedido }) => (
   <div>
-    <h3 className="text-sm font-black uppercase tracking-widest text-[#0b2b88]">
+    <h3 className="text-sm font-black uppercase tracking-widest text-green-primary">
       Detalle del pedido
     </h3>
-    <div className="mt-4 overflow-hidden rounded-md border border-blue-100 bg-white">
+    <div className="mt-4 overflow-hidden rounded-md border border-dorado-primary/30 bg-white">
       <table className="w-full">
         <thead>
           <tr className="bg-slate-50 text-left text-xs font-bold uppercase text-slate-400">
@@ -29,7 +29,7 @@ const TablaDetallePedido = ({ pedido }) => (
               <td className="px-4 py-3 font-semibold text-slate-800">{producto.nombre}</td>
               <td className="px-4 py-3">{producto.cantidad}</td>
               <td className="px-4 py-3">{producto.precioUnitarioTexto}</td>
-              <td className="px-4 py-3 font-bold text-[#0b2b88]">{producto.subtotalTexto}</td>
+              <td className="px-4 py-3 font-bold text-green-primary">{producto.subtotalTexto}</td>
             </tr>
           ))}
         </tbody>

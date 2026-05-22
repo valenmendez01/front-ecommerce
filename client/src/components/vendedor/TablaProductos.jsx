@@ -5,12 +5,12 @@ import EncabezadoProductos from './productos/EncabezadoProductos'
 import TarjetaProducto from './productos/TarjetaProducto'
 
 const MensajeProductos = ({ children }) => (
-  <div className="rounded-md border border-slate-200 bg-slate-50 px-6 py-10 text-center font-semibold text-slate-500 xl:col-span-2">
+  <div className="rounded-md border border-slate-200 bg-slate-50 px-6 py-12 text-center font-semibold text-slate-500 xl:col-span-2">
     {children}
   </div>
 )
 
-const TablaProductos = ({ cargando = false, error = '', productos, onActualizarProducto, onEliminarProducto }) => {
+const TablaProductos = ({ cargando = false, error = '', productos, onActualizarProducto, onCambiarVisibilidadProducto }) => {
   const [mostrarTodos, setMostrarTodos] = useState(false)
   const [productoAbierto, setProductoAbierto] = useState(null)
   const [categorias, setCategorias] = useState([])
@@ -41,7 +41,7 @@ const TablaProductos = ({ cargando = false, error = '', productos, onActualizarP
           {error}
         </div>
       )}
-      <div className="grid gap-4 px-8 pb-8 xl:grid-cols-2">
+      <div className="grid gap-6 px-8 pb-8 xl:grid-cols-2">
         {cargando && <MensajeProductos>Cargando productos publicados...</MensajeProductos>}
         {!cargando && productosVisibles.length === 0 && (
           <MensajeProductos>Todavia no tenes productos publicados.</MensajeProductos>
@@ -53,7 +53,7 @@ const TablaProductos = ({ cargando = false, error = '', productos, onActualizarP
             key={producto.idProducto}
             onAbrir={() => setProductoAbierto(productoAbierto === producto.idProducto ? null : producto.idProducto)}
             onActualizarProducto={onActualizarProducto}
-            onEliminarProducto={onEliminarProducto}
+            onCambiarVisibilidadProducto={onCambiarVisibilidadProducto}
             producto={producto}
           />
         ))}

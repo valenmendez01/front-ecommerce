@@ -12,7 +12,7 @@ const CampoDescuentoProducto = ({ borrador, editando, onCambiar, producto }) => 
           isRequired
           aria-label="Descuento del producto"
           classNames={clasesCampoProducto}
-          endContent={<Percent className="text-green-700" size={16} />}
+          endContent={<Percent className="text-green-primary" size={16} />}
           errorMessage={obtenerErrorNumeroProducto(borrador.descuento, 'descuento')}
           isInvalid={Boolean(obtenerErrorNumeroProducto(borrador.descuento, 'descuento'))}
           max="100"
