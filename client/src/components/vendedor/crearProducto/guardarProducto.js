@@ -1,10 +1,5 @@
 import { crearDatosProducto } from '../../../data/productosVendedor'
-
-const crearFormularioImagenes = (imagenes) => {
-  const archivos = new FormData()
-  imagenes.forEach((imagen) => archivos.append('archivos', imagen.archivo))
-  return archivos
-}
+import { crearFormularioImagenes } from '../../../data/imagenesProducto'
 
 export const guardarProducto = async (producto, imagenes, token) => {
   const respuesta = await fetch('/productos', {

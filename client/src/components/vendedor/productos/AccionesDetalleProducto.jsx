@@ -12,20 +12,15 @@ const AccionesDetalleProducto = ({
   producto,
 }) => (
   <div className="mb-4 flex items-center justify-between gap-3">
-    <div>
-      <h3 className="text-sm font-black uppercase tracking-widest text-[#0b2b88]">
-        Detalle del producto
-      </h3>
-      <p className="mt-1 text-sm text-slate-500">
-        Estos datos se actualizan contra el backend del vendedor.
-      </p>
-    </div>
+    <h3 className="text-sm font-black uppercase tracking-widest text-green-primary">
+      Detalle del producto
+    </h3>
     {editando ? (
       <div className="flex gap-2">
         <Button
           isIconOnly
           aria-label="Guardar cambios"
-          className="bg-green-100 text-green-700"
+          className="bg-dorado-primary/25 text-green-primary"
           isDisabled={Boolean(hayErrores) || eliminando}
           isLoading={guardando}
           radius="sm"
@@ -49,7 +44,7 @@ const AccionesDetalleProducto = ({
       <Button
         isIconOnly
         aria-label={`Editar ${producto.nombre}`}
-        className="bg-blue-100 text-[#0b2b88]"
+        className="bg-dorado-primary/25 text-green-primary"
         radius="sm"
         size="sm"
         onPress={onEditar}

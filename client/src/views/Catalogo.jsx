@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Filtros } from "../components/catalogo/filtrosCatalogo/Filtros";
 import { ListaProductos } from "../components/catalogo/productos/ListaProductos";
-import { Card, CardBody, CardHeader, Divider } from "@heroui/react";
+import { Divider } from "@heroui/react";
 import { GooeyInput } from "../components/ui/gooey-input";
 
 export const Catalogo = () => {
@@ -51,43 +51,36 @@ export const Catalogo = () => {
     .filter((p) => p.nombre.toLowerCase().includes(busqueda.toLowerCase()));
 
   return (
-    <div className="flex font-sans">
-      <aside className="w-90 shrink-0 p-6 sticky top-16 self-start">
-        <Filtros
-          categorias={categorias}
-          categoriasSeleccionadas={categoriasSeleccionadas}
-          onCambiarCategoria={handleCambioCategoria}
-          precioMin={precioMin}
-          precioMax={precioMax}
-          onPrecioChange={handlePrecioChange}
+    <div className="flex flex-col font-sans max-w-7xl mx-auto w-full">
+      <div className="flex items-center justify-between px-6 py-4">
+        <h1>Mostrando {productosFiltrados.length} productos</h1>
+        <GooeyInput
+          placeholder="Buscar..."
+          value={busqueda}
+          onValueChange={(val) => setBusqueda(val)}
         />
-      </aside>
+      </div>
 
-      <main className="flex-1 p-6 md:p-8">
-        <Card>
-          <CardHeader className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-[#2d334a]">Catálogo</h1>
-              <span className="text-gray-400 text-lg font-medium">
-                ({productosFiltrados.length})
-              </span>
-            </div>
-            <div className="flex items-center gap-4">
-              <GooeyInput
-                placeholder="Buscar..."
-                value={busqueda}
-                onValueChange={(val) => setBusqueda(val)}
-              />
-            </div>
-          </CardHeader>
+      <Divider orientation="horizontal" />
 
-          <Divider orientation="horizontal" />
+      <div className="flex">
+        <aside className="w-90 shrink-0 p-6 sticky top-16 self-start">
+          <Filtros
+            categorias={categorias}
+            categoriasSeleccionadas={categoriasSeleccionadas}
+            onCambiarCategoria={handleCambioCategoria}
+            precioMin={precioMin}
+            precioMax={precioMax}
+            onPrecioChange={handlePrecioChange}
+          />
+        </aside>
 
-          <CardBody className="px-6 py-4 mb-6">
+        <main className="flex-1 p-6 md:p-8">
+          <div className="px-6 py-4 mb-6">
             <ListaProductos productos={productosFiltrados} />
-          </CardBody>
-        </Card>
-      </main>
+          </div>
+        </main>
+      </div>
     </div>
   );
 };

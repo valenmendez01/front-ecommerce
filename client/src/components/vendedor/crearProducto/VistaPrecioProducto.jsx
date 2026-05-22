@@ -11,7 +11,7 @@ const VistaPrecioProducto = ({ precio, precioFinal, tieneDescuento }) => (
         <span className="text-2xl font-black text-red-700">{formatearPesos(precioFinal)}</span>
       </div>
     ) : (
-      <p className="mt-2 text-2xl font-black text-[#0b2b88]">{formatearPesos(precio)}</p>
+      <p className="mt-2 text-2xl font-black text-green-primary">{formatearPesos(precio)}</p>
     )}
   </div>
 )

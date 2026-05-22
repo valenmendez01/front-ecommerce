@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import Navigation from "./components/Navigation"
+import { StickyBanner } from "./components/ui/sticky-banner"
 import { useAuth } from "./context/useAuth"
 import { Catalogo } from "./views/Catalogo"
 import CrearProducto from "./views/CrearProducto"
@@ -82,90 +83,100 @@ function App() {
 
   if (rutasPantallaCompleta.some((ruta) => pathname.startsWith(ruta))) {
     return (
-      <Routes>
-        <Route
-          path="/carrito"
-          element={requerirSesion(<CarritoView />, { requiereComprador: true })}
-        />
-        <Route
-          path="/compra"
-          element={requerirSesion(<CompraView />, { requiereComprador: true })}
-        />
-        <Route
-          path="/iniciar-sesion"
-          element={
-            cargandoUsuario ? (
-              <PantallaCargandoSesion />
-            ) : usuario ? (
-              <Navigate replace to={destinoUsuarioAutenticado} />
-            ) : (
-              <IniciarSesion />
-            )
-          }
-        />
-        <Route
-          path="/registro"
-          element={
-            cargandoUsuario ? (
-              <PantallaCargandoSesion />
-            ) : usuario ? (
-              <Navigate replace to={destinoUsuarioAutenticado} />
-            ) : (
-              <RegistroComprador />
-            )
-          }
-        />
-        <Route
-          path="/mi-cuenta"
-          element={requerirSesion(
-            <MiCuenta
-              token={token}
-              usuario={usuario}
-              onCerrarSesion={cerrarSesion}
-            />,
-          )}
-        />
-        <Route
-          path="/panel-vendedor"
-          element={requerirSesion(
-            <PanelVendedor
-              token={token}
-              usuario={usuario}
-              onCerrarSesion={cerrarSesion}
-            />,
-            { requiereVendedor: true },
-          )}
-        />
-        <Route
-          path="/crear-producto"
-          element={requerirSesion(
-            <CrearProducto
-              token={token}
-              usuario={usuario}
-              onCerrarSesion={cerrarSesion}
-            />,
-            { requiereVendedor: true },
-          )}
-        />
-        <Route
-          path="/ventas"
-          element={requerirSesion(
-            <VentasVendedor
-              token={token}
-              usuario={usuario}
-              onCerrarSesion={cerrarSesion}
-            />,
-            { requiereVendedor: true },
-          )}
-        />
-        <Route path="*" element={<Navigate replace to="/" />} />
-      </Routes>
+      <>
+        <Routes>
+          <Route
+            path="/carrito"
+            element={requerirSesion(<CarritoView />, { requiereComprador: true })}
+          />
+          <Route
+            path="/compra"
+            element={requerirSesion(<CompraView />, { requiereComprador: true })}
+          />
+          <Route
+            path="/iniciar-sesion"
+            element={
+              cargandoUsuario ? (
+                <PantallaCargandoSesion />
+              ) : usuario ? (
+                <Navigate replace to={destinoUsuarioAutenticado} />
+              ) : (
+                <IniciarSesion />
+              )
+            }
+          />
+          <Route
+            path="/registro"
+            element={
+              cargandoUsuario ? (
+                <PantallaCargandoSesion />
+              ) : usuario ? (
+                <Navigate replace to={destinoUsuarioAutenticado} />
+              ) : (
+                <RegistroComprador />
+              )
+            }
+          />
+          <Route
+            path="/mi-cuenta"
+            element={requerirSesion(
+              <MiCuenta
+                token={token}
+                usuario={usuario}
+                onCerrarSesion={cerrarSesion}
+              />,
+            )}
+          />
+          <Route
+            path="/panel-vendedor"
+            element={requerirSesion(
+              <PanelVendedor
+                token={token}
+                usuario={usuario}
+                onCerrarSesion={cerrarSesion}
+              />,
+              { requiereVendedor: true },
+            )}
+          />
+          <Route
+            path="/crear-producto"
+            element={requerirSesion(
+              <CrearProducto
+                token={token}
+                usuario={usuario}
+                onCerrarSesion={cerrarSesion}
+              />,
+              { requiereVendedor: true },
+            )}
+          />
+          <Route
+            path="/ventas"
+            element={requerirSesion(
+              <VentasVendedor
+                token={token}
+                usuario={usuario}
+                onCerrarSesion={cerrarSesion}
+              />,
+              { requiereVendedor: true },
+            )}
+          />
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
+        <Footer />
+      </>
     )
   }
 
   return (
     <>
-      <Navigation />
+      <div className="sticky top-0 z-50 grid" style={{ gridTemplateRows: "auto auto" }}>
+        <StickyBanner className="bg-linear-to-b from-dorado-primary to-dorado-primary/90">
+          <p className="text-white text-sm drop-shadow-md">
+            🎉 20% de descuento. Usá el código <b>PROMO20</b>
+          </p>
+        </StickyBanner>
+        <Navigation />
+      </div>
 
       <div className="mx-auto flex min-h-screen max-w-400 flex-col">
         

@@ -4,7 +4,7 @@ import EncabezadoPanelVendedor from '../components/vendedor/EncabezadoPanelVende
 import ProductosPanelVendedor from '../components/vendedor/ProductosPanelVendedor'
 
 const PanelVendedor = ({ token, usuario, onCerrarSesion }) => (
-  <PaginaGestion usuario={usuario} onCerrarSesion={onCerrarSesion}>
+  <PaginaGestion claseContenido="max-w-[92rem]" usuario={usuario} onCerrarSesion={onCerrarSesion}>
     <EncabezadoPanelVendedor />
     <div className="mt-10"><InformacionPersonal usuario={usuario} /></div>
     <ProductosPanelVendedor token={token} />

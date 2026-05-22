@@ -1,12 +1,12 @@
 const TablaDetallePedido = ({ pedido }) => (
   <div>
-    <h3 className="text-sm font-black uppercase tracking-widest text-[#142b10]">
+    <h3 className="text-sm font-black uppercase tracking-widest text-green-primary">
       Detalle del pedido
     </h3>
-    <div className="mt-4 overflow-hidden rounded-md border border-[#d8c49a] bg-white">
+    <div className="mt-4 overflow-hidden rounded-md border border-dorado-primary/30 bg-white">
       <table className="w-full">
         <thead>
-          <tr className="bg-[#f7f4ec] text-left text-xs font-bold uppercase text-[#8d6f3e]">
+          <tr className="bg-slate-50 text-left text-xs font-bold uppercase text-slate-400">
             <th className="px-4 py-3">Producto</th>
             <th className="px-4 py-3">Cantidad</th>
             <th className="px-4 py-3">Precio</th>
@@ -15,21 +15,21 @@ const TablaDetallePedido = ({ pedido }) => (
         </thead>
         <tbody>
           {pedido.productos.length === 0 && (
-            <tr className="border-t border-[#d8c49a]">
-              <td className="px-4 py-5 text-center font-semibold text-[#5f6d5a]" colSpan="4">
+            <tr className="border-t border-slate-100">
+              <td className="px-4 py-5 text-center font-semibold text-slate-500" colSpan="4">
                 No hay productos asociados a este pedido.
               </td>
             </tr>
           )}
           {pedido.productos.map((producto) => (
             <tr
-              className="border-t border-[#d8c49a]"
+              className="border-t border-slate-100"
               key={`${pedido.idPedido}-${producto.idProducto || producto.nombre}`}
             >
-              <td className="px-4 py-3 font-semibold text-[#142b10]">{producto.nombre}</td>
+              <td className="px-4 py-3 font-semibold text-slate-800">{producto.nombre}</td>
               <td className="px-4 py-3">{producto.cantidad}</td>
               <td className="px-4 py-3">{producto.precioUnitarioTexto}</td>
-              <td className="px-4 py-3 font-bold text-[#142b10]">{producto.subtotalTexto}</td>
+              <td className="px-4 py-3 font-bold text-green-primary">{producto.subtotalTexto}</td>
             </tr>
           ))}
         </tbody>

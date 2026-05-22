@@ -1,29 +1,31 @@
 const CARRITO_STORAGE_KEY = 'figullect_carrito'
 
-const obtenerMimeImagen = (contenidoBase64) => {
-  if (contenidoBase64?.startsWith('/9j/')) return 'image/jpeg'
-  if (contenidoBase64?.startsWith('iVBORw0KGgo')) return 'image/png'
-  if (contenidoBase64?.startsWith('UklGR')) return 'image/webp'
-  return 'image/jpeg'
-}
+export const obtenerImagenProducto = (producto) => {
+  if (producto.imagen) return producto.imagen
+  if (producto.imagenUrl) return producto.imagenUrl
 
-const obtenerImagenProducto = (producto) => {
   const contenidoBase64 = producto.imagenes?.find(Boolean)?.contenidoBase64
 
   if (!contenidoBase64) {
     return ''
   }
 
-  return `data:${obtenerMimeImagen(contenidoBase64)};base64,${contenidoBase64}`
+  return `data:image/jpeg;base64,${contenidoBase64}`
 }
+
+const obtenerIdProducto = (producto) =>
+  producto.idProducto ?? producto.id ?? producto.idCombo ?? producto.idAlbum
+
+const obtenerStockProducto = (producto) =>
+  producto.stock == null ? undefined : Number(producto.stock)
 
 const normalizarArticulo = (articulo) => ({
   ...articulo,
-  id: articulo.idProducto || articulo.id,
-  idProducto: articulo.idProducto || articulo.id,
+  id: obtenerIdProducto(articulo),
+  idProducto: obtenerIdProducto(articulo),
   cantidad: Math.max(1, Number(articulo.cantidad || 1)),
   precio: Number(articulo.precio || 0),
-  stock: articulo.stock == null ? undefined : Number(articulo.stock),
+  stock: obtenerStockProducto(articulo),
 })
 
 const leerCarrito = () => {
@@ -54,14 +56,19 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1) => {
   const precioBase = Number(producto.precio || 0)
   const descuento = Number(producto.descuento || 0)
   const precioFinal = Math.round(precioBase * (1 - descuento / 100))
-  const stock = Number(producto.stock || 0)
+  const stock = obtenerStockProducto(producto)
 
-  if (stock <= 0) {
+  if (stock !== undefined && stock <= 0) {
     return obtenerArticulosCarrito()
   }
 
   const articulos = leerCarrito()
-  const idProducto = producto.idProducto || producto.id
+  const idProducto = obtenerIdProducto(producto)
+
+  if (idProducto == null) {
+    return obtenerArticulosCarrito()
+  }
+
   const articuloExistente = articulos.find((articulo) => articulo.idProducto === idProducto)
   const cantidadPedida = Math.max(1, Number(cantidad || 1))
 
@@ -71,7 +78,7 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1) => {
     nombre: producto.nombre,
     precio: precioFinal,
     precioOriginal: descuento > 0 ? precioBase : null,
-    cantidad: Math.min(cantidadPedida, stock),
+    cantidad: stock === undefined ? cantidadPedida : Math.min(cantidadPedida, stock),
     stock,
     subtitulo: producto.categoria,
     imagen: obtenerImagenProducto(producto),
@@ -80,7 +87,15 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1) => {
   const articulosActualizados = articuloExistente
     ? articulos.map((articulo) =>
         articulo.idProducto === idProducto
-          ? { ...articulo, stock, cantidad: Math.min(articulo.cantidad + articuloProducto.cantidad, stock) }
+          ? {
+              ...articulo,
+              imagen: articulo.imagen || articuloProducto.imagen,
+              stock,
+              cantidad:
+                stock === undefined
+                  ? articulo.cantidad + articuloProducto.cantidad
+                  : Math.min(articulo.cantidad + articuloProducto.cantidad, stock),
+            }
           : articulo,
       )
     : [...articulos, articuloProducto]

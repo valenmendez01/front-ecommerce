@@ -1,6 +1,6 @@
 export const coloresEstadoProducto = {
-  ACTIVO: 'bg-green-100 text-green-700',
-  'STOCK BAJO': 'bg-yellow-100 text-yellow-700',
+  ACTIVO: 'bg-dorado-primary/25 text-green-primary',
+  'STOCK BAJO': 'bg-dorado-primary/30 text-green-primary',
   'SIN STOCK': 'bg-red-100 text-red-700',
   INACTIVO: 'bg-slate-200 text-slate-600',
 }
@@ -12,10 +12,10 @@ export const estadosPublicacion = [
 
 export const clasesCampoProducto = {
   errorMessage: 'font-semibold',
-  input: 'font-bold text-[#0b2b88]',
+  input: 'font-bold text-green-primary',
   inputWrapper:
-    'border border-slate-200 bg-slate-50 shadow-none data-[hover=true]:bg-slate-50 group-data-[focus=true]:border-[#0b2b88] group-data-[focus=true]:bg-white',
+    'border border-dorado-primary/35 bg-slate-50 shadow-none data-[hover=true]:bg-slate-50 group-data-[focus=true]:border-dorado-primary group-data-[focus=true]:bg-white',
   trigger:
-    'border border-slate-200 bg-slate-50 shadow-none data-[hover=true]:bg-slate-50 data-[open=true]:border-[#0b2b88]',
-  value: 'font-bold text-[#0b2b88]',
+    'border border-dorado-primary/35 bg-slate-50 shadow-none data-[hover=true]:bg-slate-50 data-[open=true]:border-dorado-primary',
+  value: 'font-bold text-green-primary',
 }

@@ -4,11 +4,11 @@ import { Mail } from 'lucide-react'
 const CorreoPersonal = ({ email, errorEmail, estaEditando, onCambiarEmail }) => {
   if (!estaEditando) {
     return (
-      <div className="rounded-lg border border-[#d8c49a] bg-white px-4 py-4">
-        <p className="text-xs font-bold uppercase tracking-widest text-[#8d6f3e]">
+      <div>
+        <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
           Correo electronico
         </p>
-        <p className="mt-2 text-xl font-bold text-[#142b10]">{email}</p>
+        <p className="mt-2 text-xl font-bold text-green-primary">{email}</p>
       </div>
     )
   }
@@ -19,10 +19,10 @@ const CorreoPersonal = ({ email, errorEmail, estaEditando, onCambiarEmail }) => 
       className="mt-1"
       classNames={{
         errorMessage: 'font-semibold',
-        input: 'font-bold text-[#142b10]',
+        input: 'font-bold text-green-primary',
         inputWrapper:
-          'border border-[#d8c49a] bg-white shadow-none group-data-[focus=true]:border-[#caa56e]',
-        label: 'font-bold text-[#5f6d5a]',
+          'border border-dorado-primary/35 bg-slate-100 shadow-none data-[hover=true]:bg-slate-100 group-data-[focus=true]:border-dorado-primary group-data-[focus=true]:bg-white',
+        label: 'font-bold text-slate-500',
       }}
       color={errorEmail ? 'danger' : 'primary'}
       errorMessage={errorEmail}
@@ -30,7 +30,7 @@ const CorreoPersonal = ({ email, errorEmail, estaEditando, onCambiarEmail }) => 
       label="Correo electronico"
       radius="lg"
       size="lg"
-      startContent={<Mail className="text-[#8d6f3e]" size={20} strokeWidth={2.4} />}
+      startContent={<Mail className="text-slate-400" size={20} strokeWidth={2.4} />}
       type="email"
       value={email}
       variant="flat"

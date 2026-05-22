@@ -1,5 +1,4 @@
 import { Button, Input } from "@heroui/react";
-import { Lock } from "lucide-react";
 
 const clasesCampo = { label: "text-xs font-semibold text-gray-600" };
 
@@ -66,11 +65,6 @@ export default function FormularioPago({
           radius="sm"
           classNames={clasesCampo}
         />
-      </div>
-
-      <div className="flex items-center gap-2 text-xs text-black bg-yellow-50 p-2 rounded-lg">
-        <Lock size={12} />
-        Tus datos estan protegidos con encriptacion SSL de 256 bits
       </div>
 
       <Button onPress={alGuardar} className="w-full bg-yellow-400 text-black text-sm font-bold rounded-lg">

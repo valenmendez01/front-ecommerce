@@ -1,4 +1,5 @@
 import { formatearPesos } from "../../data/reglasProducto";
+import ImagenProducto from "../carrito/imagenProducto";
 
 export default function PanelPedido({ articulos }) {
   return (
@@ -11,9 +12,11 @@ export default function PanelPedido({ articulos }) {
       <div className="divide-y divide-yellow-400/20">
         {articulos.map((articulo) => (
           <div key={articulo.id} className="flex items-center gap-3 p-4">
-            <div className="w-12 h-12 rounded-lg bg-white flex items-center justify-center shrink-0">
-              <span className="text-yellow-500 text-lg">*</span>
-            </div>
+            <ImagenProducto
+              src={articulo.imagen}
+              alt={articulo.nombre}
+              className="w-20 h-28 rounded-xl shrink-0"
+            />
 
             <div className="flex-1 min-w-0">
               {articulo.etiqueta && (

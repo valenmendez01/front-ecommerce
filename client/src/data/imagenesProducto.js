@@ -6,6 +6,12 @@ export const crearImagenesLocales = (archivos, cantidadActual) =>
     url: URL.createObjectURL(archivo),
   }))
 
+export const crearFormularioImagenes = (imagenes) => {
+  const archivos = new FormData()
+  imagenes.forEach((imagen) => archivos.append('archivos', imagen.archivo))
+  return archivos
+}
+
 export const quitarImagenLocal = (imagenes, idImagen) => {
   const imagenEliminada = imagenes.find((imagen) => imagen.id === idImagen)
 

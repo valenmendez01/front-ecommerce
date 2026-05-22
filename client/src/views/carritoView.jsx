@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import ArticuloCarrito from "../components/carrito/itemCarrito";
 import BarraPagoMovil from "../components/carrito/barraPagoMovil";
 import CarritoVacio from "../components/carrito/carritoVacio";
-import FooterCarrito from "../components/carrito/footerCarrito";
 import HeaderCarrito from "../components/carrito/headerCarrito";
 import ProductosRecomendados from "../components/carrito/itemsRecomendados";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
@@ -52,24 +51,6 @@ export default function CarritoView() {
     setArticulos((prev) => prev.filter((articulo) => articulo.id !== id));
   };
 
-  const agregarArticulo = (articulo) => {
-    setArticulos((prev) => {
-      if (Number(articulo.stock ?? 0) <= 0) return prev;
-
-      const existe = prev.find((actual) => actual.id === articulo.id);
-
-      if (!existe) {
-        return [...prev, { ...articulo, cantidad: 1, subtitulo: "RECOMENDADO" }];
-      }
-
-      return prev.map((actual) =>
-        actual.id === articulo.id
-          ? { ...actual, cantidad: Math.min(actual.cantidad + 1, Number(actual.stock ?? articulo.stock ?? actual.cantidad + 1)) }
-          : actual,
-      );
-    });
-  };
-
   const subtotal = articulos.reduce(
     (total, articulo) => total + articulo.precio * articulo.cantidad,
     0,
@@ -96,7 +77,7 @@ export default function CarritoView() {
                   alEliminar={eliminarArticulo}
                 />
               ))}
-              <ProductosRecomendados alAgregar={agregarArticulo} />
+              <ProductosRecomendados />
             </div>
 
             <div className="lg:col-span-1">
@@ -109,7 +90,6 @@ export default function CarritoView() {
       </main>
 
       {articulos.length > 0 && <BarraPagoMovil subtotal={subtotal} alIrAlPago={() => navigate("/compra")} />}
-      <FooterCarrito />
     </div>
   );
 }

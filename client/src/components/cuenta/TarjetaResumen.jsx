@@ -2,12 +2,12 @@ import { Card, CardBody } from '@heroui/react'
 
 const TarjetaResumen = ({ titulo, valor, destacar }) => {
   return (
-    <Card className="h-28 min-w-40 border border-white/10 bg-white/10 shadow-none" radius="sm">
+    <Card className="h-24 min-w-36 border border-dorado-primary/30 shadow-lg" radius="sm">
       <CardBody className="flex flex-col items-center justify-center px-5">
-        <h3 className="text-center text-xs font-bold uppercase tracking-widest text-white/60">
+        <h3 className="text-center text-xs font-bold uppercase tracking-widest text-slate-400">
           {titulo}
         </h3>
-        <p className={`mt-2 text-3xl font-black ${destacar ? 'text-[#caa56e]' : 'text-white'}`}>
+        <p className={`mt-1 text-3xl font-black ${destacar ? 'text-dorado-primary' : 'text-green-primary'}`}>
           {valor}
         </p>
       </CardBody>

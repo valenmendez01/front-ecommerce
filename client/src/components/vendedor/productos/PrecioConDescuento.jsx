@@ -5,7 +5,7 @@ const PrecioConDescuento = ({ compacto = false, producto }) => {
   const precioFinal = formatearPesos(calcularPrecioFinal(producto.precio, producto.descuento))
 
   if (Number(producto.descuento) <= 0) {
-    return <span className="font-black text-[#0b2b88]">{precioOriginal}</span>
+    return <span className="font-black text-green-primary">{precioOriginal}</span>
   }
 
   return (

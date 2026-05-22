@@ -2,7 +2,7 @@ import {
   Navbar,
   NavBody
 } from "./ui/resizable-navbar"
-import { LogIn, LogOut, ShoppingCart } from "lucide-react"
+import { CircleUserRound, LogIn, LogOut, ShoppingCart } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import logo from "../assets/logoHorizontal.png"
 import { useAuth } from "../context/useAuth"
@@ -20,19 +20,13 @@ export default function Navigation2() {
     navigate("/iniciar-sesion")
   }
 
-  const navItemsVendedor = [
-    { name: "Panel vendedor", link: "/panel-vendedor" },
-    { name: "Crear producto", link: "/crear-producto" },
-    { name: "Ventas", link: "/ventas" },
-  ]
-
   const navItemsComprador = [
     { name: "Home", link: "/" },
-    { name: "Catálogo", link: "/productos" },
+    { name: "Catalogo", link: "/productos" },
     ...(usuario ? [{ name: "Mi cuenta", link: "/mi-cuenta" }] : []),
   ]
 
-  const navItems = esVendedor ? navItemsVendedor : navItemsComprador
+  const navItems = esVendedor ? [] : navItemsComprador
 
   return (
     <div className="relative z-50 w-full">
@@ -82,7 +76,18 @@ export default function Navigation2() {
               </Button>
             )}
 
-            {usuario ? (
+            {esVendedor ? (
+              <Button
+                aria-label="Panel vendedor"
+                as={Link}
+                className="relative z-20 mr-4 flex items-center px-2 py-1 text-white/80 transition-colors duration-300 hover:text-white"
+                isIconOnly
+                to="/panel-vendedor"
+                variant="outline"
+              >
+                <CircleUserRound size={20} />
+              </Button>
+            ) : usuario ? (
               <Button
                 as={Link}
                 variant="outline"

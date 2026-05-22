@@ -2,18 +2,19 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@heroui/react";
 
 import { formatearPesos } from "../../data/reglasProducto";
+import ImagenProducto from "./imagenProducto";
 
 export default function itemCarrito({ articulo, alActualizarCantidad, alEliminar }) {
   const sinMasStock = articulo.stock && articulo.cantidad >= articulo.stock;
 
   return (
     <div className="flex gap-4 p-4 bg-emerald-950 rounded-xl border border-emerald-900 shadow-sm">
-      <div className="w-20 h-20 rounded-lg bg-white flex items-center justify-center overflow-hidden shrink-0 relative">
-        {articulo.imagen ? (
-          <img src={articulo.imagen} alt={articulo.nombre} className="w-full h-full object-cover" />
-        ) : (
-          <div className="text-yellow-500 text-2xl font-bold">*</div>
-        )}
+      <div className="shrink-0 relative">
+        <ImagenProducto
+          src={articulo.imagen}
+          alt={articulo.nombre}
+          className="w-20 h-28 rounded-lg"
+        />
         {articulo.etiqueta && (
           <span className="absolute top-1 left-1 text-[9px] font-bold bg-yellow-400 text-black px-1 rounded">
             {articulo.etiqueta}

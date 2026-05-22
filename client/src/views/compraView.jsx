@@ -4,10 +4,8 @@ import { useNavigate } from "react-router-dom";
 import AccordionEnvio from "../components/compra/envio";
 import AccordionPago from "../components/compra/pago";
 import AlertasCompra from "../components/compra/alertasCompra";
-import FooterCompra from "../components/compra/footerCompra";
 import HeaderCompra from "../components/compra/headerCompra";
 import PanelPedido from "../components/compra/panelPedido";
-import PasosCompra from "../components/compra/pasosCompra";
 import PedidoConfirmado from "../components/compra/pedidoConfirmado";
 import ResumenPago from "../components/compra/resumenPago";
 import TituloCompra from "../components/compra/tituloCompra";
@@ -79,7 +77,6 @@ export default function CompraView() {
       <HeaderCompra alVolverCarrito={() => navigate("/carrito")} />
 
       <main className="max-w-6xl mx-auto px-6 py-16">
-        <PasosCompra />
         <TituloCompra />
         <AlertasCompra error={errorConfirmar} esVendedor={usuario && !esComprador} />
 
@@ -103,7 +100,6 @@ export default function CompraView() {
         </div>
       </main>
 
-      <FooterCompra />
     </div>
   );
 }
