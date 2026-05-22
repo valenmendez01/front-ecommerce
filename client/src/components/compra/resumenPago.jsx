@@ -1,4 +1,4 @@
-import { ShieldCheck, Rocket } from "lucide-react";
+import { Rocket } from "lucide-react";
 import { Button } from "@heroui/react";
 import { formatearPesos } from "../../data/reglasProducto";
 
@@ -53,17 +53,6 @@ export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, ca
             Completa envio y pago para continuar
           </p>
         )}
-
-        <div className="flex items-center justify-center gap-2 mt-3 text-xs text-white/60">
-          <ShieldCheck size={12} className="text-yellow-400" />
-          Pago SSL Seguro
-        </div>
-      </div>
-
-      <div className="bg-emerald-950 rounded-2xl border border-emerald-900 shadow-sm p-4 text-xs text-white/70 leading-relaxed">
-        <p className="font-bold text-yellow-400 mb-1">Garantia del Coleccionista</p>
-        Todos los stickers son productos oficiales FIFA 2026 con licencia. Devoluciones aceptadas
-        para packs sin abrir dentro de los 30 dias.
       </div>
     </div>
   );
