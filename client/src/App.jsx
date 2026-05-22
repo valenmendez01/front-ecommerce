@@ -83,84 +83,87 @@ function App() {
 
   if (rutasPantallaCompleta.some((ruta) => pathname.startsWith(ruta))) {
     return (
-      <Routes>
-        <Route
-          path="/carrito"
-          element={requerirSesion(<CarritoView />, { requiereComprador: true })}
-        />
-        <Route
-          path="/compra"
-          element={requerirSesion(<CompraView />, { requiereComprador: true })}
-        />
-        <Route
-          path="/iniciar-sesion"
-          element={
-            cargandoUsuario ? (
-              <PantallaCargandoSesion />
-            ) : usuario ? (
-              <Navigate replace to={destinoUsuarioAutenticado} />
-            ) : (
-              <IniciarSesion />
-            )
-          }
-        />
-        <Route
-          path="/registro"
-          element={
-            cargandoUsuario ? (
-              <PantallaCargandoSesion />
-            ) : usuario ? (
-              <Navigate replace to={destinoUsuarioAutenticado} />
-            ) : (
-              <RegistroComprador />
-            )
-          }
-        />
-        <Route
-          path="/mi-cuenta"
-          element={requerirSesion(
-            <MiCuenta
-              token={token}
-              usuario={usuario}
-              onCerrarSesion={cerrarSesion}
-            />,
-          )}
-        />
-        <Route
-          path="/panel-vendedor"
-          element={requerirSesion(
-            <PanelVendedor
-              token={token}
-              usuario={usuario}
-              onCerrarSesion={cerrarSesion}
-            />,
-            { requiereVendedor: true },
-          )}
-        />
-        <Route
-          path="/crear-producto"
-          element={requerirSesion(
-            <CrearProducto
-              token={token}
-              usuario={usuario}
-              onCerrarSesion={cerrarSesion}
-            />,
-            { requiereVendedor: true },
-          )}
-        />
-        <Route
-          path="/ventas"
-          element={requerirSesion(
-            <VentasVendedor
-              token={token}
-              usuario={usuario}
-              onCerrarSesion={cerrarSesion}
-            />,
-            { requiereVendedor: true },
-          )}
-        />
-        <Route path="*" element={<Navigate replace to="/" />} />
-      </Routes>
+      <>
+        <Routes>
+          <Route
+            path="/carrito"
+            element={requerirSesion(<CarritoView />, { requiereComprador: true })}
+          />
+          <Route
+            path="/compra"
+            element={requerirSesion(<CompraView />, { requiereComprador: true })}
+          />
+          <Route
+            path="/iniciar-sesion"
+            element={
+              cargandoUsuario ? (
+                <PantallaCargandoSesion />
+              ) : usuario ? (
+                <Navigate replace to={destinoUsuarioAutenticado} />
+              ) : (
+                <IniciarSesion />
+              )
+            }
+          />
+          <Route
+            path="/registro"
+            element={
+              cargandoUsuario ? (
+                <PantallaCargandoSesion />
+              ) : usuario ? (
+                <Navigate replace to={destinoUsuarioAutenticado} />
+              ) : (
+                <RegistroComprador />
+              )
+            }
+          />
+          <Route
+            path="/mi-cuenta"
+            element={requerirSesion(
+              <MiCuenta
+                token={token}
+                usuario={usuario}
+                onCerrarSesion={cerrarSesion}
+              />,
+            )}
+          />
+          <Route
+            path="/panel-vendedor"
+            element={requerirSesion(
+              <PanelVendedor
+                token={token}
+                usuario={usuario}
+                onCerrarSesion={cerrarSesion}
+              />,
+              { requiereVendedor: true },
+            )}
+          />
+          <Route
+            path="/crear-producto"
+            element={requerirSesion(
+              <CrearProducto
+                token={token}
+                usuario={usuario}
+                onCerrarSesion={cerrarSesion}
+              />,
+              { requiereVendedor: true },
+            )}
+          />
+          <Route
+            path="/ventas"
+            element={requerirSesion(
+              <VentasVendedor
+                token={token}
+                usuario={usuario}
+                onCerrarSesion={cerrarSesion}
+              />,
+              { requiereVendedor: true },
+            )}
+          />
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
+        <Footer />
+      </>
     )
   }
 
