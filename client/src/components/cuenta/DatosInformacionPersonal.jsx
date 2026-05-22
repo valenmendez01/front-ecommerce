@@ -2,14 +2,14 @@ import { CardBody, Chip } from '@heroui/react'
 import CorreoPersonal from './CorreoPersonal'
 
 const DatoPersonal = ({ children, titulo }) => (
-  <div>
-    <p className="text-xs font-bold uppercase tracking-widest text-slate-400">{titulo}</p>
-    <div className="mt-2 text-xl font-bold text-[#0b2b88]">{children}</div>
+  <div className="rounded-lg border border-[#d8c49a] bg-white px-4 py-4">
+    <p className="text-xs font-bold uppercase tracking-widest text-[#8d6f3e]">{titulo}</p>
+    <div className="mt-2 text-xl font-bold text-[#142b10]">{children}</div>
   </div>
 )
 
 const DatosInformacionPersonal = ({ email, errorEmail, estaEditando, onCambiarEmail, usuario }) => (
-  <CardBody className="grid gap-8 px-8 py-8 md:grid-cols-3">
+  <CardBody className="grid gap-4 px-8 py-8 md:grid-cols-3">
     <DatoPersonal titulo="Nombre">{usuario.nombre}</DatoPersonal>
     <DatoPersonal titulo="Apellido">{usuario.apellido}</DatoPersonal>
     <CorreoPersonal
@@ -18,16 +18,16 @@ const DatosInformacionPersonal = ({ email, errorEmail, estaEditando, onCambiarEm
       estaEditando={estaEditando}
       onCambiarEmail={onCambiarEmail}
     />
-    <div>
-      <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Rol de cuenta</p>
-      <Chip className="mt-2 bg-green-100 font-bold text-green-700" radius="full" size="sm">
+    <div className="rounded-lg border border-[#d8c49a] bg-white px-4 py-4">
+      <p className="text-xs font-bold uppercase tracking-widest text-[#8d6f3e]">Rol de cuenta</p>
+      <Chip className="mt-2 bg-[#142b10] font-bold text-white" radius="full" size="sm">
         {usuario.rolVisible || usuario.rol}
       </Chip>
     </div>
     <DatoPersonal titulo="Fecha de registro">{usuario.fechaCreacion}</DatoPersonal>
-    <div>
-      <p className="text-xs font-bold uppercase tracking-widest text-slate-400">ID de usuario</p>
-      <p className="mt-2 text-lg text-slate-600">{usuario.idUsuarioVisual}</p>
+    <div className="rounded-lg border border-[#d8c49a] bg-white px-4 py-4">
+      <p className="text-xs font-bold uppercase tracking-widest text-[#8d6f3e]">ID de usuario</p>
+      <p className="mt-2 text-lg font-semibold text-[#5f6d5a]">{usuario.idUsuarioVisual}</p>
     </div>
   </CardBody>
 )

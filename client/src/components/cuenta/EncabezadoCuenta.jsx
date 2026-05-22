@@ -1,15 +1,19 @@
 import TarjetaResumen from './TarjetaResumen'
 
 const EncabezadoCuenta = ({ resumen, usuario }) => (
-  <section className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+  <section className="overflow-hidden rounded-2xl border border-[#d8c49a] bg-[#142b10] p-8 text-white shadow-2xl shadow-[#142b10]/10">
+    <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
     <div>
-      <h2 className="text-6xl font-black uppercase leading-none text-[#061d58] md:text-7xl">
+      <p className="text-sm font-black uppercase tracking-[0.35em] text-[#caa56e]">
+        Mi cuenta
+      </p>
+      <h2 className="mt-4 text-5xl font-black uppercase leading-none md:text-7xl">
         Hola,
         <br />
         {usuario.nombre}
       </h2>
-      <p className="mt-5 max-w-xl text-xl leading-relaxed text-slate-700">
-        Gestiona tus datos y pedidos.
+      <p className="mt-5 max-w-xl text-lg leading-8 text-white/75">
+        Revisa tus datos, segui tus pedidos y mantenete cerca de las figuritas que te faltan para completar el album.
       </p>
     </div>
 
@@ -22,6 +26,7 @@ const EncabezadoCuenta = ({ resumen, usuario }) => (
           valor={item.valor}
         />
       ))}
+    </div>
     </div>
   </section>
 )

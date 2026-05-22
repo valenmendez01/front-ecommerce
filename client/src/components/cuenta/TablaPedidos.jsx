@@ -4,8 +4,8 @@ import EncabezadoPedidos from './EncabezadoPedidos'
 import FilaPedido from './FilaPedido'
 
 const MensajeTablaPedidos = ({ children }) => (
-  <tr className="border-t border-slate-100">
-    <td className="px-8 py-10 text-center font-semibold text-slate-500" colSpan="4">
+  <tr className="border-t border-[#d8c49a]">
+    <td className="px-8 py-10 text-center font-semibold text-[#5f6d5a]" colSpan="4">
       {children}
     </td>
   </tr>
@@ -22,7 +22,7 @@ const TablaPedidos = ({ cargando = false, error = '', pedidos }) => {
   }
 
   return (
-    <Card className="overflow-hidden shadow-lg" radius="sm">
+    <Card className="overflow-hidden border border-[#d8c49a] bg-[#fffdf8] shadow-xl shadow-[#142b10]/5" radius="lg">
       <EncabezadoPedidos
         mostrarHistorial={mostrarHistorial}
         onCambiarVista={cambiarVista}
@@ -36,7 +36,7 @@ const TablaPedidos = ({ cargando = false, error = '', pedidos }) => {
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="bg-slate-50 text-left text-xs font-bold uppercase text-slate-400">
+            <tr className="bg-[#f7f4ec] text-left text-xs font-bold uppercase text-[#8d6f3e]">
               <th className="px-8 py-4">ID pedido</th>
               <th className="px-8 py-4">Fecha</th>
               <th className="px-8 py-4">Total</th>

@@ -4,16 +4,16 @@ import DetallePedido from './DetallePedido'
 
 const FilaPedido = ({ estaAbierto, onCambiarDetalle, pedido }) => (
   <Fragment>
-    <tr className="border-t border-slate-100">
+    <tr className="border-t border-[#d8c49a] bg-white">
       <td className="px-8 py-5">
-        <p className="text-lg font-black text-[#0b2b88]">#{pedido.idPedidoTexto}</p>
-        <p className="text-xs text-slate-400">{pedido.detalle}</p>
+        <p className="text-lg font-black text-[#142b10]">#{pedido.idPedidoTexto}</p>
+        <p className="text-xs text-[#5f6d5a]">{pedido.detalle}</p>
       </td>
       <td className="px-8 py-5 font-medium">{pedido.fecha}</td>
-      <td className="px-8 py-5 text-lg font-black text-[#0b2b88]">{pedido.total}</td>
+      <td className="px-8 py-5 text-lg font-black text-[#142b10]">{pedido.total}</td>
       <td className="px-8 py-5 text-right">
         <Button
-          className="bg-blue-50 text-sm font-bold text-[#0b2b88]"
+          className="border border-[#d8c49a] bg-[#fffdf8] text-sm font-bold text-[#142b10]"
           radius="sm"
           size="sm"
           onPress={onCambiarDetalle}

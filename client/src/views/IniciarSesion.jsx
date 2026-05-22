@@ -13,6 +13,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import logo from '../assets/logoHorizontal.png'
 import { useAuth } from '../context/useAuth'
 
+const MENSAJE_BIENVENIDA_KEY = 'figullect_mensaje_bienvenida'
+
 const obtenerMensajeLogin = (error) => {
   if (error?.status === 401 || error?.status === 403 || error?.status === 404) {
     return 'Email o contrasena incorrectos.'
@@ -45,9 +47,11 @@ const IniciarSesion = () => {
 
     try {
       const usuario = await iniciarSesion(credenciales)
-      const destino =
-        location.state?.from || (usuario.rol === 'VENDEDOR' ? '/panel-vendedor' : '/mi-cuenta')
-      navigate(destino, { replace: true })
+      sessionStorage.setItem(
+        MENSAJE_BIENVENIDA_KEY,
+        `Bienvenido, ${usuario.nombre || 'coleccionista'}! Gracias por iniciar sesion en Figullect.`,
+      )
+      navigate(usuario.rol === 'VENDEDOR' ? '/panel-vendedor' : '/', { replace: true })
     } catch (loginError) {
       setError(obtenerMensajeLogin(loginError))
     } finally {

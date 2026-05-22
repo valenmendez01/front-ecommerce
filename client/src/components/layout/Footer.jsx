@@ -1,9 +1,11 @@
+import logo from '../../assets/logoHorizontal.png'
+
 const Footer = () => {
   return (
-    <footer className="border-t-4 border-yellow-500 bg-[#263f98] px-8 py-8 text-white">
+    <footer className="border-t border-[#d8c49a] bg-[#142b10] px-8 py-8 text-white">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <p className="text-xl font-black italic">FIGULLECT</p>
-        <p className="text-sm text-blue-100">
+        <img className="h-10 w-auto" src={logo} alt="Figullect" />
+        <p className="text-sm text-white/70">
           Proyecto académico · Aplicaciones Interactivas · 2026
         </p>
       </div>

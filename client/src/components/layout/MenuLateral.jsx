@@ -27,17 +27,17 @@ const MenuLateral = ({ usuario, onCerrarSesion }) => {
   const opciones = esVendedor ? opcionesVendedor : opcionesCliente
 
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
-      <div className="border-b border-slate-200 px-5 py-5">
+    <aside className="flex w-64 shrink-0 flex-col border-r border-[#d8c49a] bg-[#fffdf8]">
+      <div className="border-b border-[#d8c49a] px-5 py-5">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#0b2b88] bg-white text-sm font-black text-[#0b2b88]">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-[#caa56e] bg-[#142b10] text-sm font-black text-white">
             {iniciales}
           </div>
           <div>
-            <p className="font-bold text-[#0b2b88]">
+            <p className="font-bold text-[#142b10]">
               {usuario.nombre} {usuario.apellido}
             </p>
-            <p className="text-sm text-slate-500">Cuenta de {rolCuenta}</p>
+            <p className="text-sm text-[#5f6d5a]">Cuenta de {rolCuenta}</p>
           </div>
         </div>
       </div>
@@ -49,7 +49,9 @@ const MenuLateral = ({ usuario, onCerrarSesion }) => {
               <NavLink
                 className={({ isActive }) =>
                   `flex items-center gap-4 rounded-md px-5 py-3 text-lg font-medium ${
-                    isActive ? 'bg-[#263f98] text-white shadow-md' : 'text-slate-700'
+                    isActive
+                      ? 'bg-[#142b10] text-white shadow-md shadow-[#142b10]/15'
+                      : 'text-[#5f6d5a] hover:bg-[#142b10]/5 hover:text-[#142b10]'
                   }`
                 }
                 end={texto === 'Catálogo'}
@@ -63,9 +65,9 @@ const MenuLateral = ({ usuario, onCerrarSesion }) => {
         </ul>
       </nav>
 
-      <div className="border-t border-slate-200 px-5 py-6">
+      <div className="border-t border-[#d8c49a] px-5 py-6">
         <button
-          className="flex items-center gap-4 text-lg font-medium text-red-700"
+          className="flex items-center gap-4 text-lg font-medium text-red-700 transition hover:text-red-800"
           type="button"
           onClick={onCerrarSesion}
         >
