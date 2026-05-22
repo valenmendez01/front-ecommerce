@@ -1,3 +1,4 @@
+import { addToast } from '@heroui/react'
 import { useEffect, useState } from 'react'
 import PaginaGestion from '../components/layout/PaginaGestion'
 import EncabezadoCrearProducto from '../components/vendedor/crearProducto/EncabezadoCrearProducto'
@@ -41,24 +42,21 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
     setProducto((actual) => ({ ...actual, [campo]: esNumero ? Number(valor) : valor }))
     setMensaje('')
   }
-  const cargarImagenes = (event) => {
-    const archivos = Array.from(event.target.files || [])
+  const cargarImagenes = (archivos) => {
     if (imagenes.length + archivos.length > MAXIMO_IMAGENES_PRODUCTO) {
       setTipoMensaje('error')
       setMensaje(`Podes cargar como maximo ${MAXIMO_IMAGENES_PRODUCTO} imagenes por producto.`)
-      event.target.value = ''
       return
     }
     setImagenes((actuales) => [...actuales, ...crearImagenesLocales(archivos, actuales.length)])
     setMensaje('')
-    event.target.value = ''
   }
   const publicarProducto = async () => {
     setMostrarErrores(true)
     if (!puedePublicar) {
       setTipoMensaje('error')
       setMensaje('Revisa los campos obligatorios antes de publicar el producto.')
-      return
+      return false
     }
     setPublicando(true)
     setMensaje('')
@@ -69,11 +67,14 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
       setProducto(estadoInicialProducto)
       setImagenes([])
       setMostrarErrores(false)
-      setTipoMensaje('exito')
-      setMensaje('Producto publicado correctamente.')
+      addToast({ color: 'success', title: 'Producto publicado', description: 'Ya forma parte de tu catalogo.' })
+      return true
     } catch (error) {
+      const mensajeError = error.message || 'No se pudo publicar el producto.'
+      addToast({ color: 'danger', title: 'No se pudo publicar el producto', description: mensajeError })
       setTipoMensaje('error')
-      setMensaje(error.message || 'No se pudo publicar el producto.')
+      setMensaje(mensajeError)
+      return false
     } finally {
       setPublicando(false)
     }

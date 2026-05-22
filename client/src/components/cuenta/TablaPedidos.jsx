@@ -2,6 +2,7 @@ import { Card } from '@heroui/react'
 import { useState } from 'react'
 import EncabezadoPedidos from './EncabezadoPedidos'
 import FilaPedido from './FilaPedido'
+import FilasPedidosCargando from './FilasPedidosCargando'
 
 const MensajeTablaPedidos = ({ children }) => (
   <tr className="border-t border-slate-100">
@@ -16,8 +17,8 @@ const TablaPedidos = ({ cargando = false, error = '', pedidos }) => {
   const [pedidoAbierto, setPedidoAbierto] = useState(null)
   const pedidosVisibles = mostrarHistorial ? pedidos : pedidos.slice(0, 3)
 
-  const cambiarVista = () => {
-    setMostrarHistorial(!mostrarHistorial)
+  const cambiarVista = (vista) => {
+    setMostrarHistorial(vista === 'historial')
     setPedidoAbierto(null)
   }
 
@@ -26,7 +27,6 @@ const TablaPedidos = ({ cargando = false, error = '', pedidos }) => {
       <EncabezadoPedidos
         mostrarHistorial={mostrarHistorial}
         onCambiarVista={cambiarVista}
-        puedeVerHistorial={pedidos.length > 3}
       />
       {error && (
         <div className="mx-8 mb-6 rounded-md border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
@@ -44,7 +44,7 @@ const TablaPedidos = ({ cargando = false, error = '', pedidos }) => {
             </tr>
           </thead>
           <tbody>
-            {cargando && <MensajeTablaPedidos>Cargando pedidos...</MensajeTablaPedidos>}
+            {cargando && <FilasPedidosCargando />}
             {!cargando && pedidosVisibles.length === 0 && (
               <MensajeTablaPedidos>Todavia no hay pedidos para mostrar.</MensajeTablaPedidos>
             )}

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { normalizarCategorias } from '../../data/reglasProducto'
 import EncabezadoProductos from './productos/EncabezadoProductos'
 import TarjetaProducto from './productos/TarjetaProducto'
+import TarjetasProductosCargando from './productos/TarjetasProductosCargando'
 
 const MensajeProductos = ({ children }) => (
   <div className="rounded-md border border-slate-200 bg-slate-50 px-6 py-12 text-center font-semibold text-slate-500 xl:col-span-2">
@@ -42,7 +43,7 @@ const TablaProductos = ({ cargando = false, error = '', productos, onActualizarP
         </div>
       )}
       <div className="grid gap-6 px-8 pb-8 xl:grid-cols-2">
-        {cargando && <MensajeProductos>Cargando productos publicados...</MensajeProductos>}
+        {cargando && <TarjetasProductosCargando />}
         {!cargando && productosVisibles.length === 0 && (
           <MensajeProductos>Todavia no tenes productos publicados.</MensajeProductos>
         )}

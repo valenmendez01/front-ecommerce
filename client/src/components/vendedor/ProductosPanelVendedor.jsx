@@ -65,7 +65,7 @@ const ProductosPanelVendedor = ({ token }) => {
   ]
 
   return <>
-    <MetricasPanelVendedor metricas={metricas} />
+    <MetricasPanelVendedor cargando={cargando} metricas={metricas} />
     <div className="mt-12"><TablaProductos cargando={cargando} error={error} productos={productosConVentas} onActualizarProducto={actualizarProducto} onCambiarVisibilidadProducto={cambiarVisibilidadProducto} /></div>
   </>
 }

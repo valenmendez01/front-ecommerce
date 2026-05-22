@@ -1,5 +1,6 @@
 import { Button } from '@heroui/react'
-import { Check, Pencil, X } from 'lucide-react'
+import { Pencil, X } from 'lucide-react'
+import StatefulButton from '../../ui/stateful-button'
 
 const AccionesDetalleProducto = ({
   editando,
@@ -17,18 +18,14 @@ const AccionesDetalleProducto = ({
     </h3>
     {editando ? (
       <div className="flex gap-2">
-        <Button
-          isIconOnly
+        <StatefulButton
           aria-label="Guardar cambios"
-          className="bg-dorado-primary/25 text-green-primary"
-          isDisabled={Boolean(hayErrores) || eliminando}
-          isLoading={guardando}
-          radius="sm"
-          size="sm"
-          onPress={onGuardar}
+          className="min-w-0 rounded-md bg-dorado-primary px-3 py-2 text-sm font-bold text-green-primary hover:ring-green-primary"
+          disabled={Boolean(hayErrores) || eliminando || guardando}
+          onClick={onGuardar}
         >
-          <Check size={18} />
-        </Button>
+          Guardar cambios
+        </StatefulButton>
         <Button
           isIconOnly
           aria-label="Cancelar edicion"

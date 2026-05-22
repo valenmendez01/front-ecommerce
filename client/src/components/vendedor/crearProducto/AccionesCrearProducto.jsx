@@ -1,18 +1,15 @@
-import { Button, Card, CardBody } from '@heroui/react'
-import { CheckCircle2 } from 'lucide-react'
+import { Card, CardBody } from '@heroui/react'
+import StatefulButton from '../../ui/stateful-button'
 
 const AccionesCrearProducto = ({ mensaje, onPublicar, publicando, tipoMensaje }) => (
   <>
-    <Button
-      className="w-full bg-green-primary py-8 text-2xl font-black italic text-white shadow-xl"
-      isDisabled={publicando}
-      isLoading={publicando}
-      radius="sm"
-      startContent={!publicando && <CheckCircle2 size={28} strokeWidth={2.5} />}
-      onPress={onPublicar}
+    <StatefulButton
+      className="w-full rounded-md py-6 text-2xl font-black italic shadow-xl"
+      disabled={publicando}
+      onClick={onPublicar}
     >
       Publicar producto
-    </Button>
+    </StatefulButton>
 
     {mensaje && (
       <Card

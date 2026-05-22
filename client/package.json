@@ -18,6 +18,7 @@
     "motion": "^12.40.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-dropzone": "^15.0.0",
     "react-router-dom": "^7.15.1",
     "router-dom": "^3.0.3",
     "tailwind-merge": "^3.5.0",

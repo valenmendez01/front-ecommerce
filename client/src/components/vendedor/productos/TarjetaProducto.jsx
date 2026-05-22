@@ -1,3 +1,4 @@
+import { addToast } from '@heroui/react'
 import { useState } from 'react'
 import { obtenerErrorNumeroProducto } from '../../../data/reglasProducto'
 import DetalleProducto from './DetalleProducto'
@@ -35,9 +36,12 @@ const TarjetaProducto = ({
     try {
       await onActualizarProducto(borrador, cambiosImagenes)
       setEditando(false)
+      addToast({ color: 'success', title: 'Cambios guardados', description: producto.nombre })
       return true
     } catch (error) {
-      setErrorAccion(error.message || 'No se pudo actualizar el producto.')
+      const mensaje = error.message || 'No se pudo actualizar el producto.'
+      addToast({ color: 'danger', title: 'No se guardaron los cambios', description: mensaje })
+      setErrorAccion(mensaje)
       return false
     } finally {
       setGuardando(false)
@@ -49,8 +53,15 @@ const TarjetaProducto = ({
     setErrorAccion('')
     try {
       await onCambiarVisibilidadProducto(producto)
+      addToast({
+        color: 'success',
+        title: producto.activo ? 'Producto oculto' : 'Producto visible',
+        description: producto.nombre,
+      })
     } catch (error) {
-      setErrorAccion(error.message || 'No se pudo cambiar la visibilidad del producto.')
+      const mensaje = error.message || 'No se pudo cambiar la visibilidad del producto.'
+      addToast({ color: 'danger', title: 'No se cambio la visibilidad', description: mensaje })
+      setErrorAccion(mensaje)
     } finally {
       setCambiandoVisibilidad(false)
     }

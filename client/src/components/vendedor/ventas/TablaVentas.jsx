@@ -1,6 +1,7 @@
 import { Card } from '@heroui/react'
 import { useState } from 'react'
 import EncabezadoTablaVentas from './EncabezadoTablaVentas'
+import FilasVentasCargando from './FilasVentasCargando'
 import FilaVenta from './FilaVenta'
 
 const MensajeVentas = ({ children }) => (
@@ -12,8 +13,8 @@ const TablaVentas = ({ cargando, error, ventas }) => {
   const [ventaAbierta, setVentaAbierta] = useState(null)
   const ventasVisibles = mostrarTodas ? ventas : ventas.slice(0, 3)
 
-  const cambiarVista = () => {
-    setMostrarTodas(!mostrarTodas)
+  const cambiarVista = (vista) => {
+    setMostrarTodas(vista === 'historial')
     setVentaAbierta(null)
   }
 
@@ -22,7 +23,6 @@ const TablaVentas = ({ cargando, error, ventas }) => {
       <EncabezadoTablaVentas
         mostrarTodas={mostrarTodas}
         onCambiarVista={cambiarVista}
-        puedeVerHistorial={ventas.length > 3}
       />
       {error && (
         <div className="mx-8 mb-6 rounded-md border border-red-100 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">
@@ -30,7 +30,7 @@ const TablaVentas = ({ cargando, error, ventas }) => {
         </div>
       )}
       <div className="border-t border-slate-100">
-        {cargando && <MensajeVentas>Cargando ventas...</MensajeVentas>}
+        {cargando && <FilasVentasCargando />}
         {!cargando && ventasVisibles.length === 0 && (
           <MensajeVentas>Todavia no hay ventas para mostrar.</MensajeVentas>
         )}

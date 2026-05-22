@@ -1,20 +1,7 @@
 import { Card, CardBody } from '@heroui/react'
-import { ImagePlus, UploadCloud, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { MAXIMO_IMAGENES_PRODUCTO } from '../../../data/reglasImagenesProducto'
-
-const InputImagenes = ({ children, className, deshabilitado = false, onCargar }) => (
-  <label className={className}>
-    {children}
-    <input
-      multiple
-      accept="image/png,image/jpeg,image/webp"
-      className="hidden"
-      disabled={deshabilitado}
-      type="file"
-      onChange={onCargar}
-    />
-  </label>
-)
+import FileUpload from '../../ui/file-upload'
 
 const PanelImagenesProducto = ({ imagenes, onCargar, onQuitar }) => {
   const alcanzoMaximo = imagenes.length >= MAXIMO_IMAGENES_PRODUCTO
@@ -25,19 +12,13 @@ const PanelImagenesProducto = ({ imagenes, onCargar, onQuitar }) => {
         <h3 className="text-center text-sm font-bold uppercase tracking-widest text-slate-700">
           Imagenes del producto
         </h3>
-        <InputImagenes
-          className={`mt-6 flex min-h-52 flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition ${
-            alcanzoMaximo ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:border-dorado-primary hover:bg-dorado-primary/10'
-          }`}
+        <FileUpload
+          className="mt-6"
+          descripcion="PNG, JPG o WEBP. Maximo 5 imagenes de 5MB."
           deshabilitado={alcanzoMaximo}
-          onCargar={onCargar}
-        >
-          <UploadCloud className="text-green-primary" size={42} strokeWidth={2.5} />
-          <span className="mt-4 text-xl font-black text-slate-950">
-            {alcanzoMaximo ? 'Maximo alcanzado' : 'Subir imagenes'}
-          </span>
-          <span className="mt-2 text-sm text-slate-500">PNG, JPG o WEBP. Maximo 5MB.</span>
-        </InputImagenes>
+          titulo={alcanzoMaximo ? 'Maximo alcanzado' : 'Subir imagenes'}
+          onChange={onCargar}
+        />
         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {imagenes.map((imagen) => (
             <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white" key={imagen.id}>
@@ -47,14 +28,6 @@ const PanelImagenesProducto = ({ imagenes, onCargar, onQuitar }) => {
               </button>
             </div>
           ))}
-          {!alcanzoMaximo && (
-            <InputImagenes
-              className="flex h-36 cursor-pointer items-center justify-center rounded-md border border-dashed border-slate-300 bg-slate-100 text-slate-500"
-              onCargar={onCargar}
-            >
-              <ImagePlus size={28} />
-            </InputImagenes>
-          )}
         </div>
       </CardBody>
     </Card>
