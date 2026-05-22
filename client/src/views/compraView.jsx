@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import AccordionEnvio from "../components/compra/envio";
 import AccordionPago from "../components/compra/pago";
 import AlertasCompra from "../components/compra/alertasCompra";
-import { Footer } from "../components/Footer";
 import HeaderCompra from "../components/compra/headerCompra";
 import PanelPedido from "../components/compra/panelPedido";
 import PedidoConfirmado from "../components/compra/pedidoConfirmado";
@@ -101,7 +100,6 @@ export default function CompraView() {
         </div>
       </main>
 
-      <Footer />
     </div>
   );
 }

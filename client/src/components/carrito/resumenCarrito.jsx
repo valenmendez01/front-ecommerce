@@ -1,19 +1,21 @@
-import { ShieldCheck, BadgeCheck, Tag } from "lucide-react";
+import { Tag } from "lucide-react";
 import { useState } from "react";
 import { Button, Input } from "@heroui/react";
 import { formatearPesos } from "../../data/reglasProducto";
 
-const DESCUENTO_PROMO = 1000;
+const PORCENTAJE_PROMO = 20;
+const CODIGOS_PROMO = ["PROMO20", "CHAMPIONS2026"];
 
 export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
   const [codigoPromo, setCodigoPromo] = useState("");
   const [promoAplicada, setPromoAplicada] = useState(false);
   const [errorPromo, setErrorPromo] = useState("");
 
-  const total = Math.max(subtotal - (promoAplicada ? DESCUENTO_PROMO : 0), 0);
+  const descuento = promoAplicada ? Math.round(subtotal * (PORCENTAJE_PROMO / 100)) : 0;
+  const total = Math.max(subtotal - descuento, 0);
 
   const aplicarPromo = () => {
-    if (codigoPromo.trim().toUpperCase() === "CHAMPIONS2026") {
+    if (CODIGOS_PROMO.includes(codigoPromo.trim().toUpperCase())) {
       setPromoAplicada(true);
       setErrorPromo("");
     } else {
@@ -40,8 +42,8 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
           </div>
           {promoAplicada && (
             <div className="flex justify-between text-yellow-400">
-              <span>Descuento CHAMPIONS2026</span>
-              <span>-{formatearPesos(DESCUENTO_PROMO)}</span>
+              <span>Descuento PROMO20</span>
+              <span>-{PORCENTAJE_PROMO}% ({formatearPesos(descuento)})</span>
             </div>
           )}
         </div>
@@ -60,16 +62,6 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
           Proceder al Pago
         </Button>
 
-        <div className="flex flex-col gap-2 mt-4">
-          <div className="flex items-center gap-2 text-xs text-white/70">
-            <BadgeCheck size={13} className="text-yellow-400" />
-            Productos oficiales FIFA con licencia
-          </div>
-          <div className="flex items-center gap-2 text-xs text-white/70">
-            <ShieldCheck size={13} className="text-yellow-400" />
-            Pago con encriptacion segura
-          </div>
-        </div>
       </div>
 
       <div className="bg-emerald-950 rounded-2xl p-5 border border-emerald-900 shadow-sm">
