@@ -20,7 +20,7 @@ const ProductosPanelVendedor = ({ token }) => {
     let sigueActivo = true
     const headers = { Authorization: `Bearer ${token}` }
 
-    Promise.all([fetch('/productos/mios', { headers }), fetch('/ventas/mias', { headers })])
+    Promise.all([fetch('/productos/vendedor', { headers }), fetch('/ventas/vendedor', { headers })])
       .then(async ([respuestaProductos, respuestaVentas]) => {
         const jsonProductos = await respuestaProductos.json()
         const jsonVentas = await respuestaVentas.json()
