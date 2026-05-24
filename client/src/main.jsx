@@ -11,8 +11,9 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <HeroUIProvider>
         <ToastProvider
+          maxVisibleToasts={3}
           placement="bottom-right"
-          toastProps={{ radius: 'xl', timeout: 3500, variant: 'md' }}
+          toastProps={{ radius: 'sm', timeout: 3500, variant: 'flat' }}
         />
         <AuthProvider>
           <App />

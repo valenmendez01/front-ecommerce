@@ -1,7 +1,9 @@
 import { Tag } from "lucide-react";
 import { useState } from "react";
 import { Button, Input } from "@heroui/react";
+import { motion } from "framer-motion";
 import { formatearPesos } from "../../data/reglasProducto";
+import { SpotlightCard } from "../ui/spotlight-card";
 
 const PORCENTAJE_PROMO = 20;
 const CODIGOS_PROMO = ["PROMO20", "CHAMPIONS2026"];
@@ -25,8 +27,13 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="bg-emerald-950 rounded-2xl p-6 text-white">
+    <motion.div
+      initial={{ opacity: 0, x: 14 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.25 }}
+      className="flex flex-col gap-4"
+    >
+      <SpotlightCard className="p-6 text-white">
         <h2 className="text-sm font-bold uppercase tracking-widest text-yellow-400 mb-5">
           Resumen del Pedido
         </h2>
@@ -62,9 +69,9 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
           Proceder al Pago
         </Button>
 
-      </div>
+      </SpotlightCard>
 
-      <div className="bg-emerald-950 rounded-2xl p-5 border border-emerald-900 shadow-sm">
+      <div className="bg-green-primary rounded-2xl p-5 border border-dorado-primary/25 shadow-sm">
         <p className="text-xs font-bold uppercase tracking-widest text-yellow-400 mb-3 flex items-center gap-2">
           <Tag size={13} /> Codigo Promocional
         </p>
@@ -88,6 +95,6 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
         {errorPromo && <p className="text-xs text-red-500 mt-1">{errorPromo}</p>}
         {promoAplicada && <p className="text-xs text-yellow-400 mt-1">Codigo aplicado</p>}
       </div>
-    </div>
+    </motion.div>
   );
 }
