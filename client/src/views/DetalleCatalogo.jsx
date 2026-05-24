@@ -15,9 +15,6 @@ export const DetalleCatalogo = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    setCargando(true);
-    setError("");
-
     fetch(`/productos/${id}`)
       .then(async (res) => {
         const json = await res.json();
@@ -32,6 +29,8 @@ export const DetalleCatalogo = () => {
       })
       .finally(() => setCargando(false));
   }, [id]);
+
+  const navigate = useNavigate();
 
   if (cargando) return <p className="p-6">Cargando...</p>;
 

@@ -2,13 +2,12 @@ import { Link } from "react-router-dom";
 import logo from "../assets/logoHorizontal.png" 
 
 const NAV_LINKS = [
-  { label: "Products", to: "#" },
-  { label: "Studio", to: "#" },
-  { label: "Clients", to: "#" },
-  { label: "Pricing", to: "#" },
+  { label: "Catálogo", to: "/productos" },
+  { label: "Novedades", to: "#" },
+  { label: "Preguntas frecuentes", to: "#" },
   { label: "Blog", to: "#" },
-  { label: "Privacy", to: "#" },
-  { label: "Terms", to: "#" },
+  { label: "Privacidad", to: "#" },
+  { label: "Términos y condiciones", to: "#" },
 ];
 
 const SOCIAL_LINKS = [
@@ -91,7 +90,7 @@ export const Footer = () => {
         </div>
 
         <div className="flex justify-between items-center py-4">
-          <span className="text-xs text-white/70">© DevStudios LLABC</span>
+          <span className="text-xs text-white/70">© DevStudio UADE</span>
           <div className="flex gap-4">
             {SOCIAL_LINKS.map(({ label, icon, href }) => (
               <a key={label} href={href} aria-label={label} className="text-white/70 hover:text-white transition-colors">

@@ -5,27 +5,31 @@ import { Divider } from "@heroui/react";
 import { GooeyInput } from "../components/ui/gooey-input";
 import { SkeletonCatalogo } from "../components/catalogo/productos/SkeletonCatalogo";
 import { addToast } from "@heroui/react";
+import { FlipWords } from "../components/ui/flip-words";
 
 export const Catalogo = () => {
   const [categorias, setCategorias] = useState([]);
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
   const [productos, setProductos] = useState([]);
   const [precioMin, setPrecioMin] = useState(0);
-  const [precioMax, setPrecioMax] = useState(20000);
+  const [precioMax, setPrecioMax] = useState(100000);
   const [busqueda, setBusqueda] = useState("");
   const [pagina, setPagina] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const PAGE_SIZE = 9;
-  const [cargando, setCargando] = useState(false);
+  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
     fetch("/categorias")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => Promise.reject(err));
+        return res.json();
+      })
       .then((json) => setCategorias(json.data))
-      .catch(() =>
+      .catch((err) =>
         addToast({
           title: "Error al cargar categorías",
-          description: "No se pudieron obtener las categorías. Intentá de nuevo más tarde.",
+          description: err.message || "Intentá de nuevo más tarde.",
           color: "danger",
         })
       );
@@ -38,8 +42,9 @@ export const Catalogo = () => {
       if (busqueda.trim()) {
         return `/productos/filtrar/nombre?nombre=${encodeURIComponent(busqueda)}&${pagination}`;
       }
-      if (categoriasSeleccionadas.length === 1) {
-        return `/productos/filtrar/${categoriasSeleccionadas[0]}?${pagination}`;
+      if (categoriasSeleccionadas.length >= 1) {
+        const params = categoriasSeleccionadas.map(c => `categorias=${c}`).join("&");
+        return `/productos/filtrar/categorias?${params}&${pagination}`;
       }
       if (precioMin > 0 || precioMax < 20000) {
         return `/productos/filtrar/precio?min=${precioMin}&max=${precioMax}&${pagination}`;
@@ -47,17 +52,19 @@ export const Catalogo = () => {
       return `/productos?${pagination}`;
     };
 
-    setTimeout(() => setCargando(true), 0);
     fetch(buildUrl())
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => Promise.reject(err));
+        return res.json();
+      })
       .then((json) => {
         setProductos(Array.isArray(json.data.content) ? json.data.content : []);
         setTotalPaginas(json.data.totalPages ?? 1);
       })
-      .catch((error) =>
+      .catch((err) =>
         addToast({
           title: "Error al cargar productos",
-          description: error.message || "Intentá de nuevo más tarde.",
+          description: err.message || "Intentá de nuevo más tarde.",
           color: "danger",
         })
       )
@@ -81,7 +88,9 @@ export const Catalogo = () => {
   return (
     <div className="flex flex-col font-sans max-w-7xl mx-auto w-full">
       <div className="flex items-center justify-between px-6 py-4">
-        <h1>Mostrando {productos.length} productos</h1>
+        <h1 className="text-3xl">
+          Encontrá tu próxima<FlipWords words={["figurita", "joya", "estrella", "sorpresa"]} />
+        </h1>
         <GooeyInput
           placeholder="Buscar..."
           value={busqueda}
