@@ -15,6 +15,21 @@ const formatearVencimiento = (valor) => {
 const soloLetras = (valor) => valor.replace(/[^\p{L}\s]/gu, "").slice(0, 60);
 const soloCvv = (valor) => valor.replace(/\D/g, "").slice(0, 4);
 
+const vencimientoValido = (valor) => {
+  const digitos = valor.replace(/\D/g, "");
+  if (digitos.length !== 4) return false;
+
+  const mes = Number(digitos.slice(0, 2));
+  const anio = 2000 + Number(digitos.slice(2));
+  const hoy = new Date();
+  const anioActual = hoy.getFullYear();
+  const mesActual = hoy.getMonth() + 1;
+
+  if (mes < 1 || mes > 12) return false;
+
+  return anio > anioActual || (anio === anioActual && mes >= mesActual);
+};
+
 export default function Pago({ alGuardar }) {
   const [abierto, setAbierto] = useState(false);
   const [guardado, setGuardado] = useState(false);
@@ -27,11 +42,10 @@ export default function Pago({ alGuardar }) {
   });
 
   const digitosTarjeta = formulario.numero.replace(/\s/g, "");
-  const digitosVencimiento = formulario.vencimiento.replace(/\D/g, "");
   const validaciones = {
     numeroValido: digitosTarjeta.length === 16,
     titularValido: formulario.titular.trim().length >= 3,
-    vencimientoValido: digitosVencimiento.length === 4,
+    vencimientoValido: vencimientoValido(formulario.vencimiento),
     cvvValido: formulario.cvv.length >= 3 && formulario.cvv.length <= 4,
   };
   const formularioValido = Object.values(validaciones).every(Boolean);
@@ -58,7 +72,7 @@ export default function Pago({ alGuardar }) {
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+    <div className="rounded-xl border border-dorado-primary/25 overflow-hidden shadow-sm">
       <CabeceraAcordeon
         abierto={abierto}
         guardado={guardado}

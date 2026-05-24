@@ -9,15 +9,42 @@ import { AccionesProducto } from "../components/detalleCatalogo/Accionesproducto
 export const DetalleCatalogo = () => {
   const { id } = useParams();
   const [producto, setProducto] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
+    setCargando(true);
+    setError("");
+
     fetch(`/productos/${id}`)
-      .then((res) => res.json())
-      .then((json) => setProducto(json.data))
-      .catch((error) => console.error("Error al obtener producto:", error));
+      .then(async (res) => {
+        const json = await res.json();
+        if (!res.ok || !json.data) {
+          throw new Error(json.mensaje || json.message || "Producto no encontrado.");
+        }
+        setProducto(json.data);
+      })
+      .catch(() => {
+        setProducto(null);
+        setError("Producto no encontrado.");
+      })
+      .finally(() => setCargando(false));
   }, [id]);
 
-  if (!producto) return <p>Cargando...</p>;
+  if (cargando) return <p className="p-6">Cargando...</p>;
+
+  if (error) {
+    return (
+      <div className="min-h-screen p-6 md:p-10">
+        <Card className="max-w-2xl mx-auto p-8 text-center">
+          <h1 className="text-2xl font-black text-emerald-950">{error}</h1>
+          <p className="mt-3 text-gray-600">
+            El producto que queres ver no existe o ya no esta disponible.
+          </p>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen p-6 md:p-10">

@@ -1,6 +1,8 @@
 import { Rocket } from "lucide-react";
 import { Button } from "@heroui/react";
+import { motion } from "framer-motion";
 import { formatearPesos } from "../../data/reglasProducto";
+import { SpotlightCard } from "../ui/spotlight-card";
 
 export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, cargando }) {
   const subtotal = articulos.reduce((acc, a) => acc + a.precio * a.cantidad, 0);
@@ -9,8 +11,13 @@ export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, ca
   const total = subtotal + envio + impuesto;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="bg-emerald-950 text-white rounded-2xl p-6">
+    <motion.div
+      initial={{ opacity: 0, x: 14 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.25 }}
+      className="flex flex-col gap-4"
+    >
+      <SpotlightCard className="text-white p-6">
         <h2 className="text-sm font-bold uppercase tracking-widest text-yellow-400 mb-5">
           Resumen del Pedido
         </h2>
@@ -53,7 +60,7 @@ export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, ca
             Completa envio y pago para continuar
           </p>
         )}
-      </div>
-    </div>
+      </SpotlightCard>
+    </motion.div>
   );
 }

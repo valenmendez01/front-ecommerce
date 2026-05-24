@@ -34,7 +34,7 @@ export const AccionesProducto = ({ producto }) => {
       return;
     }
 
-    agregarProductoAlCarrito(producto, cantidad);
+    agregarProductoAlCarrito(producto, cantidad, usuario.idUsuario);
     setMensaje("Producto agregado al carrito");
   }
 

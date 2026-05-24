@@ -44,7 +44,7 @@ export default function FormularioPago({
           label="Vencimiento"
           placeholder="MM/AA"
           value={formulario.vencimiento}
-          errorMessage="Usa el formato MM/AA."
+          errorMessage="Usa un vencimiento valido."
           inputMode="numeric"
           onValueChange={(value) => alActualizar("vencimiento", value)}
           variant="bordered"

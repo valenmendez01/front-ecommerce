@@ -52,7 +52,7 @@ export default function Envio({ alGuardar }) {
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+    <div className="rounded-xl border border-dorado-primary/25 overflow-hidden shadow-sm">
       <CabeceraAcordeon
         abierto={abierto}
         guardado={guardado}

@@ -9,26 +9,21 @@ import ProductosRecomendados from "../components/carrito/itemsRecomendados";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
 import TituloCarrito from "../components/carrito/tituloCarrito";
 import copaMundo from "../assets/copa-mundo.png";
+import { useAuth } from "../context/useAuth";
 import {
   obtenerArticulosCarrito,
   reemplazarArticulosCarrito,
 } from "../data/reglasCarrito";
 
 export default function CarritoView() {
-  const [articulos, setArticulos] = useState([]);
-  const [carritoCargado, setCarritoCargado] = useState(false);
+  const { usuario } = useAuth();
+  const idUsuario = usuario?.idUsuario;
+  const [articulos, setArticulos] = useState(() => obtenerArticulosCarrito(idUsuario));
   const navigate = useNavigate();
 
   useEffect(() => {
-    setArticulos(obtenerArticulosCarrito());
-    setCarritoCargado(true);
-  }, []);
-
-  useEffect(() => {
-    if (carritoCargado) {
-      reemplazarArticulosCarrito(articulos);
-    }
-  }, [articulos, carritoCargado]);
+    reemplazarArticulosCarrito(articulos, idUsuario);
+  }, [articulos, idUsuario]);
 
   const actualizarCantidad = (id, nuevaCantidad) => {
     if (nuevaCantidad < 1) {
@@ -57,7 +52,7 @@ export default function CarritoView() {
   );
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden font-sans text-slate-950">
       <img src={copaMundo} alt="" className="absolute -right-48 top-16 w-[900px] opacity-5 pointer-events-none select-none" />
       <HeaderCarrito alVolverInicio={() => navigate("/")} />
 

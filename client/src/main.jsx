@@ -12,7 +12,7 @@ createRoot(document.getElementById('root')).render(
       <HeroUIProvider>
         <ToastProvider
           maxVisibleToasts={3}
-          placement="top-right"
+          placement="bottom-right"
           toastProps={{ radius: 'sm', timeout: 3500, variant: 'flat' }}
         />
         <AuthProvider>
