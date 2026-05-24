@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Pagination } from "@heroui/react";
 import { CardProducto } from "./CardProducto";
 
@@ -10,16 +10,19 @@ export const ListaProductos = ({ productos, pagina, totalPaginas, onCambioPagina
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap gap-4">
-        {productos.map((producto, index) => (
-          <motion.div
-            key={producto.idProducto}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.05 }}
-          >
-            <CardProducto producto={producto} />
-          </motion.div>
-        ))}
+        <AnimatePresence>
+          {productos.map((producto, index) => (
+            <motion.div
+              key={producto.idProducto}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+            >
+              <CardProducto producto={producto} />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
       {totalPaginas > 1 && (
