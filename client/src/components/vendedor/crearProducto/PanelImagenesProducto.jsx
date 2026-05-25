@@ -23,7 +23,7 @@ const PanelImagenesProducto = ({ imagenes, onCargar, onQuitar }) => {
     <Card className="shadow-lg" radius="sm">
       <CardBody className="px-7 py-8">
         <h3 className="text-center text-sm font-bold uppercase tracking-widest text-slate-700">
-          Imagenes del producto
+          Imágenes del producto
         </h3>
         <InputImagenes
           className={`mt-6 flex min-h-52 flex-col items-center justify-center rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 px-6 py-8 text-center transition ${
@@ -36,7 +36,7 @@ const PanelImagenesProducto = ({ imagenes, onCargar, onQuitar }) => {
           <span className="mt-4 text-xl font-black text-slate-950">
             {alcanzoMaximo ? 'Maximo alcanzado' : 'Subir imagenes'}
           </span>
-          <span className="mt-2 text-sm text-slate-500">PNG, JPG o WEBP. Maximo 5MB.</span>
+          <span className="mt-2 text-sm text-slate-500">PNG, JPG o WEBP. Máximo 5MB.</span>
         </InputImagenes>
         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
           {imagenes.map((imagen) => (

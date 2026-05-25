@@ -33,11 +33,11 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
 
         <div className="flex flex-col gap-3 text-sm mb-5">
           <div className="flex justify-between">
-            <span className="text-white/80">Subtotal coleccion</span>
+            <span className="text-white/80">Subtotal colección</span>
             <span className="font-semibold">{formatearPesos(subtotal)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-white/80">Envio estandar</span>
+            <span className="text-white/80">Envío estándar</span>
             <span className="font-bold text-yellow-400">GRATIS</span>
           </div>
           {promoAplicada && (
@@ -66,7 +66,7 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
 
       <div className="bg-emerald-950 rounded-2xl p-5 border border-emerald-900 shadow-sm">
         <p className="text-xs font-bold uppercase tracking-widest text-yellow-400 mb-3 flex items-center gap-2">
-          <Tag size={13} /> Codigo Promocional
+          <Tag size={13} /> Código Promocional
         </p>
         <div className="flex gap-2">
           <Input
@@ -86,7 +86,7 @@ export default function ResumenCarrito({ subtotal, alProcederAlPago }) {
           </Button>
         </div>
         {errorPromo && <p className="text-xs text-red-500 mt-1">{errorPromo}</p>}
-        {promoAplicada && <p className="text-xs text-yellow-400 mt-1">Codigo aplicado</p>}
+        {promoAplicada && <p className="text-xs text-yellow-400 mt-1">Código aplicado</p>}
       </div>
     </div>
   );

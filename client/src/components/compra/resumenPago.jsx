@@ -21,7 +21,7 @@ export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, ca
             <span className="font-semibold">{formatearPesos(subtotal)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-white/80">Envio</span>
+            <span className="text-white/80">Envío</span>
             <span className="font-bold text-yellow-400">GRATIS</span>
           </div>
           <div className="flex justify-between">
@@ -50,7 +50,7 @@ export default function ResumenPago({ articulos, alConfirmar, puedeConfirmar, ca
 
         {!puedeConfirmar && (
           <p className="text-xs text-white/60 text-center mt-2">
-            Completa envio y pago para continuar
+            Completá envío y pago para continuar
           </p>
         )}
       </div>

@@ -88,13 +88,13 @@ const RegistroComprador = () => {
                 Nuevo coleccionista
               </p>
               <h1 className="mt-5 text-5xl font-black uppercase leading-none md:text-7xl">
-                Crea tu
+                Creá tu
                 <br />
                 cuenta
               </h1>
               <p className="mt-6 max-w-lg text-lg leading-8 text-white/75">
                 Registrate para guardar tu progreso, comprar figuritas y armar tu
-                album con confianza.
+                álbum con confianza.
               </p>
             </div>
 
@@ -105,7 +105,7 @@ const RegistroComprador = () => {
               </div>
               <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3">
                 <PackageCheck className="text-[#caa56e]" size={20} />
-                Segui tus compras y pedidos
+                Seguí tus compras y pedidos
               </div>
               <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3">
                 <HeartHandshake className="text-[#caa56e]" size={20} />
@@ -121,11 +121,11 @@ const RegistroComprador = () => {
                   Registro comprador
                 </p>
                 <h2 className="mt-3 text-3xl font-black text-[#142b10]">
-                  Empeza tu coleccion
+                  Empezá tu colección
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[#5f6d5a]">
-                  Crea tu cuenta para comprar combos, sumar figuritas y volver cuando quieras a
-                  continuar completando tu album.
+                  Creá tu cuenta para comprar combos, sumar figuritas y volver cuando quieras a
+                  continuar completando tu álbum.
                 </p>
               </div>
 
@@ -202,7 +202,7 @@ const RegistroComprador = () => {
                 </Button>
 
                 <p className="pt-1 text-center text-sm font-semibold text-[#5f6d5a]">
-                  Ya sos parte de Figullect?
+                  ¿Ya sos parte de Figullect?
                 </p>
 
                 <Button

@@ -39,7 +39,7 @@ const PantallaCargandoSesion = () => (
   <div className="flex min-h-screen items-center justify-center bg-slate-50 px-6 text-slate-950">
     <div className="text-center">
       <p className="text-sm font-black uppercase tracking-widest text-green-700">FIGULLECT</p>
-      <h1 className="mt-3 text-3xl font-black text-[#061d58]">Cargando sesion...</h1>
+      <h1 className="mt-3 text-3xl font-black text-[#061d58]">Cargando sesión...</h1>
     </div>
   </div>
 )

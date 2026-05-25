@@ -93,7 +93,7 @@ const IniciarSesion = () => {
                 sesion
               </h1>
               <p className="mt-6 max-w-lg text-lg leading-8 text-white/75">
-                Empieza el camino de coleccionar tu álbum ahora mismo! Comprá figuritas y accedé a combos imperdibles. 
+                ¡Empezá el camino de coleccionar tu álbum ahora mismo! Comprá figuritas y accedé a combos imperdibles. 
               </p>
             </div>
 
@@ -119,7 +119,7 @@ const IniciarSesion = () => {
                   Volvé a tu album
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[#5f6d5a]">
-                  Iniciá sesion para continuar tu colección, revisar tus compras y encontrar las
+                  Iniciá sesión para continuar tu colección, revisar tus compras y encontrar las
                   figuritas que te faltan.
                 </p>
               </div>
@@ -181,7 +181,7 @@ const IniciarSesion = () => {
                 </Button>
 
                 <p className="pt-2 text-center text-sm font-semibold text-[#5f6d5a]">
-                  Todavia no tenes cuenta? Sumate y empeza tu coleccion.
+                  ¿Todavia no tenes cuenta? Sumate y empezá tu colección.
                 </p>
 
                 <Button

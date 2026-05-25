@@ -6,7 +6,7 @@ const CorreoPersonal = ({ email, errorEmail, estaEditando, onCambiarEmail }) => 
     return (
       <div>
         <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-          Correo electronico
+          Correo electrónico
         </p>
         <p className="mt-2 text-xl font-bold text-green-primary">{email}</p>
       </div>

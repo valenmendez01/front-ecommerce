@@ -10,7 +10,7 @@ const CampoCategoriaProducto = ({ borrador, categorias, editando, onCambiar, pro
   <CampoDetalleProducto etiqueta="Categoria">
     {editando ? (
       <Select
-        aria-label="Categoria del producto"
+        aria-label="Categoría del producto"
         classNames={clasesCampoProducto}
         selectedKeys={[borrador.categoria]}
         size="sm"

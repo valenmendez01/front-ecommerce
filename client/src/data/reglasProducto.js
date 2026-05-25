@@ -33,10 +33,10 @@ export const obtenerErroresProducto = (producto, categorias = []) => {
 
   return {
     nombre: producto.nombre.trim() ? '' : 'El nombre es obligatorio.',
-    description: producto.description.trim() ? '' : 'La descripcion es obligatoria.',
+    description: producto.description.trim() ? '' : 'La descripción es obligatoria.',
     categoria: valoresCategorias.includes(producto.categoria)
       ? ''
-      : 'Selecciona una categoria valida.',
+      : 'Seleccioná una categoría válida.',
     stock:
       producto.stock !== '' && !Number.isNaN(stock) && stock >= 0
         ? ''

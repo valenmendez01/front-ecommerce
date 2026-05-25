@@ -21,7 +21,7 @@ const SeccionInformacionProducto = ({ categorias, errores, mostrarErrores, onCam
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-primary text-dorado-primary">
           <Info size={18} />
         </div>
-        <h3 className="text-2xl font-black text-slate-950">Informacion principal</h3>
+        <h3 className="text-2xl font-black text-slate-950">Información principal</h3>
       </div>
       <div className="space-y-6">
         <EtiquetaCampo titulo="Nombre del producto">

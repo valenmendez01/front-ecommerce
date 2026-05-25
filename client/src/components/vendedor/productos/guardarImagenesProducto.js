@@ -12,7 +12,7 @@ export const guardarImagenesProducto = async (idProducto, cambios, token) => {
 
   await Promise.all(quitadas.map(async (idImagen) => {
     const respuesta = await fetch(`/productos/${idProducto}/imagenes/${idImagen}`, { method: 'DELETE', headers })
-    if (!respuesta.ok) throw new Error(await obtenerErrorRespuesta(respuesta, 'No se pudo quitar una imagen.'))
+    if (!respuesta.ok) throw new Error(await obtenerErrorRespuesta(respuesta, 'No se pudo quitar una imágen.'))
   }))
 
   if (nuevas.length > 0) {
@@ -21,7 +21,7 @@ export const guardarImagenesProducto = async (idProducto, cambios, token) => {
       headers,
       body: crearFormularioImagenes(nuevas),
     })
-    if (!respuesta.ok) throw new Error(await obtenerErrorRespuesta(respuesta, 'No se pudieron guardar las imagenes.'))
+    if (!respuesta.ok) throw new Error(await obtenerErrorRespuesta(respuesta, 'No se pudieron guardar las imágenes.'))
   }
 
   if (nuevas.length === 0 && quitadas.length === 0) return null

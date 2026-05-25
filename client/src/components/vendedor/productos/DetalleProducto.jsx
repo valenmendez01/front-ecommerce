@@ -34,7 +34,7 @@ const DetalleProducto = ({
   const cargarImagenes = (event) => {
     const archivos = Array.from(event.target.files || [])
     if (guardadas.length + imagenesNuevas.length + archivos.length > MAXIMO_IMAGENES_PRODUCTO) {
-      setErrorCarga(`Podes cargar como maximo ${MAXIMO_IMAGENES_PRODUCTO} imagenes por producto.`)
+      setErrorCarga(`Podés cargar como máximo ${MAXIMO_IMAGENES_PRODUCTO} imágenes por producto.`)
       event.target.value = ''
       return
     }

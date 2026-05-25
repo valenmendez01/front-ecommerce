@@ -93,7 +93,7 @@ export default function Navigation2() {
                 variant="outline"
                 className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white"
                 isIconOnly
-                aria-label="Cerrar sesion"
+                aria-label="Cerrar sesión"
                 onPress={manejarCierreSesion}
               >
                 <LogOut size={20} />
@@ -107,7 +107,7 @@ export default function Navigation2() {
                 to="/iniciar-sesion"
                 variant="outline"
               >
-                Iniciar sesion
+                Iniciar sesión
               </Button>
             )}
           </div>

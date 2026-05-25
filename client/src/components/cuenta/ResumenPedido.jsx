@@ -8,10 +8,10 @@ const DatoPedido = ({ titulo, valor }) => (
 const ResumenPedido = ({ pedido }) => (
   <div className="rounded-md border border-dorado-primary/30 bg-white p-5">
     <h3 className="text-sm font-black uppercase tracking-widest text-green-primary">
-      Informacion del pedido
+      Información del pedido
     </h3>
     <div className="mt-4 space-y-4 text-sm">
-      {pedido.metodoPago && <DatoPedido titulo="Metodo de pago" valor={pedido.metodoPago} />}
+      {pedido.metodoPago && <DatoPedido titulo="Método de pago" valor={pedido.metodoPago} />}
       {pedido.entrega && <DatoPedido titulo="Entrega" valor={pedido.entrega} />}
       <div>
         <p className="font-bold uppercase tracking-widest text-slate-400">Total del pedido</p>

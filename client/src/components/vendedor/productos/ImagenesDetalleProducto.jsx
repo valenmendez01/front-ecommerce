@@ -5,7 +5,7 @@ import { MAXIMO_IMAGENES_PRODUCTO } from '../../../data/reglasImagenesProducto'
 const EntradaImagen = ({ deshabilitada, onCargar }) => (
   <label className={`flex h-36 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-dorado-primary/60 bg-white text-sm font-bold text-green-primary ${deshabilitada ? 'cursor-not-allowed opacity-50' : 'hover:bg-dorado-primary/10'}`}>
     <ImagePlus size={24} />
-    <span className="mt-2">Agregar imagen</span>
+    <span className="mt-2">Agregar imágen</span>
     <input
       multiple
       accept="image/png,image/jpeg,image/webp"
@@ -50,14 +50,14 @@ const ImagenesDetalleProducto = ({
   return (
     <section className="mt-5 rounded-lg border border-dorado-primary/35 bg-white/90 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h4 className="text-sm font-black uppercase tracking-widest text-green-primary">Imagenes</h4>
+        <h4 className="text-sm font-black uppercase tracking-widest text-green-primary">Imágenes</h4>
         <p className="text-xs font-bold text-slate-500">{cantidad}/{MAXIMO_IMAGENES_PRODUCTO}</p>
       </div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {guardadas.map((imagen) => (
           <ImagenDetalle
             key={imagen.idImagen}
-            nombre="Imagen del producto"
+            nombre="Imágen del producto"
             onQuitar={editando ? () => onQuitarActual(imagen.idImagen) : null}
             url={obtenerUrlImagenProducto(imagen)}
           />
@@ -67,7 +67,7 @@ const ImagenesDetalleProducto = ({
         ))}
         {editando && <EntradaImagen deshabilitada={alcanzoMaximo} onCargar={onCargar} />}
       </div>
-      {!editando && cantidad === 0 && <p className="mt-3 text-sm font-semibold text-slate-500">Este producto no tiene imagenes.</p>}
+      {!editando && cantidad === 0 && <p className="mt-3 text-sm font-semibold text-slate-500">Este producto no tiene imágenes.</p>}
       {error && <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm font-bold text-red-700">{error}</p>}
     </section>
   )
