@@ -16,7 +16,7 @@ const TablaDetallePedido = ({ pedido }) => (
         <tbody>
           {pedido.productos.length === 0 && (
             <tr className="border-t border-slate-100">
-              <td className="px-4 py-5 text-center font-semibold text-slate-500" colSpan="4">
+              <td className="px-4 py-5 text-center font-semibold text-green-primary/70" colSpan="4">
                 No hay productos asociados a este pedido.
               </td>
             </tr>
@@ -26,9 +26,9 @@ const TablaDetallePedido = ({ pedido }) => (
               className="border-t border-slate-100"
               key={`${pedido.idPedido}-${producto.idProducto || producto.nombre}`}
             >
-              <td className="px-4 py-3 font-semibold text-slate-800">{producto.nombre}</td>
-              <td className="px-4 py-3">{producto.cantidad}</td>
-              <td className="px-4 py-3">{producto.precioUnitarioTexto}</td>
+              <td className="px-4 py-3 font-semibold text-green-primary">{producto.nombre}</td>
+              <td className="px-4 py-3 text-green-primary">{producto.cantidad}</td>
+              <td className="px-4 py-3 text-green-primary">{producto.precioUnitarioTexto}</td>
               <td className="px-4 py-3 font-bold text-green-primary">{producto.subtotalTexto}</td>
             </tr>
           ))}

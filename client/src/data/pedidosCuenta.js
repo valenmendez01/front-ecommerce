@@ -50,7 +50,5 @@ export const normalizarPedidoCuenta = (pedido, indice) => {
     monto,
     total: formatearPesos(monto),
     productos,
-    metodoPago: pedido.metodoPago,
-    entrega: pedido.entrega,
   }
 }
