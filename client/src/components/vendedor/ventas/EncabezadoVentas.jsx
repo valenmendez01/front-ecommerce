@@ -4,7 +4,7 @@ const EncabezadoVentas = () => (
       Ventas
     </h2>
     <p className="mt-5 max-w-2xl text-xl leading-relaxed text-slate-700">
-      Consultá las ventas realizadas y el detalle de cada operación.
+      Consulta las ventas realizadas y el detalle de cada operacion.
     </p>
   </section>
 )

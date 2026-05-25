@@ -10,7 +10,7 @@ const EncabezadoInformacionPersonal = ({
   puedeEditar,
 }) => (
   <div className="flex items-center justify-between bg-green-primary px-8 py-4">
-    <h2 className="text-xl font-black text-white">INFORMACIóN PERSONAL</h2>
+    <h2 className="text-xl font-black text-white">INFORMACION PERSONAL</h2>
 
     {puedeEditar && estaEditando && (
       <div className="flex gap-2">

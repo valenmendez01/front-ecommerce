@@ -58,7 +58,7 @@ export default function FormularioPago({
           placeholder="123"
           type="password"
           value={formulario.cvv}
-          errorMessage="El CVV debe tener 3 o 4 números."
+          errorMessage="El CVV debe tener 3 o 4 numeros."
           inputMode="numeric"
           onValueChange={(value) => alActualizar("cvv", value)}
           variant="bordered"
@@ -68,7 +68,7 @@ export default function FormularioPago({
       </div>
 
       <Button onPress={alGuardar} className="w-full bg-yellow-400 text-black text-sm font-bold rounded-lg">
-        Guardar método de pago
+        Guardar metodo de pago
       </Button>
     </div>
   );

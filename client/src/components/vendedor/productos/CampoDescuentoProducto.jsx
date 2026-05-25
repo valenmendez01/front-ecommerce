@@ -26,7 +26,7 @@ const CampoDescuentoProducto = ({ borrador, editando, onCambiar, producto }) => 
         />
         {Number(borrador.descuento) > 0 && (
           <p className="text-xs font-bold text-red-700">
-            Precio con descuento aplicado automáticamente.
+            Precio con descuento aplicado automaticamente.
           </p>
         )}
       </div>

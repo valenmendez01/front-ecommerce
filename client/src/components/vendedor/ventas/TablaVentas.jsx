@@ -32,7 +32,7 @@ const TablaVentas = ({ cargando, error, ventas }) => {
       <div className="border-t border-slate-100">
         {cargando && <MensajeVentas>Cargando ventas...</MensajeVentas>}
         {!cargando && ventasVisibles.length === 0 && (
-          <MensajeVentas>Todavía no hay ventas para mostrar.</MensajeVentas>
+          <MensajeVentas>Todavia no hay ventas para mostrar.</MensajeVentas>
         )}
         {!cargando && ventasVisibles.map((venta) => (
           <FilaVenta

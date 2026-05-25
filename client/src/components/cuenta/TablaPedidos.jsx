@@ -40,13 +40,13 @@ const TablaPedidos = ({ cargando = false, error = '', pedidos }) => {
               <th className="px-8 py-4">ID pedido</th>
               <th className="px-8 py-4">Fecha</th>
               <th className="px-8 py-4">Total</th>
-              <th className="px-8 py-4 text-right">Acción</th>
+              <th className="px-8 py-4 text-right">Accion</th>
             </tr>
           </thead>
           <tbody>
             {cargando && <MensajeTablaPedidos>Cargando pedidos...</MensajeTablaPedidos>}
             {!cargando && pedidosVisibles.length === 0 && (
-              <MensajeTablaPedidos>Todavía no hay pedidos para mostrar.</MensajeTablaPedidos>
+              <MensajeTablaPedidos>Todavia no hay pedidos para mostrar.</MensajeTablaPedidos>
             )}
             {!cargando && pedidosVisibles.map((pedido) => (
               <FilaPedido

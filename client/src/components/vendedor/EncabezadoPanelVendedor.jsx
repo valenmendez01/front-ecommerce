@@ -6,7 +6,7 @@ const EncabezadoPanelVendedor = () => (
       vendedor
     </h2>
     <p className="mt-5 max-w-2xl text-xl leading-relaxed text-slate-700">
-      Revisá tus productos publicados y controlá el stock de tu catálogo.
+      Revisa tus productos publicados y controla el stock de tu catalogo.
     </p>
   </section>
 )

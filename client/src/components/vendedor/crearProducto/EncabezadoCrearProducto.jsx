@@ -6,7 +6,7 @@ const EncabezadoCrearProducto = () => (
       producto
     </h2>
     <p className="mt-5 max-w-2xl text-xl leading-relaxed text-slate-700">
-      Cargá la información principal, definí stock, precio, descuento e imágenes.
+      Carga la informacion principal, defini stock, precio, descuento e imagenes.
     </p>
   </section>
 )

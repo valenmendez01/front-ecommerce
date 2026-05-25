@@ -94,13 +94,13 @@ const RegistroComprador = () => {
                 Nuevo coleccionista
               </p>
               <h1 className="mt-5 text-5xl font-black uppercase leading-none md:text-7xl">
-                Creá tu
+                Crea tu
                 <br />
                 cuenta
               </h1>
               <p className="mt-6 max-w-lg text-lg leading-8 text-white/75">
-                Registrate para guardar tu progreso, comprar figuritas y armar tu álbum con
-                confianza.
+                Registrate para guardar tu progreso, comprar figuritas y armar tu
+                album con confianza.
               </p>
             </div>
 
@@ -111,7 +111,7 @@ const RegistroComprador = () => {
               </div>
               <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3">
                 <PackageCheck className="text-[#caa56e]" size={20} />
-                Seguí tus compras y pedidos
+                Segui tus compras y pedidos
               </div>
               <div className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/5 px-4 py-3">
                 <HeartHandshake className="text-[#caa56e]" size={20} />
@@ -127,11 +127,11 @@ const RegistroComprador = () => {
                   Registro comprador
                 </p>
                 <h2 className="mt-3 text-3xl font-black text-[#142b10]">
-                  Empezá tu colección
+                  Empeza tu coleccion
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[#5f6d5a]">
-                  Creá tu cuenta para comprar combos, sumar figuritas y volver cuando quieras a
-                  continuar completando tu álbum.
+                  Crea tu cuenta para comprar combos, sumar figuritas y volver cuando quieras a
+                  continuar completando tu album.
                 </p>
               </div>
 
@@ -165,7 +165,7 @@ const RegistroComprador = () => {
                 <Input
                   isRequired
                   classNames={clasesInput}
-                  label="Correo electrónico"
+                  label="Correo electronico"
                   radius="sm"
                   size="lg"
                   startContent={<Mail className="text-[#8d6f3e]" size={20} />}
@@ -178,7 +178,7 @@ const RegistroComprador = () => {
                 <Input
                   isRequired
                   classNames={clasesInput}
-                  label="Contraseña"
+                  label="Contrasena"
                   radius="sm"
                   size="lg"
                   startContent={<LockKeyhole className="text-[#8d6f3e]" size={20} />}
@@ -208,7 +208,7 @@ const RegistroComprador = () => {
                 </Button>
 
                 <p className="pt-1 text-center text-sm font-semibold text-[#5f6d5a]">
-                  ¿Ya sos parte de Figullect?
+                  Ya sos parte de Figullect?
                 </p>
 
                 <Button
@@ -219,7 +219,7 @@ const RegistroComprador = () => {
                   to="/iniciar-sesion"
                   variant="bordered"
                 >
-                  Iniciar sesión
+                  Iniciar sesion
                 </Button>
               </form>
             </CardBody>

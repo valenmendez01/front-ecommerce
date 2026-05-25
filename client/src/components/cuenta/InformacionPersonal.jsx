@@ -19,13 +19,13 @@ const dominiosPermitidos = [
 const obtenerErrorEmail = (email) => {
   const emailLimpio = email.trim().toLowerCase()
 
-  if (!emailLimpio) return 'El correo electrónico es obligatorio.'
+  if (!emailLimpio) return 'El correo electronico es obligatorio.'
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpio)) {
-    return 'Ingresá un correo electrónico válido.'
+    return 'Ingresa un correo electronico valido.'
   }
 
   if (!dominiosPermitidos.includes(emailLimpio.split('@')[1])) {
-    return 'Usá un dominio válido, como gmail.com, hotmail.com u outlook.com.'
+    return 'Usa un dominio valido, como gmail.com, hotmail.com u outlook.com.'
   }
 
   return ''

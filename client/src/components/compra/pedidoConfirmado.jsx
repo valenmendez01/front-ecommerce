@@ -14,7 +14,7 @@ export default function PedidoConfirmado({ alVolverInicio }) {
         </h1>
 
         <p className="text-white/70 mb-6">
-          Recibirás un email con los detalles de tu colección. Gracias por tu compra.
+          Recibiras un email con los detalles de tu coleccion. Gracias por tu compra.
         </p>
 
         <Button

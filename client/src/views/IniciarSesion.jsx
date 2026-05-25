@@ -94,12 +94,12 @@ const IniciarSesion = () => {
                 Cuenta Figullect
               </p>
               <h1 className="mt-5 text-5xl font-black uppercase leading-none md:text-7xl">
-                Iniciá
+                Inicia
                 <br />
-                sesión
+                sesion
               </h1>
               <p className="mt-6 max-w-lg text-lg leading-8 text-white/75">
-                ¡Empezá el camino de coleccionar tu álbum ahora mismo! Comprá figuritas y accedé a combos imperdibles.
+                Empieza el camino de coleccionar tu álbum ahora mismo! Comprá figuritas y accedé a combos imperdibles. 
               </p>
             </div>
 
@@ -122,10 +122,10 @@ const IniciarSesion = () => {
                   Bienvenido
                 </p>
                 <h2 className="mt-3 text-3xl font-black text-[#142b10]">
-                  Volvé a tu álbum
+                  Volvé a tu album
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[#5f6d5a]">
-                  Iniciá sesión para continuar tu colección, revisar tus compras y encontrar las
+                  Iniciá sesion para continuar tu colección, revisar tus compras y encontrar las
                   figuritas que te faltan.
                 </p>
               </div>
@@ -139,7 +139,7 @@ const IniciarSesion = () => {
                     label: 'text-[#52614d]',
                     input: 'text-[#142b10]',
                   }}
-                  label="Correo electrónico"
+                  label="Correo electronico"
                   radius="sm"
                   size="lg"
                   startContent={<Mail className="text-[#8d6f3e]" size={20} />}
@@ -157,7 +157,7 @@ const IniciarSesion = () => {
                     label: 'text-[#52614d]',
                     input: 'text-[#142b10]',
                   }}
-                  label="Contraseña"
+                  label="Contrasena"
                   radius="sm"
                   size="lg"
                   startContent={<LockKeyhole className="text-[#8d6f3e]" size={20} />}
@@ -187,7 +187,7 @@ const IniciarSesion = () => {
                 </Button>
 
                 <p className="pt-2 text-center text-sm font-semibold text-[#5f6d5a]">
-                  ¿Todavía no tenés cuenta? Sumate y empezá tu colección.
+                  Todavia no tenes cuenta? Sumate y empeza tu coleccion.
                 </p>
 
                 <Button

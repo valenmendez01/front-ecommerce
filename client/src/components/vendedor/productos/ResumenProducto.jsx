@@ -37,7 +37,7 @@ const ResumenProducto = ({ abierto, cambiandoVisibilidad, guardando, onAbrir, on
         </Button>
         <Button
           isIconOnly
-          aria-label={`${producto.activo ? 'Ocultar' : 'Mostrar'} ${producto.nombre} en el catálogo`}
+          aria-label={`${producto.activo ? 'Ocultar' : 'Mostrar'} ${producto.nombre} en el catalogo`}
           className="bg-dorado-primary/20 text-green-primary"
           isDisabled={guardando || cambiandoVisibilidad}
           isLoading={cambiandoVisibilidad}
