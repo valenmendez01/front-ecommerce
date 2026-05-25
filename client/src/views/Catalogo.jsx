@@ -10,6 +10,8 @@ import { FlipWords } from "../components/ui/flip-words";
 export const Catalogo = () => {
   const [categorias, setCategorias] = useState([]);
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
+  const [selecciones, setSelecciones] = useState([]);
+  const [seleccionesSeleccionadas, setSeleccionesSeleccionadas] = useState([]);
   const [productos, setProductos] = useState([]);
   const [precioMin, setPrecioMin] = useState(0);
   const [precioMax, setPrecioMax] = useState(100000);
@@ -36,6 +38,22 @@ export const Catalogo = () => {
   }, []);
 
   useEffect(() => {
+    fetch("/selecciones")
+      .then((res) => {
+        if (!res.ok) return res.json().then((err) => Promise.reject(err));
+        return res.json();
+      })
+      .then((json) => setSelecciones(json.data))
+      .catch((err) =>
+        addToast({
+          title: "Error al cargar selecciones",
+          description: err.message || "Intentá de nuevo más tarde.",
+          color: "danger",
+        })
+      );
+  }, []);
+
+  useEffect(() => {
     const buildUrl = () => {
       const pagination = `page=${pagina}&size=${PAGE_SIZE}`;
 
@@ -45,6 +63,10 @@ export const Catalogo = () => {
       if (categoriasSeleccionadas.length >= 1) {
         const params = categoriasSeleccionadas.map(c => `categorias=${c}`).join("&");
         return `/productos/filtrar/categorias?${params}&${pagination}`;
+      }
+      if (seleccionesSeleccionadas.length >= 1) {
+        const params = seleccionesSeleccionadas.map(s => `selecciones=${s}`).join("&");
+        return `/productos/filtrar/selecciones?${params}&${pagination}`;
       }
       if (precioMin > 0 || precioMax < 20000) {
         return `/productos/filtrar/precio?min=${precioMin}&max=${precioMax}&${pagination}`;
@@ -69,7 +91,7 @@ export const Catalogo = () => {
         })
       )
       .finally(() => setCargando(false));
-  }, [categoriasSeleccionadas, precioMin, precioMax, busqueda, pagina]);
+  }, [categoriasSeleccionadas, seleccionesSeleccionadas, precioMin, precioMax, busqueda, pagina]);
 
   function handleCambioCategoria(categoria) {
     setPagina(0);
@@ -77,6 +99,15 @@ export const Catalogo = () => {
       categoriasPrevias.includes(categoria)
         ? categoriasPrevias.filter((c) => c !== categoria)
         : [...categoriasPrevias, categoria]
+    );
+  }
+
+  function handleCambioSeleccion(seleccion) {
+    setPagina(0);
+    setSeleccionesSeleccionadas((previas) =>
+      previas.includes(seleccion)
+        ? previas.filter((s) => s !== seleccion)
+        : [...previas, seleccion]
     );
   }
 
@@ -106,6 +137,9 @@ export const Catalogo = () => {
             categorias={categorias}
             categoriasSeleccionadas={categoriasSeleccionadas}
             onCambiarCategoria={handleCambioCategoria}
+            selecciones={selecciones}
+            seleccionesSeleccionadas={seleccionesSeleccionadas} 
+            onCambiarSeleccion={handleCambioSeleccion}
             precioMin={precioMin}
             precioMax={precioMax}
             onPrecioChange={handlePrecioChange}
