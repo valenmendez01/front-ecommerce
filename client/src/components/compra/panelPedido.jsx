@@ -1,5 +1,5 @@
 import { formatearPesos } from "../../data/reglasProducto";
-import ImagenProducto from "../carrito/imagenProducto";
+import ImagenProducto from "../carrito/items/imagenProducto";
 import { motion } from "framer-motion";
 
 export default function PanelPedido({ articulos }) {

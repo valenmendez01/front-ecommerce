@@ -1,8 +1,8 @@
 import { Button } from "@heroui/react";
 import { Rocket } from "lucide-react";
 import { motion } from "framer-motion";
-import { formatearPesos } from "../../data/reglasProducto";
-import { SpotlightCard } from "../ui/spotlight-card";
+import { formatearPesos } from "../../../data/reglasProducto";
+import { SpotlightCard } from "../../ui/spotlight-card";
 
 export default function ResumenPago({ alConfirmar, puedeConfirmar, cargando, resumen }) {
   const tieneDescuento = resumen.descuento > 0;

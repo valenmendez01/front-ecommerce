@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { obtenerImagenProducto } from "../../data/reglasCarrito";
-import { HoverEffect } from "../ui/card-hover-effect";
+import { obtenerImagenProducto } from "../../../data/reglasCarrito";
+import { HoverEffect } from "../../ui/card-hover-effect";
 import ItemRecomendado from "./itemRecomendado";
 import RecomendadosSkeleton from "./recomendadosSkeleton";
 
