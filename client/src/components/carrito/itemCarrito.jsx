@@ -7,6 +7,8 @@ import ImagenProducto from "./imagenProducto";
 
 export default function itemCarrito({ articulo, alActualizarCantidad, alEliminar }) {
   const sinMasStock = articulo.stock && articulo.cantidad >= articulo.stock;
+  const precioOriginalTotal = articulo.precioOriginal ? articulo.precioOriginal * articulo.cantidad : 0;
+  const precioFinalTotal = articulo.precio * articulo.cantidad;
 
   return (
     <motion.div
@@ -84,10 +86,15 @@ export default function itemCarrito({ articulo, alActualizarCantidad, alEliminar
 
       <div className="text-right shrink-0">
         {articulo.precioOriginal && (
-          <p className="text-xs text-white/50 line-through">{formatearPesos(articulo.precioOriginal)}</p>
+          <p className="text-xs text-white/50 line-through">{formatearPesos(precioOriginalTotal)}</p>
         )}
-        <p className="font-bold text-white">{formatearPesos(articulo.precio * articulo.cantidad)}</p>
-        {articulo.badge && (
+        <p className="font-bold text-white">{formatearPesos(precioFinalTotal)}</p>
+        {articulo.descuento > 0 && (
+          <span className="text-[10px] font-bold text-black bg-yellow-400 px-1.5 py-0.5 rounded">
+            -{articulo.descuento}%
+          </span>
+        )}
+        {articulo.badge && !articulo.descuento && (
           <span className="text-[10px] font-bold text-black bg-yellow-400 px-1.5 py-0.5 rounded">
             {articulo.badge}
           </span>

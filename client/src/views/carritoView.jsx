@@ -11,6 +11,7 @@ import TituloCarrito from "../components/carrito/tituloCarrito";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
 import {
+  calcularResumenCarrito,
   obtenerArticulosCarrito,
   reemplazarArticulosCarrito,
 } from "../data/reglasCarrito";
@@ -46,10 +47,7 @@ export default function CarritoView() {
     setArticulos((prev) => prev.filter((articulo) => articulo.id !== id));
   };
 
-  const subtotal = articulos.reduce(
-    (total, articulo) => total + articulo.precio * articulo.cantidad,
-    0,
-  );
+  const resumen = calcularResumenCarrito(articulos);
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden font-sans text-slate-950">
@@ -77,14 +75,14 @@ export default function CarritoView() {
 
             <div className="lg:col-span-1">
               <div className="sticky top-24">
-                <ResumenCarrito subtotal={subtotal} alProcederAlPago={() => navigate("/compra")} />
+                <ResumenCarrito resumen={resumen} alProcederAlPago={() => navigate("/compra")} />
               </div>
             </div>
           </div>
         )}
       </main>
 
-      {articulos.length > 0 && <BarraPagoMovil subtotal={subtotal} alIrAlPago={() => navigate("/compra")} />}
+      {articulos.length > 0 && <BarraPagoMovil subtotal={resumen.total} alIrAlPago={() => navigate("/compra")} />}
     </div>
   );
 }
