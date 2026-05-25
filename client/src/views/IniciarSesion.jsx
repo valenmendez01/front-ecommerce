@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Input } from '@heroui/react'
+import { addToast, Button, Card, CardBody, Input } from '@heroui/react'
 import {
   ArrowLeft,
   BadgeCheck,
@@ -15,14 +15,14 @@ import { useAuth } from '../context/useAuth'
 
 const obtenerMensajeLogin = (error) => {
   if (error?.status === 401 || error?.status === 403 || error?.status === 404) {
-    return 'Email o contrasena incorrectos.'
+    return 'Email o contraseña incorrectos.'
   }
 
   if (error instanceof TypeError) {
-    return 'No se pudo conectar en este momento. Intenta nuevamente.'
+    return 'No se pudo conectar en este momento. Intentá nuevamente.'
   }
 
-  return error?.message || 'No se pudo iniciar sesion.'
+  return error?.message || 'No se pudo iniciar sesión.'
 }
 
 const IniciarSesion = () => {
@@ -47,7 +47,13 @@ const IniciarSesion = () => {
       const usuario = await iniciarSesion(credenciales)
       navigate(usuario.rol === 'VENDEDOR' ? '/panel-vendedor' : '/', { replace: true })
     } catch (loginError) {
-      setError(obtenerMensajeLogin(loginError))
+      const mensaje = obtenerMensajeLogin(loginError)
+      setError(mensaje)
+      addToast({
+        title: 'No pudimos iniciar sesión',
+        description: mensaje,
+        color: 'danger',
+      })
     } finally {
       setEnviando(false)
     }

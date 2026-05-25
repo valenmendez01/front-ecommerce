@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Input } from '@heroui/react'
+import { addToast, Button, Card, CardBody, Input } from '@heroui/react'
 import {
   HeartHandshake,
   LockKeyhole,
@@ -20,7 +20,7 @@ const obtenerMensajeRegistro = (error) => {
   }
 
   if (error instanceof TypeError) {
-    return 'No se pudo conectar en este momento. Intenta nuevamente.'
+    return 'No se pudo conectar en este momento. Intentá nuevamente.'
   }
 
   return error?.message || 'No se pudo crear la cuenta.'
@@ -58,7 +58,13 @@ const RegistroComprador = () => {
       await registrarComprador(datos)
       navigate('/', { replace: true })
     } catch (registroError) {
-      setError(obtenerMensajeRegistro(registroError))
+      const mensaje = obtenerMensajeRegistro(registroError)
+      setError(mensaje)
+      addToast({
+        title: 'No pudimos crear tu cuenta',
+        description: mensaje,
+        color: 'danger',
+      })
     } finally {
       setEnviando(false)
     }
