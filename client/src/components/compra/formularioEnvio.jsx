@@ -1,6 +1,6 @@
 import { Button, Input, Select, SelectItem } from "@heroui/react";
 
-const PAISES = ["Argentina", "Brasil", "Chile", "Mexico", "Espana", "Estados Unidos", "Qatar"];
+const PAISES = ["Argentina", "Brasil", "Chile", "México", "España", "Estados Unidos", "Qatar"];
 const clasesCampo = { label: "text-xs font-semibold text-gray-600" };
 
 export default function FormularioEnvio({
@@ -28,10 +28,10 @@ export default function FormularioEnvio({
 
         <Input
           isInvalid={intentoGuardar && !formulario.direccion.trim()}
-          label="Direccion"
-          placeholder="Calle, numero, piso"
+          label="Dirección"
+          placeholder="Calle, número, piso"
           value={formulario.direccion}
-          errorMessage="Ingresa una direccion valida."
+          errorMessage="Ingresá una dirección válida."
           onValueChange={(value) => alActualizar("direccion", value)}
           variant="bordered"
           radius="sm"
@@ -53,11 +53,12 @@ export default function FormularioEnvio({
 
         <Input
           isInvalid={intentoGuardar && (!formulario.codigoPostal || !cpValido)}
-          label="Codigo Postal"
+          label="Código postal"
           placeholder="CP"
           value={formulario.codigoPostal}
-          errorMessage={formulario.pais === "Argentina" ? "En Argentina debe tener 4 numeros." : "Ingresa solo numeros."}
+          errorMessage={formulario.pais === "Argentina" ? "En Argentina debe tener 4 números." : "Ingresá solo números."}
           inputMode="numeric"
+          maxLength={8}
           onValueChange={(value) => alActualizar("codigoPostal", value)}
           variant="bordered"
           radius="sm"
@@ -66,10 +67,10 @@ export default function FormularioEnvio({
 
         <Select
           isInvalid={intentoGuardar && !formulario.pais}
-          label="Pais"
-          placeholder="Selecciona un pais"
+          label="País"
+          placeholder="Seleccioná un país"
           selectedKeys={formulario.pais ? [formulario.pais] : []}
-          errorMessage="Selecciona un pais."
+          errorMessage="Seleccioná un país."
           onSelectionChange={(keys) => alActualizar("pais", [...keys][0] || "")}
           variant="bordered"
           radius="sm"
@@ -81,7 +82,7 @@ export default function FormularioEnvio({
       </div>
 
       <Button onPress={alGuardar} className="w-full bg-yellow-400 text-black text-sm font-bold rounded-lg mt-1">
-        Guardar direccion
+        Guardar dirección
       </Button>
     </div>
   );

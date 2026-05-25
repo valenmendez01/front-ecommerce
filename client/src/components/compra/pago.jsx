@@ -3,6 +3,7 @@ import { CheckCircle2, CreditCard } from "lucide-react";
 
 import CabeceraAcordeon from "./cabeceraAcordeon";
 import FormularioPago from "./formularioPago";
+import { SpotlightCard } from "../ui/spotlight-card";
 
 const formatearNumeroTarjeta = (valor) =>
   valor.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
@@ -72,14 +73,14 @@ export default function Pago({ alGuardar }) {
   };
 
   return (
-    <div className="rounded-xl border border-dorado-primary/25 overflow-hidden shadow-sm">
+    <SpotlightCard posicionLuz="derecha" className="rounded-xl border border-dorado-primary/25 shadow-sm">
       <CabeceraAcordeon
         abierto={abierto}
         guardado={guardado}
         iconoPendiente={<CreditCard size={18} className="text-emerald-950" />}
         iconoGuardado={<CheckCircle2 size={18} className="text-emerald-950" />}
-        titulo="Metodo de Pago"
-        subtitulo="Tarjeta de credito / debito"
+        titulo="Método de pago"
+        subtitulo="Tarjeta de crédito / débito"
         subtituloGuardado={`**** **** **** ${digitosTarjeta.slice(-4)} - Vence ${formulario.vencimiento}`}
         alCambiar={() => setAbierto(!abierto)}
       />
@@ -93,6 +94,6 @@ export default function Pago({ alGuardar }) {
           alGuardar={guardar}
         />
       </div>
-    </div>
+    </SpotlightCard>
   );
 }

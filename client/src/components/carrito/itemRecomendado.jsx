@@ -13,7 +13,6 @@ export default function ItemRecomendado({ articulo }) {
       />
       <p className="text-xs font-semibold text-white leading-tight">{articulo.nombre}</p>
       <p className="text-sm font-black text-yellow-400 mt-0.5">{formatearPesos(articulo.precio)}</p>
-      <p className="text-[10px] text-white/70 font-bold mt-0.5">Stock: {articulo.stock}</p>
       <p className="mt-2 text-[10px] font-black uppercase tracking-widest text-yellow-400">
         Ver producto
       </p>

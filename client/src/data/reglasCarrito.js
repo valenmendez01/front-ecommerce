@@ -28,6 +28,8 @@ const normalizarArticulo = (articulo) => ({
   idProducto: obtenerIdProducto(articulo),
   cantidad: Math.max(1, Number(articulo.cantidad || 1)),
   precio: Number(articulo.precio || 0),
+  precioOriginal: articulo.precioOriginal == null ? null : Number(articulo.precioOriginal),
+  descuento: Number(articulo.descuento || 0),
   stock: obtenerStockProducto(articulo),
 })
 
@@ -88,6 +90,7 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
     nombre: producto.nombre,
     precio: precioFinal,
     precioOriginal: descuento > 0 ? precioBase : null,
+    descuento,
     cantidad: stock === undefined ? cantidadPedida : Math.min(cantidadPedida, stock),
     stock,
     subtitulo: producto.categoria,
@@ -100,6 +103,9 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
           ? {
               ...articulo,
               imagen: articulo.imagen || articuloProducto.imagen,
+              precio: articuloProducto.precio,
+              precioOriginal: articuloProducto.precioOriginal,
+              descuento,
               stock,
               cantidad:
                 stock === undefined
@@ -112,4 +118,26 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
 
   guardarCarrito(articulosActualizados, idUsuario)
   return obtenerArticulosCarrito(idUsuario)
+}
+
+export const calcularResumenCarrito = (articulos) => {
+  const subtotalOriginal = articulos.reduce((total, articulo) => {
+    const precioBase = articulo.precioOriginal || articulo.precio
+    return total + precioBase * articulo.cantidad
+  }, 0)
+
+  const subtotal = articulos.reduce(
+    (total, articulo) => total + articulo.precio * articulo.cantidad,
+    0,
+  )
+
+  const descuento = Math.max(subtotalOriginal - subtotal, 0)
+
+  return {
+    descuento,
+    envio: 0,
+    subtotal,
+    subtotalOriginal,
+    total: subtotal,
+  }
 }

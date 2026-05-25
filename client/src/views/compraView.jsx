@@ -13,7 +13,7 @@ import TituloCompra from "../components/compra/tituloCompra";
 import { confirmarPedido } from "../components/compra/confirmarPedido";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
-import { obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
+import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
 
 export default function CompraView() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
@@ -25,6 +25,7 @@ export default function CompraView() {
   const { usuario, token } = useAuth();
 
   const articulos = obtenerArticulosCarrito(usuario?.idUsuario);
+  const resumen = calcularResumenCarrito(articulos);
   const esComprador = usuario?.rol === "COMPRADOR";
   const puedeConfirmar = envioGuardado && pagoGuardado && articulos.length > 0 && esComprador;
 
@@ -84,6 +85,7 @@ export default function CompraView() {
             <div className="sticky top-24">
               <ResumenPago
                 articulos={articulos}
+                resumen={resumen}
                 puedeConfirmar={puedeConfirmar}
                 cargando={cargandoConfirmar}
                 alConfirmar={confirmarCompra}
