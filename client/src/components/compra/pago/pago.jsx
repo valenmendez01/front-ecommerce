@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { CheckCircle2, CreditCard } from "lucide-react";
 
-import CabeceraAcordeon from "./cabeceraAcordeon";
+import CabeceraAcordeon from "../cabeceraAcordeon";
 import FormularioPago from "./formularioPago";
+import { SpotlightCard } from "../../ui/spotlight-card";
 
 const formatearNumeroTarjeta = (valor) =>
   valor.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
@@ -14,6 +15,21 @@ const formatearVencimiento = (valor) => {
 
 const soloLetras = (valor) => valor.replace(/[^\p{L}\s]/gu, "").slice(0, 60);
 const soloCvv = (valor) => valor.replace(/\D/g, "").slice(0, 4);
+
+const vencimientoValido = (valor) => {
+  const digitos = valor.replace(/\D/g, "");
+  if (digitos.length !== 4) return false;
+
+  const mes = Number(digitos.slice(0, 2));
+  const anio = 2000 + Number(digitos.slice(2));
+  const hoy = new Date();
+  const anioActual = hoy.getFullYear();
+  const mesActual = hoy.getMonth() + 1;
+
+  if (mes < 1 || mes > 12) return false;
+
+  return anio > anioActual || (anio === anioActual && mes >= mesActual);
+};
 
 export default function Pago({ alGuardar }) {
   const [abierto, setAbierto] = useState(false);
@@ -27,11 +43,10 @@ export default function Pago({ alGuardar }) {
   });
 
   const digitosTarjeta = formulario.numero.replace(/\s/g, "");
-  const digitosVencimiento = formulario.vencimiento.replace(/\D/g, "");
   const validaciones = {
     numeroValido: digitosTarjeta.length === 16,
     titularValido: formulario.titular.trim().length >= 3,
-    vencimientoValido: digitosVencimiento.length === 4,
+    vencimientoValido: vencimientoValido(formulario.vencimiento),
     cvvValido: formulario.cvv.length >= 3 && formulario.cvv.length <= 4,
   };
   const formularioValido = Object.values(validaciones).every(Boolean);
@@ -58,14 +73,14 @@ export default function Pago({ alGuardar }) {
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+    <SpotlightCard posicionLuz="derecha" className="rounded-xl border border-dorado-primary/25 shadow-sm">
       <CabeceraAcordeon
         abierto={abierto}
         guardado={guardado}
         iconoPendiente={<CreditCard size={18} className="text-emerald-950" />}
         iconoGuardado={<CheckCircle2 size={18} className="text-emerald-950" />}
-        titulo="Metodo de Pago"
-        subtitulo="Tarjeta de credito / debito"
+        titulo="Método de pago"
+        subtitulo="Tarjeta de crédito / débito"
         subtituloGuardado={`**** **** **** ${digitosTarjeta.slice(-4)} - Vence ${formulario.vencimiento}`}
         alCambiar={() => setAbierto(!abierto)}
       />
@@ -79,6 +94,6 @@ export default function Pago({ alGuardar }) {
           alGuardar={guardar}
         />
       </div>
-    </div>
+    </SpotlightCard>
   );
 }

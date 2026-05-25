@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
     setErrorSesion('')
 
     try {
-      const usuarioActual = await apiRequest('/usuarios/me')
+      const usuarioActual = await apiRequest('/usuarios/actual')
       const usuarioNormalizado = normalizarUsuario(usuarioActual)
       setUsuario(usuarioNormalizado)
       setToken(tokenActual)
@@ -162,7 +162,7 @@ export const AuthProvider = ({ children }) => {
 
     let sigueMontado = true
 
-    apiRequest('/usuarios/me')
+    apiRequest('/usuarios/actual')
       .then((usuarioActual) => {
         if (!sigueMontado) return
 

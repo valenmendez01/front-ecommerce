@@ -1,21 +1,7 @@
-import { ImagePlus, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { obtenerUrlImagenProducto } from '../../../data/productosVendedor'
 import { MAXIMO_IMAGENES_PRODUCTO } from '../../../data/reglasImagenesProducto'
-
-const EntradaImagen = ({ deshabilitada, onCargar }) => (
-  <label className={`flex h-36 cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-dorado-primary/60 bg-white text-sm font-bold text-green-primary ${deshabilitada ? 'cursor-not-allowed opacity-50' : 'hover:bg-dorado-primary/10'}`}>
-    <ImagePlus size={24} />
-    <span className="mt-2">Agregar imagen</span>
-    <input
-      multiple
-      accept="image/png,image/jpeg,image/webp"
-      className="hidden"
-      disabled={deshabilitada}
-      type="file"
-      onChange={onCargar}
-    />
-  </label>
-)
+import FileUpload from '../../ui/file-upload'
 
 const ImagenDetalle = ({ nombre, onQuitar, url }) => (
   <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white">
@@ -65,8 +51,16 @@ const ImagenesDetalleProducto = ({
         {imagenesNuevas.map((imagen) => (
           <ImagenDetalle key={imagen.id} nombre={imagen.nombre} onQuitar={() => onQuitarNueva(imagen.id)} url={imagen.url} />
         ))}
-        {editando && <EntradaImagen deshabilitada={alcanzoMaximo} onCargar={onCargar} />}
       </div>
+      {editando && (
+        <FileUpload
+          className="mt-4"
+          descripcion="Arrastra o selecciona nuevas imagenes para este producto."
+          deshabilitado={alcanzoMaximo}
+          titulo={alcanzoMaximo ? 'Maximo alcanzado' : 'Agregar imagenes'}
+          onChange={onCargar}
+        />
+      )}
       {!editando && cantidad === 0 && <p className="mt-3 text-sm font-semibold text-slate-500">Este producto no tiene imagenes.</p>}
       {error && <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm font-bold text-red-700">{error}</p>}
     </section>

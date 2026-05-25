@@ -31,17 +31,14 @@ const DetalleProducto = ({
     setErrorCarga('')
   }
 
-  const cargarImagenes = (event) => {
-    const archivos = Array.from(event.target.files || [])
+  const cargarImagenes = (archivos) => {
     if (guardadas.length + imagenesNuevas.length + archivos.length > MAXIMO_IMAGENES_PRODUCTO) {
       setErrorCarga(`Podes cargar como maximo ${MAXIMO_IMAGENES_PRODUCTO} imagenes por producto.`)
-      event.target.value = ''
       return
     }
 
     setImagenesNuevas((actuales) => [...actuales, ...crearImagenesLocales(archivos, actuales.length)])
     setErrorCarga('')
-    event.target.value = ''
   }
 
   const cancelar = () => {
@@ -50,9 +47,10 @@ const DetalleProducto = ({
   }
 
   const guardar = async () => {
-    if (errorCantidad || errorCarga) return
+    if (errorCantidad || errorCarga) return false
     const guardado = await onGuardar({ nuevas: imagenesNuevas, quitadas: imagenesQuitadas })
     if (guardado) limpiarCambiosImagenes()
+    return guardado
   }
 
   return (

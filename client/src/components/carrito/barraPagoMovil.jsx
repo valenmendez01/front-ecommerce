@@ -11,7 +11,7 @@ export default function BarraPagoMovil({ subtotal, alIrAlPago }) {
         endContent={<ArrowRight size={16} />}
         className="w-full bg-yellow-400 text-black font-black rounded-xl text-sm uppercase tracking-wider"
       >
-        Ir al Pago - {formatearPesos(subtotal)}
+        Ir al pago - {formatearPesos(subtotal)}
       </Button>
     </div>
   );

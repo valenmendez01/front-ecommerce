@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { CheckCircle2, Truck } from "lucide-react";
 
-import CabeceraAcordeon from "./cabeceraAcordeon";
+import CabeceraAcordeon from "../cabeceraAcordeon";
 import FormularioEnvio from "./formularioEnvio";
+import { SpotlightCard } from "../../ui/spotlight-card";
 
 const soloLetras = (valor) => valor.replace(/[^\p{L}\s]/gu, "").slice(0, 60);
 const textoDireccion = (valor) => valor.replace(/[^\p{L}\d\s.,#/-]/gu, "").slice(0, 90);
@@ -52,14 +53,14 @@ export default function Envio({ alGuardar }) {
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
+    <SpotlightCard posicionLuz="derecha" className="rounded-xl border border-dorado-primary/25 shadow-sm">
       <CabeceraAcordeon
         abierto={abierto}
         guardado={guardado}
         iconoPendiente={<Truck size={18} className="text-emerald-950" />}
         iconoGuardado={<CheckCircle2 size={18} className="text-emerald-950" />}
-        titulo="Direccion de Envio"
-        subtitulo="Completa tu direccion"
+        titulo="Dirección de envío"
+        subtitulo="Completá tu dirección"
         subtituloGuardado={`${formulario.nombre} - ${formulario.ciudad}, ${formulario.pais}`}
         alCambiar={() => setAbierto(!abierto)}
       />
@@ -73,6 +74,6 @@ export default function Envio({ alGuardar }) {
           alGuardar={guardar}
         />
       </div>
-    </div>
+    </SpotlightCard>
   );
 }

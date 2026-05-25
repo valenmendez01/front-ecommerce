@@ -1,4 +1,4 @@
-import { Button, Chip } from '@heroui/react'
+import { Button, Chip, Tooltip } from '@heroui/react'
 import { ChevronDown, ChevronUp, Eye, EyeOff } from 'lucide-react'
 import { obtenerEstadoProducto } from '../../../data/reglasProducto'
 import { coloresEstadoProducto } from './estilosProducto'
@@ -35,18 +35,25 @@ const ResumenProducto = ({ abierto, cambiandoVisibilidad, guardando, onAbrir, on
         >
           Detalle
         </Button>
-        <Button
-          isIconOnly
-          aria-label={`${producto.activo ? 'Ocultar' : 'Mostrar'} ${producto.nombre} en el catalogo`}
-          className="bg-dorado-primary/20 text-green-primary"
-          isDisabled={guardando || cambiandoVisibilidad}
-          isLoading={cambiandoVisibilidad}
-          radius="sm"
-          size="sm"
-          onPress={onCambiarVisibilidad}
+        <Tooltip
+          showArrow
+          className="bg-green-primary font-semibold text-white"
+          content={producto.activo ? 'Ocultar del catalogo' : 'Mostrar en el catalogo'}
+          placement="top"
         >
-          {producto.activo ? <EyeOff size={18} /> : <Eye size={18} />}
-        </Button>
+          <Button
+            isIconOnly
+            aria-label={`${producto.activo ? 'Ocultar' : 'Mostrar'} ${producto.nombre} en el catalogo`}
+            className="bg-dorado-primary/20 text-green-primary"
+            isDisabled={guardando || cambiandoVisibilidad}
+            isLoading={cambiandoVisibilidad}
+            radius="sm"
+            size="sm"
+            onPress={onCambiarVisibilidad}
+          >
+            {producto.activo ? <EyeOff size={18} /> : <Eye size={18} />}
+          </Button>
+        </Tooltip>
       </div>
     </div>
   )

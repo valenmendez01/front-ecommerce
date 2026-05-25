@@ -8,7 +8,7 @@ import PrecioConDescuento from './PrecioConDescuento'
 const CampoPrecioProducto = ({ borrador, editando, onCambiar, producto }) => (
   <CampoDetalleProducto etiqueta="Precio">
     {editando ? (
-      <div className="space-y-3">
+      <div className="space-y-2">
         <Input
           isRequired
           aria-label="Precio del producto"
@@ -24,10 +24,10 @@ const CampoPrecioProducto = ({ borrador, editando, onCambiar, producto }) => (
           variant="bordered"
           onValueChange={(value) => onCambiar('precio', value)}
         />
-        <PrecioConDescuento producto={borrador} />
+        <PrecioConDescuento compacto producto={borrador} />
       </div>
     ) : (
-      <PrecioConDescuento producto={producto} />
+      <PrecioConDescuento compacto producto={producto} />
     )}
   </CampoDetalleProducto>
 )

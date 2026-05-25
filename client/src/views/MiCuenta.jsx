@@ -14,7 +14,7 @@ const MiCuenta = ({ token, usuario, onCerrarSesion }) => {
   useEffect(() => {
     let sigueActivo = true
 
-    fetch('/pedidos/mios', { headers: { Authorization: `Bearer ${token}` } })
+    fetch('/pedidos/comprador', { headers: { Authorization: `Bearer ${token}` } })
       .then(async (respuesta) => {
         const json = await respuesta.json()
         if (!respuesta.ok) throw new Error(json.mensaje || json.message || 'No se pudieron cargar tus pedidos.')

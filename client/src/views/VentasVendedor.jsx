@@ -13,7 +13,7 @@ const VentasVendedor = ({ token, usuario, onCerrarSesion }) => {
   useEffect(() => {
     let sigueActivo = true
 
-    fetch('/ventas/mias', { headers: { Authorization: `Bearer ${token}` } })
+    fetch('/ventas/vendedor', { headers: { Authorization: `Bearer ${token}` } })
       .then(async (respuesta) => {
         const json = await respuesta.json()
         if (!respuesta.ok) throw new Error(json.mensaje || json.message || 'No se pudieron cargar tus ventas.')

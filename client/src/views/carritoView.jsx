@@ -1,34 +1,30 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import ArticuloCarrito from "../components/carrito/itemCarrito";
+import ArticuloCarrito from "../components/carrito/items/itemCarrito";
 import BarraPagoMovil from "../components/carrito/barraPagoMovil";
 import CarritoVacio from "../components/carrito/carritoVacio";
 import HeaderCarrito from "../components/carrito/headerCarrito";
-import ProductosRecomendados from "../components/carrito/itemsRecomendados";
+import ProductosRecomendados from "../components/carrito/items/itemsRecomendados";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
 import TituloCarrito from "../components/carrito/tituloCarrito";
 import copaMundo from "../assets/copa-mundo.png";
+import { useAuth } from "../context/useAuth";
 import {
+  calcularResumenCarrito,
   obtenerArticulosCarrito,
   reemplazarArticulosCarrito,
 } from "../data/reglasCarrito";
 
 export default function CarritoView() {
-  const [articulos, setArticulos] = useState([]);
-  const [carritoCargado, setCarritoCargado] = useState(false);
+  const { usuario } = useAuth();
+  const idUsuario = usuario?.idUsuario;
+  const [articulos, setArticulos] = useState(() => obtenerArticulosCarrito(idUsuario));
   const navigate = useNavigate();
 
   useEffect(() => {
-    setArticulos(obtenerArticulosCarrito());
-    setCarritoCargado(true);
-  }, []);
-
-  useEffect(() => {
-    if (carritoCargado) {
-      reemplazarArticulosCarrito(articulos);
-    }
-  }, [articulos, carritoCargado]);
+    reemplazarArticulosCarrito(articulos, idUsuario);
+  }, [articulos, idUsuario]);
 
   const actualizarCantidad = (id, nuevaCantidad) => {
     if (nuevaCantidad < 1) {
@@ -51,13 +47,10 @@ export default function CarritoView() {
     setArticulos((prev) => prev.filter((articulo) => articulo.id !== id));
   };
 
-  const subtotal = articulos.reduce(
-    (total, articulo) => total + articulo.precio * articulo.cantidad,
-    0,
-  );
+  const resumen = calcularResumenCarrito(articulos);
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden font-sans text-slate-950">
       <img src={copaMundo} alt="" className="absolute -right-48 top-16 w-[900px] opacity-5 pointer-events-none select-none" />
       <HeaderCarrito alVolverInicio={() => navigate("/")} />
 
@@ -82,14 +75,14 @@ export default function CarritoView() {
 
             <div className="lg:col-span-1">
               <div className="sticky top-24">
-                <ResumenCarrito subtotal={subtotal} alProcederAlPago={() => navigate("/compra")} />
+                <ResumenCarrito resumen={resumen} alProcederAlPago={() => navigate("/compra")} />
               </div>
             </div>
           </div>
         )}
       </main>
 
-      {articulos.length > 0 && <BarraPagoMovil subtotal={subtotal} alIrAlPago={() => navigate("/compra")} />}
+      {articulos.length > 0 && <BarraPagoMovil subtotal={resumen.total} alIrAlPago={() => navigate("/compra")} />}
     </div>
   );
 }

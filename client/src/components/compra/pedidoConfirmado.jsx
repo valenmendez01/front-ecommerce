@@ -1,20 +1,26 @@
 import { Button } from "@heroui/react";
 import { PackageCheck } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function PedidoConfirmado({ alVolverInicio }) {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center">
-      <div className="text-center max-w-md mx-auto p-8 bg-emerald-950 rounded-2xl">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.28 }}
+        className="text-center max-w-md mx-auto p-8 bg-green-primary rounded-2xl"
+      >
         <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
           <PackageCheck size={36} className="text-emerald-950" />
         </div>
 
         <h1 className="text-2xl font-black text-white mb-2">
-          Pedido Confirmado
+          Pedido confirmado
         </h1>
 
         <p className="text-white/70 mb-6">
-          Recibiras un email con los detalles de tu coleccion. Gracias por tu compra.
+          Recibirás un email con los detalles de tu colección. Gracias por tu compra.
         </p>
 
         <Button
@@ -23,7 +29,7 @@ export default function PedidoConfirmado({ alVolverInicio }) {
         >
           Volver al inicio
         </Button>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -14,8 +14,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import logo from '../assets/logoHorizontal.png'
 import { useAuth } from '../context/useAuth'
 
-const MENSAJE_BIENVENIDA_KEY = 'figullect_mensaje_bienvenida'
-
 const obtenerMensajeRegistro = (error) => {
   if (error?.status === 409) {
     return 'Ya existe una cuenta con ese email.'
@@ -57,11 +55,7 @@ const RegistroComprador = () => {
     setError('')
 
     try {
-      const usuario = await registrarComprador(datos)
-      sessionStorage.setItem(
-        MENSAJE_BIENVENIDA_KEY,
-        `¡Bienvenido a Figullect, ${usuario.nombre || datos.nombre || 'coleccionista'}! Tu cuenta ya está lista para empezar a completar tu álbum.`,
-      )
+      await registrarComprador(datos)
       navigate('/', { replace: true })
     } catch (registroError) {
       const mensaje = obtenerMensajeRegistro(registroError)

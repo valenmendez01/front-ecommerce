@@ -6,4 +6,19 @@
 @theme {
   --color-green-primary: #142b10;
   --color-dorado-primary: #caa56e;
+  --animate-scroll-left: scroll-left var(--animation-duration, 38s) linear infinite;
+  --animate-scroll-right: scroll-right var(--animation-duration, 38s) linear infinite;
+  @keyframes scroll-left {
+    to {
+      transform: translateX(calc(-50% - 0.625rem));
+    }
+  }
+  @keyframes scroll-right {
+    from {
+      transform: translateX(calc(-50% - 0.625rem));
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
 }

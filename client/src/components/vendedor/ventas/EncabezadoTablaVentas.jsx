@@ -1,7 +1,12 @@
-import { Button } from '@heroui/react'
+import Tabs from '../../ui/tabs'
 
-const EncabezadoTablaVentas = ({ mostrarTodas, onCambiarVista, puedeVerHistorial }) => (
-  <div className="flex items-center justify-between px-8 py-6">
+const pestanasVentas = [
+  { title: 'Ventas recientes', value: 'recientes' },
+  { title: 'Historial', value: 'historial' },
+]
+
+const EncabezadoTablaVentas = ({ mostrarTodas, onCambiarVista }) => (
+  <div className="flex flex-wrap items-center justify-between gap-4 px-8 py-6">
     <div>
       <h3 className="text-2xl font-black text-green-primary">
         {mostrarTodas ? 'HISTORIAL DE VENTAS' : 'VENTAS RECIENTES'}
@@ -10,16 +15,13 @@ const EncabezadoTablaVentas = ({ mostrarTodas, onCambiarVista, puedeVerHistorial
         {mostrarTodas ? 'Todas las ventas registradas.' : 'Ultimas ventas realizadas.'}
       </p>
     </div>
-    {puedeVerHistorial && (
-      <Button
-        className="bg-transparent text-sm font-bold text-green-primary"
-        radius="sm"
-        size="sm"
-        onPress={onCambiarVista}
-      >
-        {mostrarTodas ? 'Ver ventas recientes' : 'Ver todo el historial'}
-      </Button>
-    )}
+    <Tabs
+      activeTabClassName="shadow-[0_10px_28px_rgba(202,165,110,0.28)]"
+      tabClassName="text-green-primary"
+      tabs={pestanasVentas}
+      value={mostrarTodas ? 'historial' : 'recientes'}
+      onChange={onCambiarVista}
+    />
   </div>
 )
 

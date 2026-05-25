@@ -23,10 +23,10 @@ export const FiltroByPrecio = ({ precioMin, precioMax, onChange }) => {
         step: "data-[in-range=true]:bg-black/30 dark:data-[in-range=true]:bg-white/50",
       }}
       disableThumbScale={true}
-      formatOptions={{ style: "currency", currency: "ARS" }}
+      formatOptions={{ style: "currency", currency: "ARS", maximumFractionDigits: 0}}
       label="Precio"
       minValue={0}
-      maxValue={20000}
+      maxValue={100000}
       step={500}
       value={[precioMin, precioMax]}
       onChange={handleChange}

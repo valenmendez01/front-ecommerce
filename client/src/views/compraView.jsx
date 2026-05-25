@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { addToast } from "@heroui/react";
 
-import AccordionEnvio from "../components/compra/envio";
-import AccordionPago from "../components/compra/pago";
+import AccordionEnvio from "../components/compra/envio/envio";
+import AccordionPago from "../components/compra/pago/pago";
 import AlertasCompra from "../components/compra/alertasCompra";
 import HeaderCompra from "../components/compra/headerCompra";
 import PanelPedido from "../components/compra/panelPedido";
 import PedidoConfirmado from "../components/compra/pedidoConfirmado";
-import ResumenPago from "../components/compra/resumenPago";
+import ResumenPago from "../components/compra/pago/resumenPago";
 import TituloCompra from "../components/compra/tituloCompra";
+import { confirmarPedido } from "../components/compra/confirmarPedido";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
-import { obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
+import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
 
 export default function CompraView() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
@@ -22,13 +24,14 @@ export default function CompraView() {
   const navigate = useNavigate();
   const { usuario, token } = useAuth();
 
-  const articulos = obtenerArticulosCarrito();
+  const articulos = obtenerArticulosCarrito(usuario?.idUsuario);
+  const resumen = calcularResumenCarrito(articulos);
   const esComprador = usuario?.rol === "COMPRADOR";
   const puedeConfirmar = envioGuardado && pagoGuardado && articulos.length > 0 && esComprador;
 
-  const confirmarPedido = () => {
+  const confirmarCompra = () => {
     if (!usuario) {
-      setErrorConfirmar("Tenes que iniciar sesion para confirmar el pedido.");
+      setErrorConfirmar("Tenés que iniciar sesión para confirmar el pedido.");
       return;
     }
 
@@ -40,30 +43,21 @@ export default function CompraView() {
     setCargandoConfirmar(true);
     setErrorConfirmar(null);
 
-    fetch("/pedidos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        idUsuario: usuario.idUsuario,
-        items: articulos.map((articulo) => ({
-          idProducto: articulo.id,
-          cantidad: articulo.cantidad,
-        })),
-      }),
-    })
-      .then(async (respuesta) => {
-        if (!respuesta.ok) {
-          const texto = await respuesta.text();
-          throw new Error(texto || respuesta.statusText);
-        }
-
-        vaciarCarrito();
+    confirmarPedido({ articulos, token, usuario })
+      .then((mensajeBack) => {
+        vaciarCarrito(usuario.idUsuario);
         setConfirmado(true);
+        addToast({
+          color: "success",
+          title: mensajeBack,
+          description: "Tu compra se registró correctamente.",
+        });
       })
-      .catch((error) => setErrorConfirmar(`No se pudo confirmar el pedido: ${error.message}`))
+      .catch((error) => {
+        const mensaje = `No se pudo confirmar el pedido: ${error.message}`;
+        setErrorConfirmar(mensaje);
+        addToast({ color: "danger", title: "No se pudo confirmar el pedido", description: error.message });
+      })
       .finally(() => setCargandoConfirmar(false));
   };
 
@@ -72,7 +66,7 @@ export default function CompraView() {
   }
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden font-sans text-slate-950">
       <img src={copaMundo} alt="" className="absolute -right-48 top-16 w-[900px] opacity-5 pointer-events-none select-none z-0" />
       <HeaderCompra alVolverCarrito={() => navigate("/carrito")} />
 
@@ -91,9 +85,10 @@ export default function CompraView() {
             <div className="sticky top-24">
               <ResumenPago
                 articulos={articulos}
+                resumen={resumen}
                 puedeConfirmar={puedeConfirmar}
                 cargando={cargandoConfirmar}
-                alConfirmar={confirmarPedido}
+                alConfirmar={confirmarCompra}
               />
             </div>
           </div>

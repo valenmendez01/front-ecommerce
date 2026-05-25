@@ -1,14 +1,24 @@
 import { Trash2 } from "lucide-react";
 import { Button } from "@heroui/react";
+import { motion } from "framer-motion";
 
-import { formatearPesos } from "../../data/reglasProducto";
+import { formatearPesos } from "../../../data/reglasProducto";
 import ImagenProducto from "./imagenProducto";
 
 export default function itemCarrito({ articulo, alActualizarCantidad, alEliminar }) {
   const sinMasStock = articulo.stock && articulo.cantidad >= articulo.stock;
+  const precioOriginalTotal = articulo.precioOriginal ? articulo.precioOriginal * articulo.cantidad : 0;
+  const precioFinalTotal = articulo.precio * articulo.cantidad;
 
   return (
-    <div className="flex gap-4 p-4 bg-emerald-950 rounded-xl border border-emerald-900 shadow-sm">
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.2 }}
+      className="flex gap-4 p-4 bg-green-primary rounded-xl border border-dorado-primary/25 shadow-sm"
+    >
       <div className="shrink-0 relative">
         <ImagenProducto
           src={articulo.imagen}
@@ -76,15 +86,20 @@ export default function itemCarrito({ articulo, alActualizarCantidad, alEliminar
 
       <div className="text-right shrink-0">
         {articulo.precioOriginal && (
-          <p className="text-xs text-white/50 line-through">{formatearPesos(articulo.precioOriginal)}</p>
+          <p className="text-xs text-white/50 line-through">{formatearPesos(precioOriginalTotal)}</p>
         )}
-        <p className="font-bold text-white">{formatearPesos(articulo.precio * articulo.cantidad)}</p>
-        {articulo.badge && (
+        <p className="font-bold text-white">{formatearPesos(precioFinalTotal)}</p>
+        {articulo.descuento > 0 && (
+          <span className="text-[10px] font-bold text-black bg-yellow-400 px-1.5 py-0.5 rounded">
+            -{articulo.descuento}%
+          </span>
+        )}
+        {articulo.badge && !articulo.descuento && (
           <span className="text-[10px] font-bold text-black bg-yellow-400 px-1.5 py-0.5 rounded">
             {articulo.badge}
           </span>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

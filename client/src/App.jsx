@@ -12,8 +12,8 @@ import RegistroComprador from "./views/RegistroComprador"
 import VentasVendedor from "./views/VentasVendedor"
 import CarritoView from "./views/carritoView"
 import CompraView from "./views/compraView"
-import { Home } from "./views/Home"
 import { Footer } from "./components/Footer"
+import Home from "./views/Home"
 
 const rutasPantallaCompleta = [
   '/mi-cuenta',
@@ -172,7 +172,7 @@ function App() {
       <div className="sticky top-0 z-50 grid" style={{ gridTemplateRows: "auto auto" }}>
         <StickyBanner className="bg-linear-to-b from-dorado-primary to-dorado-primary/90">
           <p className="text-white text-sm drop-shadow-md">
-            🎉 20% de descuento. Usá el código <b>PROMO20</b>
+            ⚡ ¡Comprá hoy y recibí tu pedido <b>en menos de 24 hs</b>!
           </p>
         </StickyBanner>
         <Navigation />

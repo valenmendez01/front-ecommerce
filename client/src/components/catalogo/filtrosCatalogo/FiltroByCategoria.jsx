@@ -1,8 +1,11 @@
 import { CheckboxGroup, Checkbox } from "@heroui/react";
 
 export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
-  const capitalizar = (str) =>
-    str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  
+  const formatearTexto = (str) => {
+    const textoSinGuiones = str.replace(/_/g, " ");
+    return textoSinGuiones.charAt(0).toUpperCase() + textoSinGuiones.slice(1).toLowerCase();
+  };
 
   return (
     <CheckboxGroup
@@ -30,7 +33,7 @@ export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
             icon: "text-white",
           }}
         >
-          {capitalizar(cat)}
+          {formatearTexto(cat)}
         </Checkbox>
       ))}
     </CheckboxGroup>
