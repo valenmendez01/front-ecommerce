@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Input } from '@heroui/react'
+import { addToast, Button, Card, CardBody, Input } from '@heroui/react'
 import {
   HeartHandshake,
   LockKeyhole,
@@ -22,7 +22,7 @@ const obtenerMensajeRegistro = (error) => {
   }
 
   if (error instanceof TypeError) {
-    return 'No se pudo conectar en este momento. Intenta nuevamente.'
+    return 'No se pudo conectar en este momento. Intentá nuevamente.'
   }
 
   return error?.message || 'No se pudo crear la cuenta.'
@@ -60,11 +60,17 @@ const RegistroComprador = () => {
       const usuario = await registrarComprador(datos)
       sessionStorage.setItem(
         MENSAJE_BIENVENIDA_KEY,
-        `Bienvenido a Figullect, ${usuario.nombre || datos.nombre || 'coleccionista'}! Tu cuenta ya esta lista para empezar a completar tu album.`,
+        `¡Bienvenido a Figullect, ${usuario.nombre || datos.nombre || 'coleccionista'}! Tu cuenta ya está lista para empezar a completar tu álbum.`,
       )
       navigate('/', { replace: true })
     } catch (registroError) {
-      setError(obtenerMensajeRegistro(registroError))
+      const mensaje = obtenerMensajeRegistro(registroError)
+      setError(mensaje)
+      addToast({
+        title: 'No pudimos crear tu cuenta',
+        description: mensaje,
+        color: 'danger',
+      })
     } finally {
       setEnviando(false)
     }
@@ -93,8 +99,8 @@ const RegistroComprador = () => {
                 cuenta
               </h1>
               <p className="mt-6 max-w-lg text-lg leading-8 text-white/75">
-                Registrate para guardar tu progreso, comprar figuritas y armar tu
-                álbum con confianza.
+                Registrate para guardar tu progreso, comprar figuritas y armar tu álbum con
+                confianza.
               </p>
             </div>
 
@@ -159,7 +165,7 @@ const RegistroComprador = () => {
                 <Input
                   isRequired
                   classNames={clasesInput}
-                  label="Correo electronico"
+                  label="Correo electrónico"
                   radius="sm"
                   size="lg"
                   startContent={<Mail className="text-[#8d6f3e]" size={20} />}
@@ -172,7 +178,7 @@ const RegistroComprador = () => {
                 <Input
                   isRequired
                   classNames={clasesInput}
-                  label="Contrasena"
+                  label="Contraseña"
                   radius="sm"
                   size="lg"
                   startContent={<LockKeyhole className="text-[#8d6f3e]" size={20} />}
@@ -213,7 +219,7 @@ const RegistroComprador = () => {
                   to="/iniciar-sesion"
                   variant="bordered"
                 >
-                  Iniciar sesion
+                  Iniciar sesión
                 </Button>
               </form>
             </CardBody>

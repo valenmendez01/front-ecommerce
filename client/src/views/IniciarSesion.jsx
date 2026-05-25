@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Input } from '@heroui/react'
+import { addToast, Button, Card, CardBody, Input } from '@heroui/react'
 import {
   ArrowLeft,
   BadgeCheck,
@@ -17,14 +17,14 @@ const MENSAJE_BIENVENIDA_KEY = 'figullect_mensaje_bienvenida'
 
 const obtenerMensajeLogin = (error) => {
   if (error?.status === 401 || error?.status === 403 || error?.status === 404) {
-    return 'Email o contrasena incorrectos.'
+    return 'Email o contraseña incorrectos.'
   }
 
   if (error instanceof TypeError) {
-    return 'No se pudo conectar en este momento. Intenta nuevamente.'
+    return 'No se pudo conectar en este momento. Intentá nuevamente.'
   }
 
-  return error?.message || 'No se pudo iniciar sesion.'
+  return error?.message || 'No se pudo iniciar sesión.'
 }
 
 const IniciarSesion = () => {
@@ -49,11 +49,17 @@ const IniciarSesion = () => {
       const usuario = await iniciarSesion(credenciales)
       sessionStorage.setItem(
         MENSAJE_BIENVENIDA_KEY,
-        `Bienvenido, ${usuario.nombre || 'coleccionista'}! Gracias por iniciar sesion en Figullect.`,
+        `¡Bienvenido, ${usuario.nombre || 'coleccionista'}! Gracias por iniciar sesión en Figullect.`,
       )
       navigate(usuario.rol === 'VENDEDOR' ? '/panel-vendedor' : '/', { replace: true })
     } catch (loginError) {
-      setError(obtenerMensajeLogin(loginError))
+      const mensaje = obtenerMensajeLogin(loginError)
+      setError(mensaje)
+      addToast({
+        title: 'No pudimos iniciar sesión',
+        description: mensaje,
+        color: 'danger',
+      })
     } finally {
       setEnviando(false)
     }
@@ -88,12 +94,12 @@ const IniciarSesion = () => {
                 Cuenta Figullect
               </p>
               <h1 className="mt-5 text-5xl font-black uppercase leading-none md:text-7xl">
-                Inicia
+                Iniciá
                 <br />
-                sesion
+                sesión
               </h1>
               <p className="mt-6 max-w-lg text-lg leading-8 text-white/75">
-                ¡Empezá el camino de coleccionar tu álbum ahora mismo! Comprá figuritas y accedé a combos imperdibles. 
+                ¡Empezá el camino de coleccionar tu álbum ahora mismo! Comprá figuritas y accedé a combos imperdibles.
               </p>
             </div>
 
@@ -116,7 +122,7 @@ const IniciarSesion = () => {
                   Bienvenido
                 </p>
                 <h2 className="mt-3 text-3xl font-black text-[#142b10]">
-                  Volvé a tu album
+                  Volvé a tu álbum
                 </h2>
                 <p className="mt-2 text-sm leading-6 text-[#5f6d5a]">
                   Iniciá sesión para continuar tu colección, revisar tus compras y encontrar las
@@ -133,7 +139,7 @@ const IniciarSesion = () => {
                     label: 'text-[#52614d]',
                     input: 'text-[#142b10]',
                   }}
-                  label="Correo electronico"
+                  label="Correo electrónico"
                   radius="sm"
                   size="lg"
                   startContent={<Mail className="text-[#8d6f3e]" size={20} />}
@@ -151,7 +157,7 @@ const IniciarSesion = () => {
                     label: 'text-[#52614d]',
                     input: 'text-[#142b10]',
                   }}
-                  label="Contrasena"
+                  label="Contraseña"
                   radius="sm"
                   size="lg"
                   startContent={<LockKeyhole className="text-[#8d6f3e]" size={20} />}
@@ -181,7 +187,7 @@ const IniciarSesion = () => {
                 </Button>
 
                 <p className="pt-2 text-center text-sm font-semibold text-[#5f6d5a]">
-                  ¿Todavia no tenes cuenta? Sumate y empezá tu colección.
+                  ¿Todavía no tenés cuenta? Sumate y empezá tu colección.
                 </p>
 
                 <Button
