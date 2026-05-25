@@ -14,6 +14,7 @@ export default function Navigation2() {
   const navigate = useNavigate()
   const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
   const esVendedor = usuario?.rol === "VENDEDOR"
+  const esComprador = usuario?.rol === "COMPRADOR"
 
   const manejarCierreSesion = () => {
     cerrarSesion()
@@ -23,7 +24,7 @@ export default function Navigation2() {
   const navItemsComprador = [
     { name: "Home", link: "/" },
     { name: "Catalogo", link: "/productos" },
-    ...(usuario ? [{ name: "Mi cuenta", link: "/mi-cuenta" }] : []),
+    ...(esComprador ? [{ name: "Mi cuenta", link: "/mi-cuenta" }] : []),
   ]
 
   const navItems = esVendedor ? [] : navItemsComprador
@@ -70,7 +71,7 @@ export default function Navigation2() {
 
           {/* Acciones */}
           <div className="flex items-center gap-2">
-            {!esVendedor && (
+            {esComprador && (
               <Button as={Link} to="/carrito" className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white" variant="outline" isIconOnly aria-label="Carrito">
                 <ShoppingCart size={20} />
               </Button>
@@ -89,7 +90,6 @@ export default function Navigation2() {
               </Button>
             ) : usuario ? (
               <Button
-                as={Link}
                 variant="outline"
                 className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white"
                 isIconOnly

@@ -12,8 +12,8 @@ import RegistroComprador from "./views/RegistroComprador"
 import VentasVendedor from "./views/VentasVendedor"
 import CarritoView from "./views/carritoView"
 import CompraView from "./views/compraView"
-import { Home } from "./views/Home"
 import { Footer } from "./components/Footer"
+import Home from "./views/Home"
 
 const rutasPantallaCompleta = [
   '/mi-cuenta',
