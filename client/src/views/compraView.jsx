@@ -2,13 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { addToast } from "@heroui/react";
 
-import AccordionEnvio from "../components/compra/envio";
-import AccordionPago from "../components/compra/pago";
+import AccordionEnvio from "../components/compra/envio/envio";
+import AccordionPago from "../components/compra/pago/pago";
 import AlertasCompra from "../components/compra/alertasCompra";
 import HeaderCompra from "../components/compra/headerCompra";
 import PanelPedido from "../components/compra/panelPedido";
 import PedidoConfirmado from "../components/compra/pedidoConfirmado";
-import ResumenPago from "../components/compra/resumenPago";
+import ResumenPago from "../components/compra/pago/resumenPago";
 import TituloCompra from "../components/compra/tituloCompra";
 import { confirmarPedido } from "../components/compra/confirmarPedido";
 import copaMundo from "../assets/copa-mundo.png";
@@ -31,7 +31,7 @@ export default function CompraView() {
 
   const confirmarCompra = () => {
     if (!usuario) {
-      setErrorConfirmar("Tenes que iniciar sesion para confirmar el pedido.");
+      setErrorConfirmar("Tenés que iniciar sesión para confirmar el pedido.");
       return;
     }
 
@@ -50,7 +50,7 @@ export default function CompraView() {
         addToast({
           color: "success",
           title: mensajeBack,
-          description: "Tu compra se registro correctamente.",
+          description: "Tu compra se registró correctamente.",
         });
       })
       .catch((error) => {

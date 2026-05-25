@@ -16,11 +16,11 @@ export default function PedidoConfirmado({ alVolverInicio }) {
         </div>
 
         <h1 className="text-2xl font-black text-white mb-2">
-          Pedido Confirmado
+          Pedido confirmado
         </h1>
 
         <p className="text-white/70 mb-6">
-          Recibiras un email con los detalles de tu coleccion. Gracias por tu compra.
+          Recibirás un email con los detalles de tu colección. Gracias por tu compra.
         </p>
 
         <Button

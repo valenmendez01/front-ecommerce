@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import ArticuloCarrito from "../components/carrito/itemCarrito";
+import ArticuloCarrito from "../components/carrito/items/itemCarrito";
 import BarraPagoMovil from "../components/carrito/barraPagoMovil";
 import CarritoVacio from "../components/carrito/carritoVacio";
 import HeaderCarrito from "../components/carrito/headerCarrito";
-import ProductosRecomendados from "../components/carrito/itemsRecomendados";
+import ProductosRecomendados from "../components/carrito/items/itemsRecomendados";
 import ResumenCarrito from "../components/carrito/resumenCarrito";
 import TituloCarrito from "../components/carrito/tituloCarrito";
 import copaMundo from "../assets/copa-mundo.png";

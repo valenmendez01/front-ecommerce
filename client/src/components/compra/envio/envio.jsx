@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { CheckCircle2, Truck } from "lucide-react";
 
-import CabeceraAcordeon from "./cabeceraAcordeon";
+import CabeceraAcordeon from "../cabeceraAcordeon";
 import FormularioEnvio from "./formularioEnvio";
-import { SpotlightCard } from "../ui/spotlight-card";
+import { SpotlightCard } from "../../ui/spotlight-card";
 
 const soloLetras = (valor) => valor.replace(/[^\p{L}\s]/gu, "").slice(0, 60);
 const textoDireccion = (valor) => valor.replace(/[^\p{L}\d\s.,#/-]/gu, "").slice(0, 90);

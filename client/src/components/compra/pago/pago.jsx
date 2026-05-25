@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { CheckCircle2, CreditCard } from "lucide-react";
 
-import CabeceraAcordeon from "./cabeceraAcordeon";
+import CabeceraAcordeon from "../cabeceraAcordeon";
 import FormularioPago from "./formularioPago";
-import { SpotlightCard } from "../ui/spotlight-card";
+import { SpotlightCard } from "../../ui/spotlight-card";
 
 const formatearNumeroTarjeta = (valor) =>
   valor.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();

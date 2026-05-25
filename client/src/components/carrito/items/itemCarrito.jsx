@@ -2,7 +2,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 
-import { formatearPesos } from "../../data/reglasProducto";
+import { formatearPesos } from "../../../data/reglasProducto";
 import ImagenProducto from "./imagenProducto";
 
 export default function itemCarrito({ articulo, alActualizarCantidad, alEliminar }) {
