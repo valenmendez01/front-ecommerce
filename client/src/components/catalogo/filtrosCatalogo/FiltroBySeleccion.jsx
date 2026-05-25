@@ -1,11 +1,8 @@
 import { CheckboxGroup, Checkbox } from "@heroui/react";
 
-export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
-  
-  const formatearTexto = (str) => {
-    const textoSinGuiones = str.replace(/_/g, " ");
-    return textoSinGuiones.charAt(0).toUpperCase() + textoSinGuiones.slice(1).toLowerCase();
-  };
+export const FiltroBySeleccion = ({ selecciones, seleccionadas, onCambiar }) => {
+  const capitalizar = (str) =>
+    str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
   return (
     <CheckboxGroup
@@ -20,10 +17,10 @@ export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
         onCambiar(agregada ?? eliminada);
       }}
     >
-      {categorias.map((cat) => (
+      {selecciones.map((sel) => (
         <Checkbox
-          key={cat}
-          value={cat}
+          key={sel}
+          value={sel}
           classNames={{
             wrapper: [
               "before:border-[var(--color-dorado-primary)]",
@@ -33,7 +30,7 @@ export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
             icon: "text-white",
           }}
         >
-          {formatearTexto(cat)}
+          {capitalizar(sel)}
         </Checkbox>
       ))}
     </CheckboxGroup>
