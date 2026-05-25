@@ -49,7 +49,7 @@ const InformacionPersonal = ({ usuario, onActualizarUsuario }) => {
   }
 
   return (
-    <Card className="overflow-hidden shadow-xl" radius="sm">
+    <Card className="overflow-hidden border border-[#d8c49a] bg-[#fffdf8] shadow-xl shadow-[#142b10]/5" radius="lg">
       <EncabezadoInformacionPersonal
         errorEmail={errorEmail}
         estaEditando={estaEditando}
