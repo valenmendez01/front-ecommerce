@@ -1,4 +1,4 @@
-import { Button } from "@heroui/react";
+﻿import { Button } from "@heroui/react";
 import { Rocket } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatearPesos } from "../../../data/reglasProducto";
@@ -15,21 +15,21 @@ export default function ResumenPago({ alConfirmar, puedeConfirmar, cargando, res
       className="flex flex-col gap-4"
     >
       <SpotlightCard className="p-6 text-white">
-        <h2 className="mb-5 text-sm font-black uppercase tracking-widest text-yellow-400">
+        <h2 className="mb-5 text-sm font-black uppercase tracking-widest text-dorado-primary">
           Ticket de compra
         </h2>
 
-        <div className="mb-5 flex flex-col gap-2 border-y border-dashed border-yellow-400/35 py-4 text-sm">
+        <div className="mb-5 flex flex-col gap-2 border-y border-dashed border-dorado-primary/35 py-4 text-sm">
           <FilaTicket etiqueta="Subtotal" valor={formatearPesos(resumen.subtotalOriginal)} />
           {tieneDescuento && (
             <FilaTicket etiqueta="Descuentos" valor={`-${formatearPesos(resumen.descuento)}`} destacado />
           )}
-          <FilaTicket etiqueta="Envío" valor="GRATIS" destacado />
+          <FilaTicket etiqueta="EnvÃ­o" valor="GRATIS" destacado />
         </div>
 
         <div className="mb-5 flex items-center justify-between">
           <span className="font-black uppercase tracking-wide">Total</span>
-          <span className="text-xl font-black text-yellow-400">{formatearPesos(resumen.total)}</span>
+          <span className="text-xl font-black text-dorado-primary">{formatearPesos(resumen.total)}</span>
         </div>
 
         <Button
@@ -38,16 +38,16 @@ export default function ResumenPago({ alConfirmar, puedeConfirmar, cargando, res
           startContent={!cargando && <Rocket size={16} />}
           className={`w-full rounded-xl text-sm font-black uppercase tracking-wider ${
             puedeConfirmar && !cargando
-              ? "bg-yellow-400 text-black hover:bg-yellow-300"
+              ? "bg-dorado-primary text-black hover:bg-dorado-primary"
               : "bg-white/10 text-white/40"
           }`}
         >
-          {cargando ? "Confirmando..." : puedeConfirmar ? "Confirmar pedido" : "Completá los datos"}
+          {cargando ? "Confirmando..." : puedeConfirmar ? "Confirmar pedido" : "CompletÃ¡ los datos"}
         </Button>
 
         {!puedeConfirmar && (
           <p className="mt-2 text-center text-xs text-white/60">
-            Completá envío y pago para continuar
+            CompletÃ¡ envÃ­o y pago para continuar
           </p>
         )}
       </SpotlightCard>
@@ -57,7 +57,7 @@ export default function ResumenPago({ alConfirmar, puedeConfirmar, cargando, res
 
 function FilaTicket({ destacado = false, etiqueta, valor }) {
   return (
-    <div className={`flex justify-between ${destacado ? "text-yellow-400" : "text-white/80"}`}>
+    <div className={`flex justify-between ${destacado ? "text-dorado-primary" : "text-white/80"}`}>
       <span>{etiqueta}</span>
       <span className="font-semibold">{valor}</span>
     </div>

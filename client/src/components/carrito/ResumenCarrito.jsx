@@ -1,4 +1,4 @@
-import { Button } from "@heroui/react";
+﻿import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 import { formatearPesos } from "../../data/reglasProducto";
 import { SpotlightCard } from "../ui/spotlight-card";
@@ -13,7 +13,7 @@ export default function ResumenCarrito({ resumen, alProcederAlPago }) {
       transition={{ duration: 0.25 }}
     >
       <SpotlightCard className="p-6 text-white">
-        <h2 className="mb-5 text-sm font-black uppercase tracking-widest text-yellow-400">
+        <h2 className="mb-5 text-sm font-black uppercase tracking-widest text-dorado-primary">
           Resumen del pedido
         </h2>
 
@@ -23,25 +23,25 @@ export default function ResumenCarrito({ resumen, alProcederAlPago }) {
             <span className="font-semibold">{formatearPesos(resumen.subtotalOriginal)}</span>
           </div>
           {tieneDescuento && (
-            <div className="flex justify-between text-yellow-400">
+            <div className="flex justify-between text-dorado-primary">
               <span>Descuentos</span>
               <span>-{formatearPesos(resumen.descuento)}</span>
             </div>
           )}
           <div className="flex justify-between">
-            <span className="text-white/80">Envío estándar</span>
-            <span className="font-bold text-yellow-400">GRATIS</span>
+            <span className="text-white/80">EnvÃ­o estÃ¡ndar</span>
+            <span className="font-bold text-dorado-primary">GRATIS</span>
           </div>
         </div>
 
-        <div className="mb-6 flex items-center justify-between border-t border-yellow-400/30 pt-4">
+        <div className="mb-6 flex items-center justify-between border-t border-dorado-primary/30 pt-4">
           <span className="text-base font-bold">Total a pagar</span>
-          <span className="text-xl font-black text-yellow-400">{formatearPesos(resumen.total)}</span>
+          <span className="text-xl font-black text-dorado-primary">{formatearPesos(resumen.total)}</span>
         </div>
 
         <Button
           onPress={alProcederAlPago}
-          className="w-full rounded-xl bg-yellow-400 text-sm font-black uppercase tracking-wider text-black"
+          className="w-full rounded-xl bg-dorado-primary text-sm font-black uppercase tracking-wider text-black"
         >
           Proceder al pago
         </Button>

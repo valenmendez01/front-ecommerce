@@ -1,6 +1,6 @@
-import { Button, Input } from "@heroui/react";
+﻿import { Button, Input } from "@heroui/react";
 
-const clasesCampo = { label: "text-xs font-semibold text-gray-600" };
+const clasesCampo = { label: "text-xs font-semibold text-green-primary/70" };
 
 export default function FormularioPago({
   formulario,
@@ -10,14 +10,14 @@ export default function FormularioPago({
   alGuardar,
 }) {
   return (
-    <div className="p-4 bg-white border-t border-yellow-400/30 flex flex-col gap-3">
+    <div className="p-4 bg-white border-t border-dorado-primary/30 flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-3">
         <Input
           isInvalid={intentoGuardar && !validaciones.numeroValido}
-          label="Número de tarjeta"
+          label="NÃºmero de tarjeta"
           placeholder="0000 0000 0000 0000"
           value={formulario.numero}
-          errorMessage="La tarjeta debe tener 16 números."
+          errorMessage="La tarjeta debe tener 16 nÃºmeros."
           inputMode="numeric"
           maxLength={19}
           onValueChange={(value) => alActualizar("numero", value)}
@@ -45,7 +45,7 @@ export default function FormularioPago({
           label="Vencimiento"
           placeholder="MM/AA"
           value={formulario.vencimiento}
-          errorMessage="Usá un vencimiento válido."
+          errorMessage="UsÃ¡ un vencimiento vÃ¡lido."
           inputMode="numeric"
           maxLength={5}
           onValueChange={(value) => alActualizar("vencimiento", value)}
@@ -60,7 +60,7 @@ export default function FormularioPago({
           placeholder="123"
           type="password"
           value={formulario.cvv}
-          errorMessage="El CVV debe tener 3 o 4 números."
+          errorMessage="El CVV debe tener 3 o 4 nÃºmeros."
           inputMode="numeric"
           maxLength={4}
           onValueChange={(value) => alActualizar("cvv", value)}
@@ -70,8 +70,8 @@ export default function FormularioPago({
         />
       </div>
 
-      <Button onPress={alGuardar} className="w-full bg-yellow-400 text-black text-sm font-bold rounded-lg">
-        Guardar método de pago
+      <Button onPress={alGuardar} className="w-full bg-dorado-primary text-black text-sm font-bold rounded-lg">
+        Guardar mÃ©todo de pago
       </Button>
     </div>
   );
