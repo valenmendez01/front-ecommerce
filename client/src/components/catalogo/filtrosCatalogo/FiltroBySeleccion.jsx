@@ -5,6 +5,7 @@ export const FiltroBySeleccion = ({ selecciones, seleccionadas, onCambiar }) => 
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
   return (
+    <div className="max-h-52 overflow-y-auto pr-1">
     <CheckboxGroup
       value={seleccionadas}
       onChange={(valoresSeleccionados) => {
@@ -34,5 +35,6 @@ export const FiltroBySeleccion = ({ selecciones, seleccionadas, onCambiar }) => 
         </Checkbox>
       ))}
     </CheckboxGroup>
+    </div>
   );
 };
