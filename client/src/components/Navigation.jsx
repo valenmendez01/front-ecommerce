@@ -9,7 +9,7 @@ import { useAuth } from "../context/useAuth"
 import { motion } from "framer-motion"
 import { Button } from "@heroui/react"
 
-export default function Navigation2() {
+export default function Navigation() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
@@ -23,7 +23,7 @@ export default function Navigation2() {
 
   const navItemsComprador = [
     { name: "Home", link: "/" },
-    { name: "Catalogo", link: "/productos" },
+    { name: "Catálogo", link: "/productos" },
     ...(esComprador ? [{ name: "Mi cuenta", link: "/mi-cuenta" }] : []),
   ]
 
@@ -93,7 +93,7 @@ export default function Navigation2() {
                 variant="outline"
                 className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white"
                 isIconOnly
-                aria-label="Cerrar sesion"
+                aria-label="Cerrar sesión"
                 onPress={manejarCierreSesion}
               >
                 <LogOut size={20} />
@@ -101,13 +101,13 @@ export default function Navigation2() {
             ) : (
               <Button
                 as={Link}
-                className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white"
+                className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/90 hover:text-white"
                 isDisabled={cargandoUsuario}
                 startContent={<LogIn size={18} />}
                 to="/iniciar-sesion"
                 variant="outline"
               >
-                Iniciar sesion
+                Iniciar sesión
               </Button>
             )}
           </div>

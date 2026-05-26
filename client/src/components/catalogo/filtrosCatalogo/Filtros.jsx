@@ -26,7 +26,7 @@ export const Filtros = ({
           aria-label="Categoría"
           title="Categoría"
           className="my-2"
-          classNames={{ title: "font-semibold text-lg", trigger: "cursor-pointer" }}
+          classNames={{ title: "font-heading font-semibold text-lg text-[var(--color-green-primary)]", trigger: "cursor-pointer" }}
         >
           <FiltroByCategoria
             categorias={categorias}
@@ -40,7 +40,7 @@ export const Filtros = ({
           aria-label="Selección"
           title="Selección"
           className="my-2"
-          classNames={{ title: "font-semibold text-lg", trigger: "cursor-pointer" }}
+          classNames={{ title: "font-heading font-semibold text-lg text-[var(--color-green-primary)]", trigger: "cursor-pointer" }}
         >
           <FiltroBySeleccion
             selecciones={selecciones}
@@ -54,7 +54,7 @@ export const Filtros = ({
           aria-label="Rango de precio"
           title="Rango de precio"
           className="my-2"
-          classNames={{ title: "font-semibold text-lg", trigger: "cursor-pointer" }}
+          classNames={{ title: "font-heading font-semibold text-lg text-[var(--color-green-primary)]", trigger: "cursor-pointer" }}
         >
           <FiltroByPrecio
             precioMin={precioMin}

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Button } from "@heroui/react";
-import { ShoppingCart, Minus, Plus } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { agregarProductoAlCarrito } from "../../data/reglasCarrito";
+import { AddToCartButton } from "../ui/AddToCartButton";
 
 export const AccionesProducto = ({ producto }) => {
   const [cantidad, setCantidad] = useState(1);
@@ -59,16 +59,12 @@ export const AccionesProducto = ({ producto }) => {
         </div>
       </div>
 
-      {/* Botones */}
-      <Button
-        size="lg"
-        isDisabled={sinStock}
-        startContent={<ShoppingCart size={18} />}
-        className="w-full font-semibold bg-green-primary hover:bg-green-primary/90 disabled:bg-gray-300 disabled:text-gray-500 text-white"
-        onPress={agregarAlCarrito}
+      <AddToCartButton
+        onAdd={agregarAlCarrito}
+        disabled={sinStock}
       >
         Agregar al carrito
-      </Button>
+      </AddToCartButton>
 
       {mensaje && (
         <p className="text-sm font-semibold text-green-600">{mensaje}</p>

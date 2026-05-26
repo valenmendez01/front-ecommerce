@@ -1,11 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Changa+One&family=Lexend:wght@300&family=Quicksand:wght@400;500;600&display=swap');
+
 @import "tailwindcss";
 @plugin "../hero.ts";
 @source "../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-green-primary: #142b10;
-  --color-dorado-primary: #caa56e;
+  --color-green-primary:    #142b10;
+  --color-dorado-primary:   #caa56e;
+
+  --font-display: 'Changa One', sans-serif;
+  --font-heading: 'Lexend', sans-serif;
+  --font-body: 'Quicksand', sans-serif;
+
   --animate-scroll-left: scroll-left var(--animation-duration, 38s) linear infinite;
   --animate-scroll-right: scroll-right var(--animation-duration, 38s) linear infinite;
   @keyframes scroll-left {
@@ -22,3 +29,14 @@
     }
   }
 }
+
+@layer base {
+  body, *:not(.flip-display):not(.flip-display *) {
+    font-family: var(--font-body);
+  }
+}
+
+/* Uso
+  Titulo: className="font-display uppercase tracking-wide text-5xl"
+  Subtitulo: className="font-heading font-semibold text-xl"
+  Texto normal: className="font-body text-base font-normal" */

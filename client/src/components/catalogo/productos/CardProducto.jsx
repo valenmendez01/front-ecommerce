@@ -46,7 +46,7 @@ export const CardProducto = ({ producto }) => {
         </CardBody>
 
         <CardFooter className="flex flex-col items-start gap-1 w-full">
-          <b className="wrap-break-word">{producto.nombre}</b>
+          <b className="wrap-break-word text-[var(--color-green-primary)]">{producto.nombre}</b>
 
           <div className="flex items-center gap-2">
             <span className={tieneDescuento ? "text-default-400 line-through text-xs" : "text-default-500"}>
