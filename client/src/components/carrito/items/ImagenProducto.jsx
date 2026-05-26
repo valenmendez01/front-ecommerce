@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Sparkles } from "lucide-react";
 
 const obtenerAjusteImagen = (imagen, proporcionMarco) => {
@@ -8,7 +8,7 @@ const obtenerAjusteImagen = (imagen, proporcionMarco) => {
   return diferencia > 0.25 ? "object-contain" : "object-cover";
 };
 
-export default function ImagenProducto({ src, alt, className, iconClassName = "text-yellow-500" }) {
+export default function ImagenProducto({ src, alt, className, iconClassName = "text-dorado-primary" }) {
   const [ajuste, setAjuste] = useState("object-cover");
 
   return (

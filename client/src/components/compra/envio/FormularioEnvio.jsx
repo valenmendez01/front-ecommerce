@@ -1,7 +1,7 @@
-import { Button, Input, Select, SelectItem } from "@heroui/react";
+﻿import { Button, Input, Select, SelectItem } from "@heroui/react";
 
-const PAISES = ["Argentina", "Brasil", "Chile", "México", "España", "Estados Unidos", "Qatar"];
-const clasesCampo = { label: "text-xs font-semibold text-gray-600" };
+const PAISES = ["Argentina", "Brasil", "Chile", "MÃ©xico", "EspaÃ±a", "Estados Unidos", "Qatar"];
+const clasesCampo = { label: "text-xs font-semibold text-green-primary/70" };
 
 export default function FormularioEnvio({
   formulario,
@@ -11,7 +11,7 @@ export default function FormularioEnvio({
   alGuardar,
 }) {
   return (
-    <div className="p-4 pt-0 bg-white border-t border-yellow-400/30 flex flex-col gap-3">
+    <div className="p-4 pt-0 bg-white border-t border-dorado-primary/30 flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-3 pt-4">
         <Input
           isInvalid={intentoGuardar && !formulario.nombre.trim()}
@@ -28,10 +28,10 @@ export default function FormularioEnvio({
 
         <Input
           isInvalid={intentoGuardar && !formulario.direccion.trim()}
-          label="Dirección"
-          placeholder="Calle, número, piso"
+          label="DirecciÃ³n"
+          placeholder="Calle, nÃºmero, piso"
           value={formulario.direccion}
-          errorMessage="Ingresá una dirección válida."
+          errorMessage="IngresÃ¡ una direcciÃ³n vÃ¡lida."
           onValueChange={(value) => alActualizar("direccion", value)}
           variant="bordered"
           radius="sm"
@@ -53,10 +53,10 @@ export default function FormularioEnvio({
 
         <Input
           isInvalid={intentoGuardar && (!formulario.codigoPostal || !cpValido)}
-          label="Código postal"
+          label="CÃ³digo postal"
           placeholder="CP"
           value={formulario.codigoPostal}
-          errorMessage={formulario.pais === "Argentina" ? "En Argentina debe tener 4 números." : "Ingresá solo números."}
+          errorMessage={formulario.pais === "Argentina" ? "En Argentina debe tener 4 nÃºmeros." : "IngresÃ¡ solo nÃºmeros."}
           inputMode="numeric"
           maxLength={8}
           onValueChange={(value) => alActualizar("codigoPostal", value)}
@@ -67,10 +67,10 @@ export default function FormularioEnvio({
 
         <Select
           isInvalid={intentoGuardar && !formulario.pais}
-          label="País"
-          placeholder="Seleccioná un país"
+          label="PaÃ­s"
+          placeholder="SeleccionÃ¡ un paÃ­s"
           selectedKeys={formulario.pais ? [formulario.pais] : []}
-          errorMessage="Seleccioná un país."
+          errorMessage="SeleccionÃ¡ un paÃ­s."
           onSelectionChange={(keys) => alActualizar("pais", [...keys][0] || "")}
           variant="bordered"
           radius="sm"
@@ -81,8 +81,8 @@ export default function FormularioEnvio({
         </Select>
       </div>
 
-      <Button onPress={alGuardar} className="w-full bg-yellow-400 text-black text-sm font-bold rounded-lg mt-1">
-        Guardar dirección
+      <Button onPress={alGuardar} className="w-full bg-dorado-primary text-black text-sm font-bold rounded-lg mt-1">
+        Guardar direcciÃ³n
       </Button>
     </div>
   );

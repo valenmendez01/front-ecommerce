@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import ArticuloCarrito from "../components/carrito/items/itemCarrito";
-import BarraPagoMovil from "../components/carrito/barraPagoMovil";
-import CarritoVacio from "../components/carrito/carritoVacio";
-import HeaderCarrito from "../components/carrito/headerCarrito";
-import ProductosRecomendados from "../components/carrito/items/itemsRecomendados";
-import ResumenCarrito from "../components/carrito/resumenCarrito";
-import TituloCarrito from "../components/carrito/tituloCarrito";
+import ArticuloCarrito from "../components/carrito/items/ItemCarrito";
+import BarraPagoMovil from "../components/carrito/BarraPagoMovil";
+import CarritoVacio from "../components/carrito/CarritoVacio";
+import HeaderCarrito from "../components/carrito/HeaderCarrito";
+import ProductosRecomendados from "../components/carrito/items/ItemsRecomendados";
+import ResumenCarrito from "../components/carrito/ResumenCarrito";
+import TituloCarrito from "../components/carrito/TituloCarrito";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
 import {

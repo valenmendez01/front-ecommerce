@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { obtenerImagenProducto } from "../../../data/reglasCarrito";
 import { HoverEffect } from "../../ui/card-hover-effect";
-import ItemRecomendado from "./itemRecomendado";
-import RecomendadosSkeleton from "./recomendadosSkeleton";
+import ItemRecomendado from "./ItemRecomendado";
+import RecomendadosSkeleton from "./RecomendadosSkeleton";
 
 const obtenerListaProductos = (respuesta) => {
   if (Array.isArray(respuesta)) return respuesta;
@@ -78,9 +78,9 @@ export default function ItemsRecomendados() {
 
   return (
     <div className="mt-8">
-      <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-emerald-950 mb-4">
+      <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-green-primary mb-4">
         <Sparkles size={15} />
-        Completá tu colección
+        CompletÃ¡ tu colecciÃ³n
       </h3>
 
       {cargando ? <RecomendadosSkeleton /> : <HoverEffect items={items} className="grid-cols-3 gap-1 py-0" />}

@@ -1,4 +1,4 @@
-import { Button } from "@heroui/react";
+﻿import { Button } from "@heroui/react";
 import { ChevronDown } from "lucide-react";
 
 export default function CabeceraAcordeon({
@@ -25,13 +25,13 @@ export default function CabeceraAcordeon({
 
         <div className="text-left">
           <p className="text-sm font-black text-white">{titulo}</p>
-          <p className="text-xs text-yellow-400">{guardado ? subtituloGuardado : subtitulo}</p>
+          <p className="text-xs text-dorado-primary">{guardado ? subtituloGuardado : subtitulo}</p>
         </div>
       </div>
 
       <ChevronDown
         size={18}
-        className={`text-yellow-400 transition-transform duration-300 ${abierto ? "rotate-180" : ""}`}
+        className={`text-dorado-primary transition-transform duration-300 ${abierto ? "rotate-180" : ""}`}
       />
     </Button>
   );

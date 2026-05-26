@@ -1,5 +1,5 @@
-import { formatearPesos } from "../../data/reglasProducto";
-import ImagenProducto from "../carrito/items/imagenProducto";
+﻿import { formatearPesos } from "../../data/reglasProducto";
+import ImagenProducto from "../carrito/items/ImagenProducto";
 import { motion } from "framer-motion";
 
 export default function PanelPedido({ articulos }) {
@@ -10,12 +10,12 @@ export default function PanelPedido({ articulos }) {
       transition={{ duration: 0.25 }}
       className="bg-green-primary rounded-2xl border border-dorado-primary/25 shadow-sm overflow-hidden"
     >
-      <div className="p-4 border-b border-yellow-400/30">
-        <h3 className="font-bold text-white">Tu selección</h3>
+      <div className="p-4 border-b border-dorado-primary/30">
+        <h3 className="font-bold text-white">Tu selecciÃ³n</h3>
         <p className="text-xs text-white/60">{articulos.length} producto(s)</p>
       </div>
 
-      <div className="divide-y divide-yellow-400/20">
+      <div className="divide-y divide-dorado-primary/20">
         {articulos.map((articulo) => (
           <motion.div
             key={articulo.id}
@@ -38,14 +38,14 @@ export default function PanelPedido({ articulos }) {
 
             <div className="flex-1 min-w-0">
               {articulo.etiqueta && (
-                <span className="text-[9px] font-bold bg-yellow-400 text-black px-1.5 py-0.5 rounded mr-1">
+                <span className="text-[9px] font-bold bg-dorado-primary text-black px-1.5 py-0.5 rounded mr-1">
                   {articulo.etiqueta}
                 </span>
               )}
               <p className="text-sm font-semibold text-white truncate">{articulo.nombre}</p>
-              <p className="text-xs text-yellow-400">{articulo.subtitulo}</p>
+              <p className="text-xs text-dorado-primary">{articulo.subtitulo}</p>
               {articulo.descuento > 0 && (
-                <p className="mt-1 text-[10px] font-black text-yellow-400">-{articulo.descuento}% aplicado</p>
+                <p className="mt-1 text-[10px] font-black text-dorado-primary">-{articulo.descuento}% aplicado</p>
               )}
             </div>
 
