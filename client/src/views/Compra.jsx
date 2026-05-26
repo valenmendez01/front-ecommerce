@@ -15,7 +15,7 @@ import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
 import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
 
-export default function CompraView() {
+export default function Compra() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
   const [costoEnvio, setCostoEnvio] = useState(null);
   const [pagoGuardado, setPagoGuardado] = useState(false);
