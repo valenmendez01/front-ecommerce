@@ -1,4 +1,4 @@
-﻿import { Button } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { Rocket } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatearPesos } from "../../../data/reglasProducto";

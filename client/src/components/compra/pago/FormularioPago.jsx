@@ -1,4 +1,4 @@
-﻿import { Button, Input } from "@heroui/react";
+import { Button, Input } from "@heroui/react";
 
 const clasesCampo = { label: "text-xs font-semibold text-green-primary/70" };
 

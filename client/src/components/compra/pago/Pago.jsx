@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { CheckCircle2, CreditCard } from "lucide-react";
 
 import CabeceraAcordeon from "../CabeceraAcordeon";
