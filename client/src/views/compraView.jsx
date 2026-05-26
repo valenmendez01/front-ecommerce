@@ -15,15 +15,6 @@ import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
 import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
 
-const toastPedidoConfirmado = {
-  base: "border-green-primary bg-green-primary text-white shadow-xl shadow-green-primary/10",
-  title: "font-black text-white",
-  description: "font-semibold text-white/80",
-  closeButton: "text-white/80 hover:bg-white/10",
-  progressTrack: "bg-white/20",
-  progressIndicator: "bg-dorado-primary",
-};
-
 export default function CompraView() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
   const [costoEnvio, setCostoEnvio] = useState(null);
@@ -58,7 +49,6 @@ export default function CompraView() {
         vaciarCarrito(usuario.idUsuario);
         setConfirmado(true);
         addToast({
-          classNames: toastPedidoConfirmado,
           color: "success",
           title: mensajeBack,
         });
