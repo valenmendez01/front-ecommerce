@@ -10,7 +10,7 @@ import PanelPedido from "../components/compra/PanelPedido";
 import PedidoConfirmado from "../components/compra/PedidoConfirmado";
 import ResumenPago from "../components/compra/pago/ResumenPago";
 import TituloCompra from "../components/compra/TituloCompra";
-import { confirmarPedido } from "../components/compra/confirmarPedido";
+import { confirmarPedido } from "../data/confirmarPedido";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
 import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
