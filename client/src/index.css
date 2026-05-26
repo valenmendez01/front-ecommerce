@@ -31,7 +31,7 @@
 }
 
 @layer base {
-  body, *:not(.flip-display):not(.flip-display *) {
+  body {
     font-family: var(--font-body);
   }
 }

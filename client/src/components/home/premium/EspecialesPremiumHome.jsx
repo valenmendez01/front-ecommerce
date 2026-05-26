@@ -25,13 +25,13 @@ const EspecialesPremiumHome = () => (
           Ediciones premium
         </motion.p>
         <motion.h2
-          className="mt-4 text-4xl font-black uppercase leading-none md:text-6xl"
+          className="font-display mt-4 text-4xl font-black uppercase leading-none md:text-6xl leading-tight tracking-wider"
           initial={{ filter: "blur(10px)", opacity: 0, scale: 0.96, y: 46 }}
           transition={{ delay: 0.08, duration: 0.75, ease: "easeOut" }}
           viewport={{ amount: 0.8, once: false }}
           whileInView={{ filter: "blur(0px)", opacity: 1, scale: 1, y: 0 }}
         >
-          Especiales para que tu coleccion tenga firma propia
+          Especiales para que tu colección tenga firma propia
         </motion.h2>
         <motion.p
           className="mt-6 max-w-xl text-lg font-medium leading-8 text-white/76"
@@ -40,7 +40,7 @@ const EspecialesPremiumHome = () => (
           viewport={{ amount: 0.8, once: false }}
           whileInView={{ filter: "blur(0px)", opacity: 1, y: 0 }}
         >
-          Extra stickers, doradas y productos unicos para transformar una compra en una pieza de coleccion.
+          Extra stickers, doradas y productos únicos para transformar una compra en una pieza de colección.
         </motion.p>
         <motion.div
           className="mt-8 flex flex-wrap gap-3"
@@ -61,7 +61,7 @@ const EspecialesPremiumHome = () => (
             className="rounded-full border border-dorado-primary/45 px-6 py-3 text-sm font-black uppercase text-white transition hover:bg-dorado-primary hover:text-green-primary"
             to="/productos"
           >
-            Explorar catalogo
+            Explorar catálogo
           </Link>
         </motion.div>
       </div>
