@@ -1,4 +1,5 @@
 import TarjetaResumen from './TarjetaResumen'
+import PerfilCuentaCompacto from './PerfilCuentaCompacto'
 
 const EncabezadoCuenta = ({ resumen, usuario }) => (
   <section className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
@@ -13,15 +14,18 @@ const EncabezadoCuenta = ({ resumen, usuario }) => (
       </p>
     </div>
 
-    <div className="grid gap-4 sm:grid-cols-2">
-      {resumen.map((item) => (
-        <TarjetaResumen
-          destacar={item.destacar}
-          key={item.titulo}
-          titulo={item.titulo}
-          valor={item.valor}
-        />
-      ))}
+    <div className="flex flex-col gap-4">
+      <PerfilCuentaCompacto usuario={usuario} />
+      <div className="grid gap-4 sm:grid-cols-2">
+        {resumen.map((item) => (
+          <TarjetaResumen
+            destacar={item.destacar}
+            key={item.titulo}
+            titulo={item.titulo}
+            valor={item.valor}
+          />
+        ))}
+      </div>
     </div>
   </section>
 )

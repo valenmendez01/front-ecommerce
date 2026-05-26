@@ -29,26 +29,27 @@ export const CardProducto = ({ producto }) => {
       style={{ borderRadius: "12px" }}
     >
       <Card
+        className="w-60 overflow-hidden"
         isPressable
         shadow="sm"
         onPress={() => navigate(`/productos/${producto.idProducto}`)}
       >
-        <CardBody className="overflow-visible p-0">
-          <Image
-            alt={producto.nombre}
-            src={imagenSrc}
-            className="object-contain"
-            radius="lg"
-            shadow="sm"
-            width={240}
-            height={320}
-          />
+        <CardBody className="p-0">
+          <div className="aspect-[579/768] w-full overflow-hidden">
+            <Image
+              alt={producto.nombre}
+              src={imagenSrc}
+              className="h-full w-full object-cover"
+              radius="lg"
+              shadow="sm"
+            />
+          </div>
         </CardBody>
 
-        <CardFooter className="flex flex-col items-start gap-1 w-full">
-          <b className="wrap-break-word text-[var(--color-green-primary)]">{producto.nombre}</b>
+        <CardFooter className="flex w-full flex-col items-start gap-2">
+          <b className="line-clamp-2 min-h-12 w-full break-words text-center text-base leading-6 text-[var(--color-green-primary)]">{producto.nombre}</b>
 
-          <div className="flex items-center gap-2">
+          <div className="flex w-full min-w-0 flex-wrap items-center gap-2">
             <span className={tieneDescuento ? "text-default-400 line-through text-xs" : "text-default-500"}>
               {formatear(producto.precio)}
             </span>

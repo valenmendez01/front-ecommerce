@@ -1,4 +1,3 @@
-import { CardBody } from '@heroui/react'
 import { formatearPesos } from '../../../data/reglasProducto'
 import TablaItemsVenta from './TablaItemsVenta'
 
@@ -10,14 +9,14 @@ const DatoVenta = ({ titulo, valor }) => (
 )
 
 const DetalleVenta = ({ venta }) => (
-  <CardBody className="border-t border-dorado-primary/30 bg-dorado-primary/10 px-8 py-5">
+  <div className="rounded-md border border-dorado-primary/30 bg-dorado-primary/10 px-6 py-5">
     <div className="grid gap-4 md:grid-cols-3">
       <DatoVenta titulo="Comprador" valor={venta.comprador} />
       <DatoVenta titulo="Cantidad total" valor={`${venta.cantidad} u.`} />
       <DatoVenta titulo="Total de la venta" valor={formatearPesos(venta.total)} />
     </div>
     <TablaItemsVenta venta={venta} />
-  </CardBody>
+  </div>
 )
 
 export default DetalleVenta

@@ -34,7 +34,7 @@ const MiCuenta = ({ token, usuario, onCerrarSesion }) => {
   ]
 
   return (
-    <PaginaGestion usuario={usuario} onCerrarSesion={onCerrarSesion}>
+    <PaginaGestion mostrarMenuLateral={false} usuario={usuario} onCerrarSesion={onCerrarSesion}>
       <EncabezadoCuenta resumen={resumen} usuario={usuario} />
       <div className="mt-10">
         <InformacionPersonal usuario={usuario} />

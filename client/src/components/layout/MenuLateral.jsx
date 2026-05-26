@@ -1,12 +1,13 @@
 import {
   CircleUserRound,
   Grid2X2,
-  LogOut,
   PlusSquare,
   ShoppingCart,
   WalletCards,
 } from 'lucide-react'
-import { NavLink } from 'react-router-dom'
+import { motion } from 'framer-motion'
+import { NavLink, useLocation } from 'react-router-dom'
+import { Sidebar, SidebarBody, SidebarLink, useSidebar } from '../ui/sidebar'
 
 const opcionesCliente = [
   { texto: 'Mi cuenta', ruta: '/mi-cuenta', Icono: CircleUserRound },
@@ -20,11 +21,60 @@ const opcionesVendedor = [
   { texto: 'Ventas', ruta: '/ventas', Icono: WalletCards },
 ]
 
-const MenuLateral = ({ usuario, onCerrarSesion }) => {
+const UsuarioVendedor = ({ iniciales, usuario }) => {
+  const { open } = useSidebar()
+
+  return (
+    <div className="mb-8 border-b border-dorado-primary/35 pb-5">
+      <div className="flex items-center gap-3">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-dorado-primary bg-white text-sm font-black text-green-primary">
+          {iniciales}
+        </div>
+        <motion.div
+          animate={{ display: open ? 'block' : 'none', opacity: open ? 1 : 0 }}
+          className="min-w-0"
+        >
+          <p className="truncate font-black text-green-primary">
+            {usuario.nombre} {usuario.apellido}
+          </p>
+          <p className="whitespace-nowrap text-xs font-semibold text-slate-500">Cuenta de vendedor</p>
+        </motion.div>
+      </div>
+    </div>
+  )
+}
+
+const MenuLateralVendedor = ({ iniciales, usuario }) => {
+  const location = useLocation()
+
+  return (
+    <Sidebar className="min-h-[calc(100vh-56px)]">
+      <SidebarBody>
+        <UsuarioVendedor iniciales={iniciales} usuario={usuario} />
+        <nav className="flex flex-1 flex-col gap-3">
+          {opcionesVendedor.map(({ texto, ruta, Icono }) => (
+            <SidebarLink
+              active={location.pathname === ruta}
+              icon={Icono}
+              key={texto}
+              to={ruta}
+            >
+              {texto}
+            </SidebarLink>
+          ))}
+        </nav>
+      </SidebarBody>
+    </Sidebar>
+  )
+}
+
+const MenuLateral = ({ usuario }) => {
   const rolCuenta = usuario.rol === 'VENDEDOR' ? 'vendedor' : 'cliente'
   const iniciales = `${usuario.nombre?.[0] || ''}${usuario.apellido?.[0] || ''}`.toUpperCase()
   const esVendedor = usuario.rol === 'VENDEDOR'
   const opciones = esVendedor ? opcionesVendedor : opcionesCliente
+
+  if (esVendedor) return <MenuLateralVendedor iniciales={iniciales} usuario={usuario} />
 
   return (
     <aside className="flex w-64 shrink-0 flex-col border-r border-dorado-primary/35 bg-white">
@@ -49,7 +99,9 @@ const MenuLateral = ({ usuario, onCerrarSesion }) => {
               <NavLink
                 className={({ isActive }) =>
                   `flex items-center gap-4 rounded-md px-5 py-3 text-lg font-medium ${
-                    isActive ? 'bg-green-primary text-white shadow-md ring-1 ring-dorado-primary/70' : 'text-green-primary hover:bg-dorado-primary/15'
+                    isActive
+                      ? 'bg-green-primary text-white shadow-md ring-1 ring-dorado-primary/70'
+                      : 'text-green-primary hover:bg-dorado-primary/15'
                   }`
                 }
                 end={texto === 'Catálogo'}
@@ -62,17 +114,6 @@ const MenuLateral = ({ usuario, onCerrarSesion }) => {
           ))}
         </ul>
       </nav>
-
-      <div className="border-t border-dorado-primary/35 px-5 py-6">
-        <button
-          className="flex items-center gap-4 text-lg font-medium text-red-700"
-          type="button"
-          onClick={onCerrarSesion}
-        >
-          <LogOut size={24} strokeWidth={2.2} />
-          Cerrar sesión
-        </button>
-      </div>
     </aside>
   )
 }

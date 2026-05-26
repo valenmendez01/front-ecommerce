@@ -6,7 +6,7 @@ import FormularioCrearProducto from '../components/vendedor/crearProducto/Formul
 import { guardarProducto } from '../components/vendedor/crearProducto/guardarProducto'
 import { crearImagenesLocales, liberarImagenesLocales, quitarImagenLocal } from '../data/imagenesProducto'
 import { MAXIMO_IMAGENES_PRODUCTO, obtenerErrorCantidadImagenesProducto } from '../data/reglasImagenesProducto'
-import { calcularPrecioFinal, estadoInicialProducto, normalizarCategorias, obtenerErroresProducto } from '../data/reglasProducto'
+import { MAXIMO_CARACTERES_NOMBRE_PRODUCTO, calcularPrecioFinal, estadoInicialProducto, normalizarCategorias, normalizarSelecciones, obtenerErroresProducto } from '../data/reglasProducto'
 const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
   const [producto, setProducto] = useState(estadoInicialProducto)
   const [imagenes, setImagenes] = useState([])
@@ -15,31 +15,40 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
   const [mostrarErrores, setMostrarErrores] = useState(false)
   const [publicando, setPublicando] = useState(false)
   const [categorias, setCategorias] = useState([])
+  const [selecciones, setSelecciones] = useState([])
   useEffect(() => {
     let sigueActivo = true
-    fetch('/categorias')
-      .then((respuesta) => respuesta.json())
-      .then((json) => {
+    Promise.all([fetch('/categorias'), fetch('/selecciones')])
+      .then(async ([respuestaCategorias, respuestaSelecciones]) => {
+        const jsonCategorias = await respuestaCategorias.json()
+        const jsonSelecciones = await respuestaSelecciones.json()
         if (!sigueActivo) return
-        const categoriasNuevas = normalizarCategorias(json.data)
+        const categoriasNuevas = normalizarCategorias(jsonCategorias.data)
+        const seleccionesNuevas = normalizarSelecciones(jsonSelecciones.data)
         setCategorias(categoriasNuevas)
+        setSelecciones(seleccionesNuevas)
         setProducto((actual) =>
           categoriasNuevas.some((categoria) => categoria.valor === actual.categoria)
-            ? actual
-            : { ...actual, categoria: categoriasNuevas[0]?.valor || actual.categoria },
+            ? { ...actual, seleccion: seleccionesNuevas.some((seleccion) => seleccion.valor === actual.seleccion) ? actual.seleccion : seleccionesNuevas[0]?.valor || actual.seleccion }
+            : { ...actual, categoria: categoriasNuevas[0]?.valor || actual.categoria, seleccion: seleccionesNuevas[0]?.valor || actual.seleccion },
         )
       })
-      .catch(() => sigueActivo && setCategorias([]))
+      .catch(() => {
+        if (!sigueActivo) return
+        setCategorias([])
+        setSelecciones([])
+      })
     return () => {
       sigueActivo = false
     }
   }, [])
-  const errores = obtenerErroresProducto(producto, categorias)
+  const errores = obtenerErroresProducto(producto, categorias, selecciones)
   const errorImagenes = obtenerErrorCantidadImagenesProducto(imagenes.length)
   const puedePublicar = Object.values(errores).every((error) => !error) && !errorImagenes
   const cambiarCampo = (campo, valor) => {
     const esNumero = ['stock', 'precio', 'descuento'].includes(campo) && valor !== ''
-    setProducto((actual) => ({ ...actual, [campo]: esNumero ? Number(valor) : valor }))
+    const nuevoValor = campo === 'nombre' ? valor.slice(0, MAXIMO_CARACTERES_NOMBRE_PRODUCTO) : valor
+    setProducto((actual) => ({ ...actual, [campo]: esNumero ? Number(nuevoValor) : nuevoValor }))
     setMensaje('')
   }
   const cargarImagenes = (archivos) => {
@@ -62,16 +71,20 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
     setMensaje('')
 
     try {
-      await guardarProducto(producto, imagenes, token)
+      const respuesta = await guardarProducto(producto, imagenes, token)
       liberarImagenesLocales(imagenes)
       setProducto(estadoInicialProducto)
       setImagenes([])
       setMostrarErrores(false)
-      addToast({ color: 'success', title: 'Producto publicado', description: 'Ya forma parte de tu catalogo.' })
+      addToast({
+        color: 'success',
+        title: respuesta.mensaje,
+        description: respuesta.mensajeImagenes || undefined,
+      })
       return true
     } catch (error) {
       const mensajeError = error.message || 'No se pudo publicar el producto.'
-      addToast({ color: 'danger', title: 'No se pudo publicar el producto', description: mensajeError })
+      addToast({ color: 'danger', title: mensajeError })
       setTipoMensaje('error')
       setMensaje(mensajeError)
       return false
@@ -91,7 +104,7 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
         onCambiar={cambiarCampo} onCargarImagenes={cargarImagenes} onPublicar={publicarProducto}
         onQuitarImagen={(id) => setImagenes((actuales) => quitarImagenLocal(actuales, id))}
         precioFinal={calcularPrecioFinal(producto.precio, producto.descuento)}
-        producto={producto} publicando={publicando} tipoMensaje={tipoMensaje}
+        producto={producto} publicando={publicando} selecciones={selecciones} tipoMensaje={tipoMensaje}
       />
     </PaginaGestion>
   )

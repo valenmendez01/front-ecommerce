@@ -34,13 +34,17 @@ const TarjetaProducto = ({
     setGuardando(true)
     setErrorAccion('')
     try {
-      await onActualizarProducto(borrador, cambiosImagenes)
+      const respuesta = await onActualizarProducto(borrador, cambiosImagenes)
       setEditando(false)
-      addToast({ color: 'success', title: 'Cambios guardados', description: producto.nombre })
+      addToast({
+        color: 'success',
+        title: respuesta?.mensaje || 'Producto actualizado correctamente',
+        description: respuesta?.mensajeImagenes || producto.nombre,
+      })
       return true
     } catch (error) {
       const mensaje = error.message || 'No se pudo actualizar el producto.'
-      addToast({ color: 'danger', title: 'No se guardaron los cambios', description: mensaje })
+      addToast({ color: 'danger', title: mensaje })
       setErrorAccion(mensaje)
       return false
     } finally {
@@ -52,15 +56,15 @@ const TarjetaProducto = ({
     setCambiandoVisibilidad(true)
     setErrorAccion('')
     try {
-      await onCambiarVisibilidadProducto(producto)
+      const respuesta = await onCambiarVisibilidadProducto(producto)
       addToast({
         color: 'success',
-        title: producto.activo ? 'Producto oculto' : 'Producto visible',
+        title: respuesta?.mensaje || 'Producto actualizado correctamente',
         description: producto.nombre,
       })
     } catch (error) {
       const mensaje = error.message || 'No se pudo cambiar la visibilidad del producto.'
-      addToast({ color: 'danger', title: 'No se cambio la visibilidad', description: mensaje })
+      addToast({ color: 'danger', title: mensaje })
       setErrorAccion(mensaje)
     } finally {
       setCambiandoVisibilidad(false)

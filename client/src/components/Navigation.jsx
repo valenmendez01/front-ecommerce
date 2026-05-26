@@ -2,7 +2,7 @@ import {
   Navbar,
   NavBody
 } from "./ui/resizable-navbar"
-import { CircleUserRound, LogIn, LogOut, ShoppingCart } from "lucide-react"
+import { LogIn, LogOut, ShoppingCart } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import logo from "../assets/logoHorizontal.png"
 import { useAuth } from "../context/useAuth"
@@ -79,14 +79,13 @@ export default function Navigation() {
 
             {esVendedor ? (
               <Button
-                aria-label="Panel vendedor"
-                as={Link}
                 className="relative z-20 mr-4 flex items-center px-2 py-1 text-white/80 transition-colors duration-300 hover:text-white"
                 isIconOnly
-                to="/panel-vendedor"
+                aria-label="Cerrar sesion"
+                onPress={manejarCierreSesion}
                 variant="outline"
               >
-                <CircleUserRound size={20} />
+                <LogOut size={20} />
               </Button>
             ) : usuario ? (
               <Button

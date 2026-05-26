@@ -2,10 +2,13 @@ export const estadoInicialProducto = {
   nombre: '',
   description: '',
   categoria: 'FIGURITAS',
+  seleccion: 'NINGUNA',
   stock: 0,
   precio: '',
   descuento: 0,
 }
+
+export const MAXIMO_CARACTERES_NOMBRE_PRODUCTO = 25
 
 export const formatearPesos = (monto) => `$${Number(monto || 0).toLocaleString('es-AR')}`
 
@@ -25,18 +28,28 @@ export const normalizarCategorias = (categorias) =>
     etiqueta: formatearEtiquetaCategoria(categoria),
   }))
 
-export const obtenerErroresProducto = (producto, categorias = []) => {
+export const normalizarSelecciones = normalizarCategorias
+
+export const obtenerErroresProducto = (producto, categorias = [], selecciones = []) => {
   const precio = Number(producto.precio)
   const stock = Number(producto.stock)
   const descuento = Number(producto.descuento)
   const valoresCategorias = categorias.map((categoria) => categoria.valor)
+  const valoresSelecciones = selecciones.map((seleccion) => seleccion.valor)
 
   return {
-    nombre: producto.nombre.trim() ? '' : 'El nombre es obligatorio.',
+    nombre: !producto.nombre.trim()
+      ? 'El nombre es obligatorio.'
+      : producto.nombre.trim().length > MAXIMO_CARACTERES_NOMBRE_PRODUCTO
+        ? `El nombre no puede superar ${MAXIMO_CARACTERES_NOMBRE_PRODUCTO} caracteres.`
+        : '',
     description: producto.description.trim() ? '' : 'La descripcion es obligatoria.',
     categoria: valoresCategorias.includes(producto.categoria)
       ? ''
       : 'Selecciona una categoria valida.',
+    seleccion: valoresSelecciones.includes(producto.seleccion)
+      ? ''
+      : 'Selecciona una seleccion valida.',
     stock:
       producto.stock !== '' && !Number.isNaN(stock) && stock >= 0
         ? ''

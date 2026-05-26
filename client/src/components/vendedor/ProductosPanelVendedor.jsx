@@ -43,10 +43,14 @@ const ProductosPanelVendedor = ({ token }) => {
     })
     const json = await respuesta.json()
     if (!respuesta.ok) throw new Error(json.mensaje || json.message || 'No se pudo actualizar el producto.')
-    const productoConImagenes = await guardarImagenesProducto(producto.idProducto, cambiosImagenes, token)
-    const guardado = normalizarProductoVendedor(productoConImagenes || json.data)
+    const resultadoImagenes = await guardarImagenesProducto(producto.idProducto, cambiosImagenes, token)
+    const guardado = normalizarProductoVendedor(resultadoImagenes?.producto || json.data)
     setProductos((actuales) => actuales.map((actual) => actual.idProducto === guardado.idProducto ? guardado : actual))
-    return guardado
+    return {
+      mensaje: json.mensaje || json.message || resultadoImagenes?.mensaje || 'Producto actualizado correctamente',
+      mensajeImagenes: resultadoImagenes?.mensaje,
+      producto: guardado,
+    }
   }
 
   const cambiarVisibilidadProducto = (producto) =>

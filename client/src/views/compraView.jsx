@@ -50,13 +50,12 @@ export default function CompraView() {
         addToast({
           color: "success",
           title: mensajeBack,
-          description: "Tu compra se registró correctamente.",
         });
       })
       .catch((error) => {
         const mensaje = `No se pudo confirmar el pedido: ${error.message}`;
         setErrorConfirmar(mensaje);
-        addToast({ color: "danger", title: "No se pudo confirmar el pedido", description: error.message });
+        addToast({ color: "danger", title: error.message });
       })
       .finally(() => setCargandoConfirmar(false));
   };

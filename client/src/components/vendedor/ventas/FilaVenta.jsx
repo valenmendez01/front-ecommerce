@@ -1,9 +1,7 @@
 import { Button } from '@heroui/react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
 import { formatearPesos } from '../../../data/reglasProducto'
-import DetalleVenta from './DetalleVenta'
 
-const FilaVenta = ({ estaAbierta, onCambiarDetalle, venta }) => (
+const FilaVenta = ({ onVerDetalle, venta }) => (
   <article className="border-b border-slate-100">
     <div className="grid gap-4 px-8 py-5 lg:grid-cols-[1fr_1fr_120px_160px_130px] lg:items-center">
       <div>
@@ -18,15 +16,13 @@ const FilaVenta = ({ estaAbierta, onCambiarDetalle, venta }) => (
       <p className="text-lg font-black text-green-primary">{formatearPesos(venta.total)}</p>
       <Button
         className="bg-dorado-primary/20 text-sm font-bold text-green-primary"
-        endContent={estaAbierta ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         radius="sm"
         size="sm"
-        onPress={onCambiarDetalle}
+        onPress={onVerDetalle}
       >
-        Detalle
+        Ver detalle
       </Button>
     </div>
-    {estaAbierta && <DetalleVenta venta={venta} />}
   </article>
 )
 
