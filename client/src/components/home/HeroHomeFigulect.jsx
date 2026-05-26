@@ -51,7 +51,7 @@ const HeroHomeFigulect = () => (
         variants={entradaContenedor}
       >
         <motion.h1
-          className="text-5xl font-black uppercase leading-[0.92] text-white sm:text-6xl lg:text-8xl"
+          className="font-display text-5xl uppercase leading-[0.92] text-white sm:text-6xl lg:text-8xl"
           variants={entradaTitulo}
         >
           <span className="block">Abri sobres.</span>
