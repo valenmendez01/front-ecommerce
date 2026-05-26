@@ -3,7 +3,7 @@ import { Info } from 'lucide-react'
 import { MAXIMO_CARACTERES_NOMBRE_PRODUCTO } from '../../../data/reglasProducto'
 
 const inputClasses =
-  'mt-2 w-full rounded-md border border-dorado-primary/35 bg-slate-100 px-5 py-4 text-base font-semibold text-slate-800 outline-none transition focus:border-dorado-primary focus:bg-white'
+  'mt-2 w-full rounded-md border border-dorado-primary/35 bg-white px-5 py-4 text-base font-semibold text-slate-800 outline-none transition focus:border-dorado-primary focus:bg-white'
 
 const EtiquetaCampo = ({ children, titulo }) => (
   <label className="block">
@@ -16,7 +16,7 @@ const ErrorCampo = ({ children, mostrar }) =>
   mostrar ? <p className="mt-2 text-sm font-semibold text-red-700">{children}</p> : null
 
 const SeccionInformacionProducto = ({ categorias, errores, mostrarErrores, onCambiar, producto, selecciones }) => (
-  <Card className="shadow-lg" radius="sm">
+  <Card className="shadow-lg bg-dorado-primary/10" radius="sm">
     <CardBody className="px-8 py-8">
       <div className="mb-7 flex items-center gap-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-primary text-dorado-primary">

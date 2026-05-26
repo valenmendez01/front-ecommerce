@@ -3,7 +3,7 @@ import { DollarSign } from 'lucide-react'
 import VistaPrecioProducto from './VistaPrecioProducto'
 
 const inputClasses =
-  'mt-2 w-full rounded-md border border-dorado-primary/35 bg-slate-100 px-5 py-4 text-base font-semibold text-slate-800 outline-none transition focus:border-dorado-primary focus:bg-white'
+  'mt-2 w-full rounded-md border border-dorado-primary/35 bg-white px-5 py-4 text-base font-semibold text-slate-800 outline-none transition focus:border-dorado-primary focus:bg-white'
 
 const CampoPrecio = ({ children, error, mostrarError, titulo }) => (
   <label className="block">
@@ -14,7 +14,7 @@ const CampoPrecio = ({ children, error, mostrarError, titulo }) => (
 )
 
 const SeccionPrecioProducto = ({ errores, mostrarErrores, onCambiar, precioFinal, producto }) => (
-  <Card className="shadow-lg" radius="sm">
+  <Card className="shadow-lg bg-dorado-primary/10" radius="sm">
     <CardBody className="px-8 py-8">
       <div className="mb-7 flex items-center gap-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-primary text-dorado-primary">
