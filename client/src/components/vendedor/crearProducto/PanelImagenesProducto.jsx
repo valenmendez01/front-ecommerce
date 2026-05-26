@@ -10,13 +10,13 @@ const PanelImagenesProducto = ({ imagenes, onCargar, onQuitar }) => {
     <Card className="shadow-lg" radius="sm">
       <CardBody className="px-7 py-8">
         <h3 className="text-center text-sm font-bold uppercase tracking-widest text-slate-700">
-          Imagenes del producto
+          Imágenes del producto
         </h3>
         <FileUpload
           className="mt-6"
-          descripcion="PNG, JPG o WEBP. Maximo 5 imagenes de 5MB."
+          descripcion="PNG, JPG o WEBP. Maximo 5 imágenes de 5MB."
           deshabilitado={alcanzoMaximo}
-          titulo={alcanzoMaximo ? 'Maximo alcanzado' : 'Subir imagenes'}
+          titulo={alcanzoMaximo ? 'Máximo alcanzado' : 'Subir imágenes'}
           onChange={onCargar}
         />
         <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">

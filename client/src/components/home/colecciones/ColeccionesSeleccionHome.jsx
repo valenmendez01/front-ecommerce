@@ -1,7 +1,9 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
+import seleccionAlemania from "../../../assets/home/seleccion-alemania.png"
 import seleccionArgentina from "../../../assets/home/seleccion-argentina.png"
 import seleccionBrasil from "../../../assets/home/seleccion-brasil.png"
+import seleccionColombia from "../../../assets/home/seleccion-colombia.png"
 import seleccionCroacia from "../../../assets/home/seleccion-croacia.png"
 import seleccionEspana from "../../../assets/home/seleccion-espana.png"
 import seleccionFrancia from "../../../assets/home/seleccion-francia.png"
@@ -12,15 +14,17 @@ import seleccionPortugal from "../../../assets/home/seleccion-portugal.png"
 import InfiniteMovingCards from "../../ui/infinite-moving-cards"
 
 const selecciones = [
-  { color: "from-sky-300/25", imagen: seleccionArgentina, nombre: "Argentina", texto: "Campeones, doradas y figuritas inevitables." },
-  { color: "from-yellow-300/25", imagen: seleccionBrasil, nombre: "Brasil", texto: "Talento, brillo y figuritas que vuelan." },
-  { color: "from-red-500/20", imagen: seleccionPortugal, nombre: "Portugal", texto: "Cracks historicos y cartas inevitables." },
-  { color: "from-blue-500/20", imagen: seleccionFrancia, nombre: "Francia", texto: "Velocidad, potencia y favoritos modernos." },
-  { color: "from-red-400/20", imagen: seleccionEspana, nombre: "Espana", texto: "Nueva generacion para completar primero." },
-  { color: "from-orange-400/25", imagen: seleccionPaisesBajos, nombre: "Paises Bajos", texto: "Elegancia defensiva y presencia premium." },
-  { color: "from-red-300/25", imagen: seleccionInglaterra, nombre: "Inglaterra", texto: "Tradicion, potencia y nombres de elite." },
-  { color: "from-orange-500/20", imagen: seleccionCroacia, nombre: "Croacia", texto: "Magia de mitad de cancha para coleccionar." },
-  { color: "from-blue-300/25", imagen: seleccionNoruega, nombre: "Noruega", texto: "Goles, fuerza y figuritas de impacto." },
+  { color: "from-sky-300/25", imagen: seleccionArgentina, nombre: "Argentina", texto: "Campeones, doradas y figuritas nacionales.", valor: "ARGENTINA" },
+  { color: "from-zinc-300/25", imagen: seleccionAlemania, nombre: "Alemania", texto: "Historia, potencia y grandeza.", valor: "ALEMANIA" },
+  { color: "from-yellow-300/25", imagen: seleccionBrasil, nombre: "Brasil", texto: "Talento, brillo y figuritas que vuelan.", valor: "BRASIL" },
+  { color: "from-yellow-400/25", imagen: seleccionColombia, nombre: "Colombia", texto: "Color, ritmo y figuritas que levantan cualquier álbum.", valor: "COLOMBIA" },
+  { color: "from-orange-500/20", imagen: seleccionCroacia, nombre: "Croacia", texto: "Magia de mitad de cancha para coleccionar.", valor: "CROACIA" },
+  { color: "from-red-400/20", imagen: seleccionEspana, nombre: "España", texto: "Nueva generación para completar primero.", valor: "ESPAÑA" },
+  { color: "from-blue-500/20", imagen: seleccionFrancia, nombre: "Francia", texto: "Velocidad, potencia y favoritos modernos.", valor: "FRANCIA" },
+  { color: "from-orange-400/25", imagen: seleccionPaisesBajos, nombre: "Holanda", texto: "Elegancia defensiva y presencia premium.", valor: "HOLANDA" },
+  { color: "from-red-300/25", imagen: seleccionInglaterra, nombre: "Inglaterra", texto: "Novedades, potencia y nombres de élite.", valor: "INGLATERRA" },
+  { color: "from-blue-300/25", imagen: seleccionNoruega, nombre: "Noruega", texto: "Goles, fuerza y figuritas de impacto.", valor: "NORUEGA" },
+  { color: "from-red-500/20", imagen: seleccionPortugal, nombre: "Portugal", texto: "Cracks historicos y figuritas infaltables.", valor: "PORTUGAL" },
 ]
 
 const ColeccionesSeleccionHome = () => (
@@ -69,14 +73,14 @@ const ColeccionesSeleccionHome = () => (
                 />
               </div>
               <h3 className="mt-5 text-2xl font-black">{seleccion.nombre}</h3>
-              <p className="mt-2 min-h-12 text-sm font-medium text-green-primary/65">
+              <p className="mt-2 min-h-8 text-sm font-medium text-green-primary/65">
                 {seleccion.texto}
               </p>
               <Link
-                className="mt-5 inline-flex border-b border-dorado-primary pb-1 text-sm font-black text-dorado-primary"
-                to="/productos"
+                className="mt-3 inline-flex border-b border-dorado-primary pb-1 text-sm font-black text-dorado-primary"
+                to={`/productos?seleccion=${encodeURIComponent(seleccion.valor)}`}
               >
-                Explorar coleccion
+                Explorar colección
               </Link>
             </motion.article>
           ))}

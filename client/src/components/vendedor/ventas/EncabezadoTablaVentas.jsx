@@ -12,7 +12,7 @@ const EncabezadoTablaVentas = ({ mostrarTodas, onCambiarVista }) => (
         {mostrarTodas ? 'HISTORIAL DE VENTAS' : 'VENTAS RECIENTES'}
       </h3>
       <p className="mt-1 text-sm text-slate-500">
-        {mostrarTodas ? 'Todas las ventas registradas.' : 'Ultimas ventas realizadas.'}
+        {mostrarTodas ? 'Todas las ventas registradas.' : 'Últimas ventas realizadas.'}
       </p>
     </div>
     <Tabs

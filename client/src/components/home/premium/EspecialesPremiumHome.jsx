@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
-import album from "../../../assets/home/album-limpio.png"
+import luisDiazGold from "../../../assets/home/luis-diaz-gold.png"
 import messiGold from "../../../assets/home/messi-gold.png"
 import BackgroundBeams from "../../ui/background-beams"
 import HoverBorderGradient from "../../ui/hover-border-gradient"
@@ -52,7 +52,7 @@ const EspecialesPremiumHome = () => (
           <HoverBorderGradient>
             <Link
               className="block rounded-full bg-dorado-primary px-6 py-3 text-sm font-black uppercase text-green-primary transition hover:bg-white"
-              to="/productos"
+              to="/productos?categoria=COCA_COLA&categoria=EXTRA_STICKERS"
             >
               Ver especiales
             </Link>
@@ -74,9 +74,9 @@ const EspecialesPremiumHome = () => (
         whileInView={{ filter: "blur(0px)", opacity: 1, scale: 1, y: 0 }}
       >
         <motion.img
-          alt="Album del Mundial 2026"
-          className="absolute right-0 top-8 w-72 rotate-6 object-contain drop-shadow-[0_30px_70px_rgba(0,0,0,0.55)] md:w-96"
-          src={album}
+          alt="Extra sticker dorado de Luis Diaz"
+          className="absolute right-0 top-8 w-56 rotate-6 object-contain drop-shadow-[0_30px_70px_rgba(0,0,0,0.55)] md:w-72"
+          src={luisDiazGold}
           whileHover={{ rotate: 3, scale: 1.04 }}
         />
         <motion.img

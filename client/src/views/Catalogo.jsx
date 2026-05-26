@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Filtros } from "../components/catalogo/filtrosCatalogo/Filtros";
 import { ListaProductos } from "../components/catalogo/productos/ListaProductos";
 import { Divider } from "@heroui/react";
@@ -7,11 +8,25 @@ import { SkeletonCatalogo } from "../components/catalogo/productos/SkeletonCatal
 import { addToast } from "@heroui/react";
 import { FlipWords } from "../components/ui/flip-words";
 
+function obtenerFiltrosDesdeUrl(search, nombreSingular, nombrePlural) {
+  const parametros = new URLSearchParams(search);
+
+  return [
+    ...parametros.getAll(nombreSingular),
+    ...parametros.getAll(nombrePlural),
+  ];
+}
+
 export const Catalogo = () => {
+  const location = useLocation();
   const [categorias, setCategorias] = useState([]);
-  const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
+  const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState(() =>
+    obtenerFiltrosDesdeUrl(location.search, "categoria", "categorias")
+  );
   const [selecciones, setSelecciones] = useState([]);
-  const [seleccionesSeleccionadas, setSeleccionesSeleccionadas] = useState([]);
+  const [seleccionesSeleccionadas, setSeleccionesSeleccionadas] = useState(() =>
+    obtenerFiltrosDesdeUrl(location.search, "seleccion", "selecciones")
+  );
   const [productos, setProductos] = useState([]);
   const [precioMin, setPrecioMin] = useState(0);
   const [precioMax, setPrecioMax] = useState(100000);
@@ -20,6 +35,16 @@ export const Catalogo = () => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const PAGE_SIZE = 9;
   const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+    setCategoriasSeleccionadas(
+      obtenerFiltrosDesdeUrl(location.search, "categoria", "categorias")
+    );
+    setSeleccionesSeleccionadas(
+      obtenerFiltrosDesdeUrl(location.search, "seleccion", "selecciones")
+    );
+    setPagina(0);
+  }, [location.search]);
 
   useEffect(() => {
     fetch("/categorias")
@@ -61,11 +86,11 @@ export const Catalogo = () => {
         return `/productos/filtrar/nombre?nombre=${encodeURIComponent(busqueda)}&${pagination}`;
       }
       if (categoriasSeleccionadas.length >= 1) {
-        const params = categoriasSeleccionadas.map(c => `categorias=${c}`).join("&");
+        const params = categoriasSeleccionadas.map(c => `categorias=${encodeURIComponent(c)}`).join("&");
         return `/productos/filtrar/categorias?${params}&${pagination}`;
       }
       if (seleccionesSeleccionadas.length >= 1) {
-        const params = seleccionesSeleccionadas.map(s => `selecciones=${s}`).join("&");
+        const params = seleccionesSeleccionadas.map(s => `selecciones=${encodeURIComponent(s)}`).join("&");
         return `/productos/filtrar/selecciones?${params}&${pagination}`;
       }
       if (precioMin > 0 || precioMax < 100000) {

@@ -54,7 +54,7 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
   const cargarImagenes = (archivos) => {
     if (imagenes.length + archivos.length > MAXIMO_IMAGENES_PRODUCTO) {
       setTipoMensaje('error')
-      setMensaje(`Podes cargar como maximo ${MAXIMO_IMAGENES_PRODUCTO} imagenes por producto.`)
+      setMensaje(`Podés cargar como máximo ${MAXIMO_IMAGENES_PRODUCTO} imágenes por producto.`)
       return
     }
     setImagenes((actuales) => [...actuales, ...crearImagenesLocales(archivos, actuales.length)])
@@ -64,7 +64,7 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
     setMostrarErrores(true)
     if (!puedePublicar) {
       setTipoMensaje('error')
-      setMensaje('Revisa los campos obligatorios antes de publicar el producto.')
+      setMensaje('Revisá los campos obligatorios antes de publicar el producto.')
       return false
     }
     setPublicando(true)

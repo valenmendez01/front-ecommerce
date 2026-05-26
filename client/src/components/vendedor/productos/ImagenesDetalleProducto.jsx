@@ -36,7 +36,7 @@ const ImagenesDetalleProducto = ({
   return (
     <section className="mt-5 rounded-lg border border-dorado-primary/35 bg-white/90 p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h4 className="text-sm font-black uppercase tracking-widest text-green-primary">Imagenes</h4>
+        <h4 className="text-sm font-black uppercase tracking-widest text-green-primary">Imágenes</h4>
         <p className="text-xs font-bold text-slate-500">{cantidad}/{MAXIMO_IMAGENES_PRODUCTO}</p>
       </div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -57,11 +57,11 @@ const ImagenesDetalleProducto = ({
           className="mt-4"
           descripcion="Arrastra o selecciona nuevas imagenes para este producto."
           deshabilitado={alcanzoMaximo}
-          titulo={alcanzoMaximo ? 'Maximo alcanzado' : 'Agregar imagenes'}
+          titulo={alcanzoMaximo ? 'Máximo alcanzado' : 'Agregar imágenes'}
           onChange={onCargar}
         />
       )}
-      {!editando && cantidad === 0 && <p className="mt-3 text-sm font-semibold text-slate-500">Este producto no tiene imagenes.</p>}
+      {!editando && cantidad === 0 && <p className="mt-3 text-sm font-semibold text-slate-500">Este producto no tiene imágenes.</p>}
       {error && <p className="mt-3 rounded-md bg-red-50 px-3 py-2 text-sm font-bold text-red-700">{error}</p>}
     </section>
   )

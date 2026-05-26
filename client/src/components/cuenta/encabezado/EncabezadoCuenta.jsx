@@ -10,7 +10,7 @@ const EncabezadoCuenta = ({ resumen, usuario }) => (
         {usuario.nombre}
       </h2>
       <p className="mt-5 max-w-xl text-xl leading-relaxed text-slate-700">
-        Gestiona tus datos y pedidos.
+        Gestioná tus datos y pedidos.
       </p>
     </div>
 
