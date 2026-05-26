@@ -1,7 +1,7 @@
 import { formatearPesos } from '../../../data/reglasProducto'
 
 const VistaPrecioProducto = ({ precio, precioFinal, tieneDescuento }) => (
-  <div className="mt-6 rounded-md bg-slate-100 p-5">
+  <div className="mt-6 rounded-md bg-white p-5">
     <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
       Vista previa del precio
     </p>

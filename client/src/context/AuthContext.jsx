@@ -1,17 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { apiRequest, clearStoredToken, getStoredToken, setStoredToken } from '../lib/api'
 import { vaciarCarrito } from '../data/reglasCarrito'
 import { AuthContext } from './useAuth'
 
+const USUARIO_KEY = 'usuario'
+
 const formatearFecha = (fecha) => {
   if (!fecha) return ''
-
   const fechaNormalizada = new Date(`${fecha}T00:00:00`)
-
-  if (Number.isNaN(fechaNormalizada.getTime())) {
-    return fecha
-  }
-
+  if (Number.isNaN(fechaNormalizada.getTime())) return fecha
   return new Intl.DateTimeFormat('es-AR', {
     day: 'numeric',
     month: 'long',
@@ -26,7 +23,6 @@ const crearIdVisual = (usuario) => {
 
 const normalizarUsuario = (usuario) => {
   if (!usuario) return null
-
   return {
     ...usuario,
     fechaCreacion: formatearFecha(usuario.fechaCreacion),
@@ -35,49 +31,76 @@ const normalizarUsuario = (usuario) => {
   }
 }
 
+const estaTokenExpirado = (token) => {
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    return payload.exp && payload.exp * 1000 < Date.now()
+  } catch {
+    return true
+  }
+}
+
+const guardarUsuarioLocal = (usuario) =>
+  localStorage.setItem(USUARIO_KEY, JSON.stringify(usuario))
+
+const leerUsuarioLocal = () => {
+  try {
+    return JSON.parse(localStorage.getItem(USUARIO_KEY))
+  } catch {
+    return null
+  }
+}
+
+const limpiarUsuarioLocal = () => localStorage.removeItem(USUARIO_KEY)
+
+// Resuelve el estado inicial de sesión una sola vez, sin necesidad de un efecto.
+// Toda la lógica que antes vivía en useEffect ahora ocurre aquí, sincrónicamente
+// durante el primer render, evitando los setCargandoUsuario() dentro de un efecto.
+const resolverSesionInicial = () => {
+  const tokenActual = getStoredToken()
+  if (!tokenActual || estaTokenExpirado(tokenActual)) {
+    clearStoredToken()
+    limpiarUsuarioLocal()
+    return { usuario: null, token: null }
+  }
+  const usuarioGuardado = leerUsuarioLocal()
+  if (!usuarioGuardado) {
+    clearStoredToken()
+    limpiarUsuarioLocal()
+    return { usuario: null, token: null }
+  }
+  return { usuario: usuarioGuardado, token: tokenActual }
+}
+
 export const AuthProvider = ({ children }) => {
-  const [usuario, setUsuario] = useState(null)
-  const [token, setToken] = useState(() => getStoredToken())
-  const [cargandoUsuario, setCargandoUsuario] = useState(Boolean(getStoredToken()))
+  const [usuario, setUsuario] = useState(() => resolverSesionInicial().usuario)
+  const [token, setToken] = useState(() => resolverSesionInicial().token)
+  const [cargandoUsuario, setCargandoUsuario] = useState(false)
   const [errorSesion, setErrorSesion] = useState('')
+
+  // Extraído como primitivo para que el React Compiler pueda razonar
+  // la dependencia sin ambigüedad (evita inferir el objeto `usuario` completo)
+  const usuarioIdActual = usuario?.idUsuario ?? null
 
   const cerrarSesion = useCallback(() => {
     clearStoredToken()
+    limpiarUsuarioLocal()
     vaciarCarrito()
     setToken(null)
     setUsuario(null)
     setErrorSesion('')
   }, [])
 
-  const cargarUsuarioActual = useCallback(async () => {
-    const tokenActual = getStoredToken()
-
-    if (!tokenActual) {
-      setCargandoUsuario(false)
-      return null
-    }
-
-    setCargandoUsuario(true)
+  const guardarSesion = useCallback((tokenNuevo, usuarioNormalizado) => {
+    setStoredToken(tokenNuevo)
+    guardarUsuarioLocal(usuarioNormalizado)
+    setToken(tokenNuevo)
+    setUsuario(usuarioNormalizado)
     setErrorSesion('')
-
-    try {
-      const usuarioActual = await apiRequest('/usuarios/actual')
-      const usuarioNormalizado = normalizarUsuario(usuarioActual)
-      setUsuario(usuarioNormalizado)
-      setToken(tokenActual)
-      return usuarioNormalizado
-    } catch (error) {
-      cerrarSesion()
-      setErrorSesion(error.message)
-      return null
-    } finally {
-      setCargandoUsuario(false)
-    }
-  }, [cerrarSesion])
+  }, [])
 
   const iniciarSesion = useCallback(async ({ email, contrasena }) => {
     setCargandoUsuario(true)
-
     try {
       const respuesta = await apiRequest('/api/v1/auth/authenticate', {
         auth: false,
@@ -85,38 +108,26 @@ export const AuthProvider = ({ children }) => {
         body: { email, contrasena },
       })
 
-      setStoredToken(respuesta.access_token)
-      setToken(respuesta.access_token)
+      const usuarioNormalizado = normalizarUsuario(respuesta.usuario)
+      if (!usuarioNormalizado) throw new Error('No se pudo obtener el usuario autenticado.')
 
-      const usuarioNormalizado = respuesta.usuario
-        ? normalizarUsuario(respuesta.usuario)
-        : await cargarUsuarioActual()
-
-      if (!usuarioNormalizado) {
-        throw new Error('No se pudo obtener el usuario autenticado.')
-      }
-
-      if (usuario?.idUsuario && usuario.idUsuario !== usuarioNormalizado.idUsuario) {
+      if (usuarioIdActual && usuarioIdActual !== usuarioNormalizado.idUsuario) {
         vaciarCarrito()
       }
 
-      setUsuario(usuarioNormalizado)
-      setErrorSesion('')
+      guardarSesion(respuesta.access_token, usuarioNormalizado)
       return usuarioNormalizado
     } catch (error) {
-      clearStoredToken()
-      setToken(null)
-      setUsuario(null)
+      cerrarSesion()
       setErrorSesion(error.message)
       throw error
     } finally {
       setCargandoUsuario(false)
     }
-  }, [cargarUsuarioActual, usuario?.idUsuario])
+  }, [cerrarSesion, guardarSesion, usuarioIdActual])
 
   const registrarComprador = useCallback(async ({ nombre, apellido, email, contrasena }) => {
     setCargandoUsuario(true)
-
     try {
       const respuesta = await apiRequest('/api/v1/auth/register', {
         auth: false,
@@ -124,71 +135,23 @@ export const AuthProvider = ({ children }) => {
         body: { nombre, apellido, email, contrasena },
       })
 
-      setStoredToken(respuesta.access_token)
-      setToken(respuesta.access_token)
+      const usuarioNormalizado = normalizarUsuario(respuesta.usuario)
+      if (!usuarioNormalizado) throw new Error('No se pudo obtener el usuario registrado.')
 
-      const usuarioNormalizado = respuesta.usuario
-        ? normalizarUsuario(respuesta.usuario)
-        : await cargarUsuarioActual()
-
-      if (!usuarioNormalizado) {
-        throw new Error('No se pudo obtener el usuario registrado.')
-      }
-
-      if (usuario?.idUsuario && usuario.idUsuario !== usuarioNormalizado.idUsuario) {
+      if (usuarioIdActual && usuarioIdActual !== usuarioNormalizado.idUsuario) {
         vaciarCarrito()
       }
 
-      setUsuario(usuarioNormalizado)
-      setErrorSesion('')
+      guardarSesion(respuesta.access_token, usuarioNormalizado)
       return usuarioNormalizado
     } catch (error) {
-      clearStoredToken()
-      setToken(null)
-      setUsuario(null)
+      cerrarSesion()
       setErrorSesion(error.message)
       throw error
     } finally {
       setCargandoUsuario(false)
     }
-  }, [cargarUsuarioActual, usuario?.idUsuario])
-
-  useEffect(() => {
-    const tokenActual = getStoredToken()
-
-    if (!tokenActual) {
-      return undefined
-    }
-
-    let sigueMontado = true
-
-    apiRequest('/usuarios/actual')
-      .then((usuarioActual) => {
-        if (!sigueMontado) return
-
-        setUsuario(normalizarUsuario(usuarioActual))
-        setToken(tokenActual)
-        setErrorSesion('')
-      })
-      .catch((error) => {
-        if (!sigueMontado) return
-
-        clearStoredToken()
-        vaciarCarrito()
-        setToken(null)
-        setUsuario(null)
-        setErrorSesion(error.message)
-      })
-      .finally(() => {
-        if (sigueMontado) {
-          setCargandoUsuario(false)
-        }
-      })
-
-    return () => {
-      sigueMontado = false
-    }
-  }, [])
+  }, [cerrarSesion, guardarSesion, usuarioIdActual])
 
   const value = useMemo(
     () => ({
@@ -196,21 +159,11 @@ export const AuthProvider = ({ children }) => {
       cerrarSesion,
       errorSesion,
       iniciarSesion,
-      recargarUsuario: cargarUsuarioActual,
       registrarComprador,
       token,
       usuario,
     }),
-    [
-      cargandoUsuario,
-      cerrarSesion,
-      errorSesion,
-      iniciarSesion,
-      cargarUsuarioActual,
-      registrarComprador,
-      token,
-      usuario,
-    ],
+    [cargandoUsuario, cerrarSesion, errorSesion, iniciarSesion, registrarComprador, token, usuario],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
