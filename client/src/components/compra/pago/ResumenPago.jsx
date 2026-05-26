@@ -1,4 +1,4 @@
-﻿import { Button } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { Rocket } from "lucide-react";
 import { motion } from "framer-motion";
 import { formatearPesos } from "../../../data/reglasProducto";
@@ -24,7 +24,11 @@ export default function ResumenPago({ alConfirmar, puedeConfirmar, cargando, res
           {tieneDescuento && (
             <FilaTicket etiqueta="Descuentos" valor={`-${formatearPesos(resumen.descuento)}`} destacado />
           )}
-          <FilaTicket etiqueta="EnvÃ­o" valor="GRATIS" destacado />
+          <FilaTicket
+            etiqueta="Envío"
+            valor={resumen.envio == null ? "" : resumen.envio > 0 ? formatearPesos(resumen.envio) : "GRATIS"}
+            destacado
+          />
         </div>
 
         <div className="mb-5 flex items-center justify-between">
@@ -42,12 +46,12 @@ export default function ResumenPago({ alConfirmar, puedeConfirmar, cargando, res
               : "bg-white/10 text-white/40"
           }`}
         >
-          {cargando ? "Confirmando..." : puedeConfirmar ? "Confirmar pedido" : "CompletÃ¡ los datos"}
+          {cargando ? "Confirmando..." : puedeConfirmar ? "Confirmar pedido" : "Completá los datos"}
         </Button>
 
         {!puedeConfirmar && (
           <p className="mt-2 text-center text-xs text-white/60">
-            CompletÃ¡ envÃ­o y pago para continuar
+            Completá envío y pago para continuar
           </p>
         )}
       </SpotlightCard>

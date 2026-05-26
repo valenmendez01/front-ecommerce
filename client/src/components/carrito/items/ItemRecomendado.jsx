@@ -1,4 +1,4 @@
-﻿import { Card } from "../../ui/card-hover-effect";
+import { Card } from "../../ui/card-hover-effect";
 import { formatearPesos } from "../../../data/reglasProducto";
 import ImagenProducto from "./ImagenProducto";
 

@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -80,7 +80,7 @@ export default function ItemsRecomendados() {
     <div className="mt-8">
       <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-green-primary mb-4">
         <Sparkles size={15} />
-        CompletÃ¡ tu colecciÃ³n
+        Completá tu colección
       </h3>
 
       {cargando ? <RecomendadosSkeleton /> : <HoverEffect items={items} className="grid-cols-3 gap-1 py-0" />}

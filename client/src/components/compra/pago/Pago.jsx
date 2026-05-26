@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { CheckCircle2, CreditCard } from "lucide-react";
 
 import CabeceraAcordeon from "../CabeceraAcordeon";
@@ -79,8 +79,8 @@ export default function Pago({ alGuardar }) {
         guardado={guardado}
         iconoPendiente={<CreditCard size={18} className="text-green-primary" />}
         iconoGuardado={<CheckCircle2 size={18} className="text-green-primary" />}
-        titulo="MÃ©todo de pago"
-        subtitulo="Tarjeta de crÃ©dito / dÃ©bito"
+        titulo="Método de pago"
+        subtitulo="Tarjeta de crédito / débito"
         subtituloGuardado={`**** **** **** ${digitosTarjeta.slice(-4)} - Vence ${formulario.vencimiento}`}
         alCambiar={() => setAbierto(!abierto)}
       />

@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { Sparkles } from "lucide-react";
 
 const obtenerAjusteImagen = (imagen, proporcionMarco) => {

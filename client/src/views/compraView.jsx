@@ -15,8 +15,18 @@ import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
 import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
 
+const toastPedidoConfirmado = {
+  base: "border-green-primary bg-green-primary text-white shadow-xl shadow-green-primary/10",
+  title: "font-black text-white",
+  description: "font-semibold text-white/80",
+  closeButton: "text-white/80 hover:bg-white/10",
+  progressTrack: "bg-white/20",
+  progressIndicator: "bg-dorado-primary",
+};
+
 export default function CompraView() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
+  const [costoEnvio, setCostoEnvio] = useState(null);
   const [pagoGuardado, setPagoGuardado] = useState(false);
   const [confirmado, setConfirmado] = useState(false);
   const [cargandoConfirmar, setCargandoConfirmar] = useState(false);
@@ -25,7 +35,7 @@ export default function CompraView() {
   const { usuario, token } = useAuth();
 
   const articulos = obtenerArticulosCarrito(usuario?.idUsuario);
-  const resumen = calcularResumenCarrito(articulos);
+  const resumen = calcularResumenCarrito(articulos, envioGuardado ? costoEnvio : null);
   const esComprador = usuario?.rol === "COMPRADOR";
   const puedeConfirmar = envioGuardado && pagoGuardado && articulos.length > 0 && esComprador;
 
@@ -48,6 +58,7 @@ export default function CompraView() {
         vaciarCarrito(usuario.idUsuario);
         setConfirmado(true);
         addToast({
+          classNames: toastPedidoConfirmado,
           color: "success",
           title: mensajeBack,
         });
@@ -58,6 +69,11 @@ export default function CompraView() {
         addToast({ color: "danger", title: error.message });
       })
       .finally(() => setCargandoConfirmar(false));
+  };
+
+  const guardarEnvio = (datosEnvio) => {
+    setEnvioGuardado(true);
+    setCostoEnvio(datosEnvio.costoEnvio);
   };
 
   if (confirmado) {
@@ -76,7 +92,7 @@ export default function CompraView() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 flex flex-col gap-5">
             <PanelPedido articulos={articulos} />
-            <AccordionEnvio alGuardar={() => setEnvioGuardado(true)} />
+            <AccordionEnvio alGuardar={guardarEnvio} />
             <AccordionPago alGuardar={() => setPagoGuardado(true)} />
           </div>
 

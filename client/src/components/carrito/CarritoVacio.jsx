@@ -1,4 +1,4 @@
-﻿import { ShoppingBag } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 
 export default function CarritoVacio() {
   return (

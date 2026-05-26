@@ -1,4 +1,4 @@
-﻿import { Button } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { ArrowRight } from "lucide-react";
 
 import { formatearPesos } from "../../data/reglasProducto";
