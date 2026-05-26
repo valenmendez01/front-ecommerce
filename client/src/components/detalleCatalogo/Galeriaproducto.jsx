@@ -10,7 +10,7 @@ export const GaleriaProducto = ({ imagenes, nombre }) => {
   const sinImagenes = !imagenes || imagenes.length === 0;
 
   return (
-    <div className="flex flex-col gap-9">
+    <div className="flex flex-col gap-6">
 
       {/* Imagen principal */}
       <CometCard>
@@ -30,8 +30,8 @@ export const GaleriaProducto = ({ imagenes, nombre }) => {
               }
               alt={nombre}
               className="w-full object-contain"
-              width={340}
-              height={450}
+              width={220}
+              height={280}
               radius="lg"
               shadow="sm"
             />
@@ -55,8 +55,8 @@ export const GaleriaProducto = ({ imagenes, nombre }) => {
               src={`data:image/jpeg;base64,${img.contenidoBase64}`}
               alt={`${nombre} ${index + 1}`}
               radius="lg"
-              width={72}
-              height={92}
+              width={50}
+              height={65}
               className="object-contain"
             />
           </button>

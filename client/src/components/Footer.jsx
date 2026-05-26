@@ -67,7 +67,7 @@ const SOCIAL_LINKS = [
 export const Footer = () => {
   return (
     <footer className="w-full font-sans pt-8 bg-green-primary text-white">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-5xl mx-auto px-6">
         <div className="flex flex-col items-center gap-4 pb-6">
           <div className="flex items-center gap-2 text-sm font-medium text-white">
             <Link to="/" className="relative z-20 mr-4 flex items-center px-2 py-1 transition-all duration-300 hover:filter-[drop-shadow(0_0_6px_rgba(184,134,11,0.6))_drop-shadow(0_0_12px_rgba(184,134,11,0.3))]">
