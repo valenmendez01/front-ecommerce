@@ -120,7 +120,7 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
   return obtenerArticulosCarrito(idUsuario)
 }
 
-export const calcularResumenCarrito = (articulos) => {
+export const calcularResumenCarrito = (articulos, envio = 0) => {
   const subtotalOriginal = articulos.reduce((total, articulo) => {
     const precioBase = articulo.precioOriginal || articulo.precio
     return total + precioBase * articulo.cantidad
@@ -133,11 +133,13 @@ export const calcularResumenCarrito = (articulos) => {
 
   const descuento = Math.max(subtotalOriginal - subtotal, 0)
 
+  const costoEnvio = envio == null ? null : Number(envio || 0)
+
   return {
     descuento,
-    envio: 0,
+    envio: costoEnvio,
     subtotal,
     subtotalOriginal,
-    total: subtotal,
+    total: subtotal + Number(costoEnvio || 0),
   }
 }

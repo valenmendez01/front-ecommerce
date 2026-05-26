@@ -5,9 +5,19 @@ import CabeceraAcordeon from "../CabeceraAcordeon";
 import FormularioEnvio from "./FormularioEnvio";
 import { SpotlightCard } from "../../ui/spotlight-card";
 
+const DATOS_ENVIO = {
+  Argentina: { costo: 0, digitosCp: 4 },
+  Brasil: { costo: 8000, digitosCp: 8 },
+  Chile: { costo: 6000, digitosCp: 7 },
+  Uruguay: { costo: 4500, digitosCp: 5 },
+  Paraguay: { costo: 5000, digitosCp: 4 },
+  Bolivia: { costo: 5500, digitosCp: 4 },
+};
+
 const soloLetras = (valor) => valor.replace(/[^\p{L}\s]/gu, "").slice(0, 60);
 const textoDireccion = (valor) => valor.replace(/[^\p{L}\d\s.,#/-]/gu, "").slice(0, 90);
-const soloNumeros = (valor) => valor.replace(/\D/g, "").slice(0, 8);
+const obtenerDigitosCp = (pais) => DATOS_ENVIO[pais]?.digitosCp || 8;
+const soloNumeros = (valor, pais) => valor.replace(/\D/g, "").slice(0, obtenerDigitosCp(pais));
 
 export default function Envio({ alGuardar }) {
   const [abierto, setAbierto] = useState(false);
@@ -21,7 +31,8 @@ export default function Envio({ alGuardar }) {
     codigoPostal: "",
   });
 
-  const cpValido = formulario.pais !== "Argentina" || formulario.codigoPostal.length === 4;
+  const cpEsperado = obtenerDigitosCp(formulario.pais);
+  const cpValido = formulario.codigoPostal.length === cpEsperado;
   const formularioValido =
     formulario.nombre.trim() &&
     formulario.direccion.trim() &&
@@ -35,11 +46,15 @@ export default function Envio({ alGuardar }) {
       nombre: soloLetras,
       ciudad: soloLetras,
       direccion: textoDireccion,
-      codigoPostal: soloNumeros,
+      codigoPostal: (codigoPostal) => soloNumeros(codigoPostal, formulario.pais),
       pais: (pais) => pais,
     };
 
-    setFormulario((prev) => ({ ...prev, [campo]: sanitizadores[campo](valor) }));
+    setFormulario((prev) => ({
+      ...prev,
+      [campo]: sanitizadores[campo](valor),
+      ...(campo === "pais" ? { codigoPostal: soloNumeros(prev.codigoPostal, valor) } : {}),
+    }));
   };
 
   const guardar = () => {
@@ -49,7 +64,7 @@ export default function Envio({ alGuardar }) {
 
     setGuardado(true);
     setAbierto(false);
-    alGuardar?.(formulario);
+    alGuardar?.({ ...formulario, costoEnvio: DATOS_ENVIO[formulario.pais].costo });
   };
 
   return (
@@ -59,8 +74,8 @@ export default function Envio({ alGuardar }) {
         guardado={guardado}
         iconoPendiente={<Truck size={18} className="text-green-primary" />}
         iconoGuardado={<CheckCircle2 size={18} className="text-green-primary" />}
-        titulo="DirecciÃ³n de envÃ­o"
-        subtitulo="CompletÃ¡ tu direcciÃ³n"
+        titulo="Dirección de envío"
+        subtitulo="Completá tu dirección"
         subtituloGuardado={`${formulario.nombre} - ${formulario.ciudad}, ${formulario.pais}`}
         alCambiar={() => setAbierto(!abierto)}
       />
@@ -68,8 +83,10 @@ export default function Envio({ alGuardar }) {
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${abierto ? "max-h-[720px] opacity-100" : "max-h-0 opacity-0"}`}>
         <FormularioEnvio
           formulario={formulario}
+          datosEnvio={DATOS_ENVIO}
           intentoGuardar={intentoGuardar}
           cpValido={cpValido}
+          cpEsperado={cpEsperado}
           alActualizar={actualizar}
           alGuardar={guardar}
         />

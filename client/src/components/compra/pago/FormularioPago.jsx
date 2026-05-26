@@ -14,10 +14,10 @@ export default function FormularioPago({
       <div className="grid grid-cols-2 gap-3">
         <Input
           isInvalid={intentoGuardar && !validaciones.numeroValido}
-          label="NÃºmero de tarjeta"
+          label="Número de tarjeta"
           placeholder="0000 0000 0000 0000"
           value={formulario.numero}
-          errorMessage="La tarjeta debe tener 16 nÃºmeros."
+          errorMessage="La tarjeta debe tener 16 números."
           inputMode="numeric"
           maxLength={19}
           onValueChange={(value) => alActualizar("numero", value)}
@@ -45,7 +45,7 @@ export default function FormularioPago({
           label="Vencimiento"
           placeholder="MM/AA"
           value={formulario.vencimiento}
-          errorMessage="UsÃ¡ un vencimiento vÃ¡lido."
+          errorMessage="Usá un vencimiento válido."
           inputMode="numeric"
           maxLength={5}
           onValueChange={(value) => alActualizar("vencimiento", value)}
@@ -60,7 +60,7 @@ export default function FormularioPago({
           placeholder="123"
           type="password"
           value={formulario.cvv}
-          errorMessage="El CVV debe tener 3 o 4 nÃºmeros."
+          errorMessage="El CVV debe tener 3 o 4 números."
           inputMode="numeric"
           maxLength={4}
           onValueChange={(value) => alActualizar("cvv", value)}
@@ -71,7 +71,7 @@ export default function FormularioPago({
       </div>
 
       <Button onPress={alGuardar} className="w-full bg-dorado-primary text-black text-sm font-bold rounded-lg">
-        Guardar mÃ©todo de pago
+        Guardar método de pago
       </Button>
     </div>
   );

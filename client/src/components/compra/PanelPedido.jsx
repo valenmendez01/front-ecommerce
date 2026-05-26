@@ -11,7 +11,7 @@ export default function PanelPedido({ articulos }) {
       className="bg-green-primary rounded-2xl border border-dorado-primary/25 shadow-sm overflow-hidden"
     >
       <div className="p-4 border-b border-dorado-primary/30">
-        <h3 className="font-bold text-white">Tu selecciÃ³n</h3>
+        <h3 className="font-bold text-white">Tu selección</h3>
         <p className="text-xs text-white/60">{articulos.length} producto(s)</p>
       </div>
 

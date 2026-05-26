@@ -29,7 +29,7 @@ export default function ResumenCarrito({ resumen, alProcederAlPago }) {
             </div>
           )}
           <div className="flex justify-between">
-            <span className="text-white/80">EnvÃ­o estÃ¡ndar</span>
+            <span className="text-white/80">Envío estándar</span>
             <span className="font-bold text-dorado-primary">GRATIS</span>
           </div>
         </div>
