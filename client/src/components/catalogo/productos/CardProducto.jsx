@@ -47,7 +47,7 @@ export const CardProducto = ({ producto }) => {
         </CardBody>
 
         <CardFooter className="flex w-full flex-col items-start gap-2">
-          <b className="line-clamp-2 min-h-12 w-full break-words text-center text-base leading-6 text-[var(--color-green-primary)]">{producto.nombre}</b>
+          <b className="line-clamp-2 w-full break-words text-center text-base leading-6 text-[var(--color-green-primary)]">{producto.nombre}</b>
 
           <div className="flex w-full min-w-0 flex-wrap items-center gap-2">
             <span className={tieneDescuento ? "text-default-400 line-through text-xs" : "text-default-500"}>
