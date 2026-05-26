@@ -1,11 +1,11 @@
 import { Package, PackageCheck, PackageX, TriangleAlert } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { crearDatosProducto, normalizarProductoVendedor, obtenerProductosPagina } from '../../data/productosVendedor'
-import { obtenerVentasPagina } from '../../data/ventasVendedor'
-import { calcularPrecioFinal, formatearPesos } from '../../data/reglasProducto'
+import { crearDatosProducto, normalizarProductoVendedor, obtenerProductosPagina } from '../../../data/productosVendedor'
+import { obtenerVentasPagina } from '../../../data/ventasVendedor'
+import { calcularPrecioFinal, formatearPesos } from '../../../data/reglasProducto'
 import MetricasPanelVendedor from './MetricasPanelVendedor'
 import TablaProductos from './TablaProductos'
-import { guardarImagenesProducto } from './productos/guardarImagenesProducto'
+import { guardarImagenesProducto } from '../productos/guardarImagenesProducto'
 
 const obtenerItems = (ventas, idProducto) =>
   ventas.flatMap((venta) => venta.items || []).filter((item) => item.idProducto === idProducto)

@@ -1,6 +1,6 @@
 import CampoCategoriaProducto from './CampoCategoriaProducto'
 import CampoDescuentoProducto from './CampoDescuentoProducto'
-import CampoEstadoProducto from './CampoEstadoProducto'
+import CampoDestacadoProducto from './CampoDestacadoProducto'
 import CampoPrecioProducto from './CampoPrecioProducto'
 import CampoStockProducto from './CampoStockProducto'
 import CampoVendidosProducto from './CampoVendidosProducto'
@@ -12,7 +12,7 @@ const CamposDetalleProducto = ({ borrador, categorias, editando, onCambiar, prod
     <CampoStockProducto borrador={borrador} editando={editando} onCambiar={onCambiar} producto={producto} />
     <CampoVendidosProducto producto={producto} />
     <CampoDescuentoProducto borrador={borrador} editando={editando} onCambiar={onCambiar} producto={producto} />
-    <CampoEstadoProducto producto={producto} />
+    <CampoDestacadoProducto editando={editando} onCambiar={onCambiar} producto={producto} />
   </div>
 )
 

@@ -38,6 +38,7 @@ export const crearDatosProducto = (producto) => ({
   stock: Number(producto.stock),
   precio: Number(producto.precio),
   descuento: Number(producto.descuento),
+  destacado: Boolean(producto.destacado),
   activo: producto.activo ?? true,
 })
 
@@ -51,5 +52,6 @@ export const normalizarProductoVendedor = (producto) => ({
   precio: Number(producto.precio || 0),
   stock: Number(producto.stock || 0),
   descuento: Number(producto.descuento || 0),
+  destacado: Boolean(producto.destacado),
   activo: producto.activo ?? true,
 })

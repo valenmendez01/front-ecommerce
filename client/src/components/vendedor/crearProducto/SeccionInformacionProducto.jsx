@@ -69,6 +69,22 @@ const SeccionInformacionProducto = ({ categorias, errores, mostrarErrores, onCam
             <ErrorCampo mostrar={mostrarErrores && errores.stock}>{errores.stock}</ErrorCampo>
           </EtiquetaCampo>
         </div>
+        <label className="flex items-center justify-between gap-4 rounded-md border border-dorado-primary/35 bg-dorado-primary/10 px-5 py-4">
+          <div>
+            <span className="block text-sm font-black uppercase tracking-widest text-green-primary">
+              Producto destacado
+            </span>
+            <span className="text-sm font-semibold text-slate-500">
+              Mostrar este producto en la seccion principal del Home.
+            </span>
+          </div>
+          <input
+            checked={Boolean(producto.destacado)}
+            className="h-5 w-5 accent-green-primary"
+            type="checkbox"
+            onChange={(event) => onCambiar('destacado', event.target.checked)}
+          />
+        </label>
       </div>
     </CardBody>
   </Card>

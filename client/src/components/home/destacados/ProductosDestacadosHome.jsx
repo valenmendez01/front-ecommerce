@@ -13,9 +13,9 @@ const ProductosDestacadosHome = () => {
   const [cargando, setCargando] = useState(true)
 
   useEffect(() => {
-    fetch("/productos")
+    fetch("/productos/destacados?page=0&size=4")
       .then((respuesta) => respuesta.json())
-      .then((json) => setProductos(obtenerProductosPagina(json.data).slice(0, 4)))
+      .then((json) => setProductos(obtenerProductosPagina(json.data)))
       .catch(() => setProductos([]))
       .finally(() => setCargando(false))
   }, [])
@@ -46,12 +46,12 @@ const ProductosDestacadosHome = () => {
           </motion.h2>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-12 flex flex-wrap justify-center gap-6">
           {cargando
             ? [0, 1, 2, 3].map((item) => <TarjetaProductoDestacadoSkeleton key={item} />)
             : productos.map((producto, index) => (
                 <motion.div
-                  className="h-full"
+                  className="h-full w-full md:w-[calc(50%-0.75rem)] xl:w-[calc(25%-1.125rem)]"
                   initial={{ filter: "blur(10px)", opacity: 0, scale: 0.94, y: 82 }}
                   key={producto.idProducto}
                   transition={{

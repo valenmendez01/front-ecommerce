@@ -36,7 +36,7 @@ export const SidebarBody = ({ children, className }) => {
 
   return (
     <motion.div
-      animate={{ width: open ? 256 : 88 }}
+      animate={{ width: open ? 320 : 88 }}
       className={cn('flex h-full flex-col overflow-hidden px-4 py-5', className)}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}

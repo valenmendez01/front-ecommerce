@@ -1,4 +1,4 @@
-import Tabs from '../ui/tabs'
+import Tabs from '../../ui/tabs'
 
 const pestanasPedidos = [
   { title: 'Pedidos recientes', value: 'recientes' },
