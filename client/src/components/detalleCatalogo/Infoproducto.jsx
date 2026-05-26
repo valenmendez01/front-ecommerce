@@ -1,7 +1,11 @@
 import { Chip } from "@heroui/react";
+import { Button } from "@heroui/react";
+import { ChevronLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const InfoProducto = ({ producto }) => {
   const { nombre, categoria, precio, descuento, description, stock, disponible } = producto;
+  const navigate = useNavigate();
 
   const precioFinal = descuento > 0 ? precio * (1 - descuento / 100) : precio;
 
@@ -11,10 +15,20 @@ export const InfoProducto = ({ producto }) => {
   return (
     <div className="flex flex-col gap-5">
 
-      {/* Categoría */}
-      <p className="text-xs font-semibold tracking-widest text-dorado-primary uppercase">
-        {categoria}
-      </p>
+      {/* Categoría + Volver */}
+      <div className="flex items-center justify-between">
+        <p className="text-xs font-semibold tracking-widest text-dorado-primary uppercase">
+          {categoria}
+        </p>
+        <Button
+          onPress={() => navigate(-1)}
+          variant="outline"
+          startContent={<ChevronLeft size={20} />}
+          className="text-dorado-primary"
+        >
+          Volver
+        </Button>
+      </div>
 
       {/* Nombre */}
       <h1 className="text-2xl font-bold text-gray-900 dark:text-white leading-snug">

@@ -1,10 +1,10 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
-import album from "../../assets/home/album-limpio.png"
-import messiGold from "../../assets/home/messi-gold.png"
-import BackgroundBeams from "../ui/background-beams"
-import HoverBorderGradient from "../ui/hover-border-gradient"
-import SparklesCore from "../ui/sparkles"
+import album from "../../../assets/home/album-limpio.png"
+import messiGold from "../../../assets/home/messi-gold.png"
+import BackgroundBeams from "../../ui/background-beams"
+import HoverBorderGradient from "../../ui/hover-border-gradient"
+import SparklesCore from "../../ui/sparkles"
 
 const EspecialesPremiumHome = () => (
   <section className="relative isolate overflow-hidden bg-green-primary px-6 py-20 text-white">

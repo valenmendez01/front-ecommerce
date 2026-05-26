@@ -6,6 +6,7 @@ export const estadoInicialProducto = {
   stock: 0,
   precio: '',
   descuento: 0,
+  destacado: false,
 }
 
 export const MAXIMO_CARACTERES_NOMBRE_PRODUCTO = 25

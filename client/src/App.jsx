@@ -178,9 +178,9 @@ function App() {
         <Navigation />
       </div>
 
-      <div className="mx-auto flex min-h-screen max-w-400 flex-col">
+      <div className="mx-auto flex max-w-400 flex-col">
         
-        <main className="w-full px-6 pt-16">
+        <main className="w-full px-6 pt-4">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/productos" element={<Catalogo />} />

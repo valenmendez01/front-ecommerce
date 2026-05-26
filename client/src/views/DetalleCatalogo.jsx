@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Card, Divider } from "@heroui/react";
+import { Card, Divider } from "@heroui/react";
 import { GaleriaProducto } from "../components/detalleCatalogo/Galeriaproducto";
 import { InfoProducto } from "../components/detalleCatalogo/Infoproducto";
 import { AccionesProducto } from "../components/detalleCatalogo/Accionesproducto";
-import { useNavigate } from "react-router-dom";
-import { ChevronLeft } from "lucide-react";
 
 
 export const DetalleCatalogo = () => {
@@ -30,8 +28,6 @@ export const DetalleCatalogo = () => {
       .finally(() => setCargando(false));
   }, [id]);
 
-  const navigate = useNavigate();
-
   if (cargando) return <p className="p-6">Cargando...</p>;
 
   if (error) {
@@ -48,21 +44,10 @@ export const DetalleCatalogo = () => {
   }
 
   return (
-    <div className="min-h-screen p-6 md:p-10">
-      <Card className="max-w-5xl mx-auto p-8">
+    <div className="mb-8">
+      <Card className="max-w-4xl mx-auto p-6">
 
-        <div className="flex justify-end mb-4">
-          <Button
-            onPress={() => navigate(-1)}
-            variant="outline"
-            startContent={<ChevronLeft size={20} />}
-            className="text-dorado-primary"
-          >
-            Volver
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] items-stretch">
 
           {/* Izquierda — galería */}
           <div className="flex items-center justify-center h-full">

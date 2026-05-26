@@ -68,7 +68,7 @@ export const Catalogo = () => {
         const params = seleccionesSeleccionadas.map(s => `selecciones=${s}`).join("&");
         return `/productos/filtrar/selecciones?${params}&${pagination}`;
       }
-      if (precioMin > 0 || precioMax < 20000) {
+      if (precioMin > 0 || precioMax < 100000) {
         return `/productos/filtrar/precio?min=${precioMin}&max=${precioMax}&${pagination}`;
       }
       return `/productos?${pagination}`;
@@ -117,7 +117,7 @@ export const Catalogo = () => {
   }
 
   return (
-    <div className="flex flex-col font-sans max-w-7xl mx-auto w-full">
+    <div className="flex flex-col font-sans max-w-7xl mx-auto w-full mt-8">
       <div className="flex items-center justify-between px-6 py-4">
         <h1 className="font-display uppercase text-5xl text-green-primary">
           Encontrá tu próxima<FlipWords words={["figurita", "joya", "estrella", "sorpresa"]} />

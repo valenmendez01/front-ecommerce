@@ -1,6 +1,6 @@
 import { ReceiptText, ShoppingBag, WalletCards } from 'lucide-react'
 import { formatearPesos } from '../../../data/reglasProducto'
-import TarjetaMetrica from '../TarjetaMetrica'
+import TarjetaMetrica from '../panel/TarjetaMetrica'
 
 const MetricasVentas = ({ ventas }) => {
   const totalVendido = ventas.reduce((total, venta) => total + venta.total, 0)

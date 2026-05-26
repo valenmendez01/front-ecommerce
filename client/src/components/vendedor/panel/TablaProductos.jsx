@@ -1,9 +1,9 @@
 import { Card } from '@heroui/react'
 import { useEffect, useState } from 'react'
-import { normalizarCategorias } from '../../data/reglasProducto'
-import EncabezadoProductos from './productos/EncabezadoProductos'
-import TarjetaProducto from './productos/TarjetaProducto'
-import TarjetasProductosCargando from './productos/TarjetasProductosCargando'
+import { normalizarCategorias } from '../../../data/reglasProducto'
+import EncabezadoProductos from '../productos/EncabezadoProductos'
+import TarjetaProducto from '../productos/TarjetaProducto'
+import TarjetasProductosCargando from '../productos/TarjetasProductosCargando'
 
 const MensajeProductos = ({ children }) => (
   <div className="rounded-md border border-slate-200 bg-slate-50 px-6 py-12 text-center font-semibold text-slate-500 xl:col-span-2">

@@ -1,8 +1,8 @@
 import { Button, Chip, Image } from "@heroui/react"
 import { Link } from "react-router-dom"
-import sinImagen from "../../assets/sinImagen.png"
-import { CometCard } from "../ui/comet-card"
-import HoverBorderGradient from "../ui/hover-border-gradient"
+import sinImagen from "../../../assets/sinImagen.png"
+import { CometCard } from "../../ui/comet-card"
+import HoverBorderGradient from "../../ui/hover-border-gradient"
 
 const obtenerTipoImagen = (contenido = "") => {
   if (contenido.startsWith("iVBORw0KGgo")) return "image/png"

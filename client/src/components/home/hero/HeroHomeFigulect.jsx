@@ -1,9 +1,9 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
-import BackgroundBeams from "../ui/background-beams"
-import HoverBorderGradient from "../ui/hover-border-gradient"
-import SpotlightNew from "../ui/spotlight-new"
-import TextGenerateEffect from "../ui/text-generate-effect"
+import BackgroundBeams from "../../ui/background-beams"
+import HoverBorderGradient from "../../ui/hover-border-gradient"
+import SpotlightNew from "../../ui/spotlight-new"
+import TextGenerateEffect from "../../ui/text-generate-effect"
 import EscenaHeroColeccion from "./EscenaHeroColeccion"
 
 const textoHero =
