@@ -4,7 +4,7 @@ import PerfilCuentaCompacto from './PerfilCuentaCompacto'
 const EncabezadoCuenta = ({ resumen, usuario }) => (
   <section className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
     <div>
-      <h2 className="text-6xl font-black uppercase leading-none text-green-primary md:text-7xl">
+      <h2 className="font-display text-6xl uppercase leading-[1] tracking-wide text-green-primary md:text-7xl">
         Hola,
         <br />
         {usuario.nombre}

@@ -37,13 +37,13 @@ const ColeccionesSeleccionHome = () => (
           Ruta mundialista
         </motion.p>
         <motion.h2
-          className="text-4xl font-black uppercase leading-none md:text-6xl"
+          className="font-display text-4xl font-black uppercase leading-none md:text-6xl tracking-wider"
           initial={{ filter: "blur(10px)", opacity: 0, scale: 0.96, y: 46 }}
           transition={{ delay: 0.08, duration: 0.75, ease: "easeOut" }}
           viewport={{ amount: 0.8, once: false }}
           whileInView={{ filter: "blur(0px)", opacity: 1, scale: 1, y: 0 }}
         >
-          Colecciones por seleccion
+          Colecciones por selección
         </motion.h2>
       </div>
 
