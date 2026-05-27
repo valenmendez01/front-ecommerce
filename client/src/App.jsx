@@ -14,10 +14,12 @@ function App() {
     return <PantallaCargandoSesion />
   }
 
+  // Si el usuario es vendedor y la ruta no es permitida para vendedores, redirige a su panel
   if (usuario?.rol === 'VENDEDOR' && !esRutaPermitidaParaVendedor(pathname)) {
     return <Navigate replace to="/panel-vendedor" />
   }
 
+  // Si la ruta es de pantalla completa (sin navbar o banner), renderiza las rutas de pantalla completa
   if (rutasPantallaCompleta.some((ruta) => pathname.startsWith(ruta))) {
     return <RutasPantallaCompleta auth={auth} />
   }

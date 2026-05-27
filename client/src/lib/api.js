@@ -1,11 +1,15 @@
+// Constante de almacenamiento del token en localStorage
 export const TOKEN_STORAGE_KEY = 'figullect_access_token'
 
+// Funcion para leer el token
 export const getStoredToken = () => localStorage.getItem(TOKEN_STORAGE_KEY)
 
+// Funcion para guardar el token
 export const setStoredToken = (token) => {
   localStorage.setItem(TOKEN_STORAGE_KEY, token)
 }
 
+// Funcion para eliminar el token
 export const clearStoredToken = () => {
   localStorage.removeItem(TOKEN_STORAGE_KEY)
 }
