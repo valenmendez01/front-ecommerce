@@ -14,7 +14,7 @@ import {
   calcularResumenCarrito,
   obtenerArticulosCarrito,
   reemplazarArticulosCarrito,
-} from "../utils/reglasCarrito";
+} from "../lib/reglasCarrito";
 
 export default function Carrito() {
   const { usuario } = useAuth();

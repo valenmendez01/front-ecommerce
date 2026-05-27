@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
-import { agregarProductoAlCarrito } from "../../utils/reglasCarrito";
+import { agregarProductoAlCarrito } from "../../lib/reglasCarrito";
 import { AddToCartButton } from "../ui/AddToCartButton";
 
 export const AccionesProducto = ({ producto }) => {

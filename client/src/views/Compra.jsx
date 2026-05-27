@@ -10,10 +10,20 @@ import PanelPedido from "../components/compra/PanelPedido";
 import PedidoConfirmado from "../components/compra/PedidoConfirmado";
 import ResumenPago from "../components/compra/pago/ResumenPago";
 import TituloCompra from "../components/compra/TituloCompra";
-import { confirmarPedido } from "../data/confirmarPedido";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
-import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../utils/reglasCarrito";
+import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../lib/reglasCarrito";
+
+const leerRespuesta = async (respuesta) => {
+  const texto = await respuesta.text();
+  if (!texto) return null;
+
+  try {
+    return JSON.parse(texto);
+  } catch {
+    return { mensaje: texto };
+  }
+};
 
 export default function Compra() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
@@ -30,6 +40,27 @@ export default function Compra() {
   const esComprador = usuario?.rol === "COMPRADOR";
   const puedeConfirmar = envioGuardado && pagoGuardado && articulos.length > 0 && esComprador;
 
+  const confirmarPedido = async () => {
+    const respuesta = await fetch("/pedidos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        idUsuario: usuario.idUsuario,
+        items: articulos.map((articulo) => ({
+          idProducto: articulo.id,
+          cantidad: articulo.cantidad,
+        })),
+      }),
+    });
+
+    const json = await leerRespuesta(respuesta);
+    if (!respuesta.ok) throw new Error(json?.mensaje || json?.message || respuesta.statusText);
+    return json?.mensaje || "Pedido confirmado";
+  };
+
   const confirmarCompra = () => {
     if (!usuario) {
       setErrorConfirmar("Tenés que iniciar sesión para confirmar el pedido.");
@@ -44,7 +75,7 @@ export default function Compra() {
     setCargandoConfirmar(true);
     setErrorConfirmar(null);
 
-    confirmarPedido({ articulos, token, usuario })
+    confirmarPedido()
       .then((mensajeBack) => {
         vaciarCarrito(usuario.idUsuario);
         setConfirmado(true);
