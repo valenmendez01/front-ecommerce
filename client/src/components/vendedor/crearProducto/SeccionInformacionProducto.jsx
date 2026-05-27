@@ -22,7 +22,7 @@ const SeccionInformacionProducto = ({ categorias, errores, mostrarErrores, onCam
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-primary text-dorado-primary">
           <Info size={18} />
         </div>
-        <h3 className="text-2xl font-black text-slate-950">Informacion principal</h3>
+        <h3 className="text-2xl font-black text-slate-950">Información principal</h3>
       </div>
       <div className="space-y-6">
         <EtiquetaCampo titulo="Nombre del producto">
@@ -38,17 +38,17 @@ const SeccionInformacionProducto = ({ categorias, errores, mostrarErrores, onCam
           </p>
           <ErrorCampo mostrar={mostrarErrores && errores.nombre}>{errores.nombre}</ErrorCampo>
         </EtiquetaCampo>
-        <EtiquetaCampo titulo="Descripcion">
+        <EtiquetaCampo titulo="Descripción">
           <textarea
             className={`${inputClasses} min-h-40 resize-y`}
-            placeholder="Describi el producto, su estado y sus caracteristicas principales..."
+            placeholder="Describí el producto, su estado y sus características principales..."
             value={producto.description}
             onChange={(event) => onCambiar('description', event.target.value)}
           />
           <ErrorCampo mostrar={mostrarErrores && errores.description}>{errores.description}</ErrorCampo>
         </EtiquetaCampo>
         <div className="grid gap-6 md:grid-cols-3">
-          <EtiquetaCampo titulo="Categoria">
+          <EtiquetaCampo titulo="Categoría">
             <select className={inputClasses} value={producto.categoria} onChange={(event) => onCambiar('categoria', event.target.value)}>
               {categorias.map((categoria) => (
                 <option key={categoria.valor} value={categoria.valor}>{categoria.etiqueta}</option>
@@ -56,7 +56,7 @@ const SeccionInformacionProducto = ({ categorias, errores, mostrarErrores, onCam
             </select>
             <ErrorCampo mostrar={mostrarErrores && errores.categoria}>{errores.categoria}</ErrorCampo>
           </EtiquetaCampo>
-          <EtiquetaCampo titulo="Seleccion">
+          <EtiquetaCampo titulo="Selección">
             <select className={inputClasses} value={producto.seleccion} onChange={(event) => onCambiar('seleccion', event.target.value)}>
               {selecciones.map((seleccion) => (
                 <option key={seleccion.valor} value={seleccion.valor}>{seleccion.etiqueta}</option>
@@ -75,7 +75,7 @@ const SeccionInformacionProducto = ({ categorias, errores, mostrarErrores, onCam
               Producto destacado
             </span>
             <span className="text-sm font-semibold text-slate-500">
-              Mostrar este producto en la seccion principal del Home.
+              Mostrar este producto en la sección principal del Home.
             </span>
           </div>
           <input

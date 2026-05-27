@@ -34,7 +34,7 @@ const TablaVentas = ({ cargando, error, ventas }) => {
         <div className="border-t border-slate-100">
           {cargando && <FilasVentasCargando />}
           {!cargando && ventasVisibles.length === 0 && (
-            <MensajeVentas>Todavia no hay ventas para mostrar.</MensajeVentas>
+            <MensajeVentas>Todavía no hay ventas para mostrar.</MensajeVentas>
           )}
           {!cargando && ventasVisibles.map((venta) => (
             <FilaVenta

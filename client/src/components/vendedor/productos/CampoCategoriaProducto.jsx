@@ -7,10 +7,10 @@ import CampoDetalleProducto from './CampoDetalleProducto'
 import { clasesCampoProducto } from './estilosProducto'
 
 const CampoCategoriaProducto = ({ borrador, categorias, editando, onCambiar, producto }) => (
-  <CampoDetalleProducto etiqueta="Categoria">
+  <CampoDetalleProducto etiqueta="Categoría">
     {editando ? (
       <Select
-        aria-label="Categoria del producto"
+        aria-label="Categoría del producto"
         classNames={clasesCampoProducto}
         selectedKeys={[borrador.categoria]}
         size="sm"

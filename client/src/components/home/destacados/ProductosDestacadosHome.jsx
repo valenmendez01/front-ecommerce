@@ -33,7 +33,7 @@ const ProductosDestacadosHome = () => {
             viewport={{ amount: 0.8, once: false }}
             whileInView={{ filter: "blur(0px)", opacity: 1, y: 0 }}
           >
-            Favoritos de coleccion
+            Favoritos de colección
           </motion.p>
           <motion.h2
             className="text-4xl font-black uppercase leading-none md:text-6xl"

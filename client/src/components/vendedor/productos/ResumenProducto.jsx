@@ -38,12 +38,12 @@ const ResumenProducto = ({ abierto, cambiandoVisibilidad, guardando, onAbrir, on
         <Tooltip
           showArrow
           className="bg-green-primary font-semibold text-white"
-          content={producto.activo ? 'Ocultar del catalogo' : 'Mostrar en el catalogo'}
+          content={producto.activo ? 'Ocultar del catálogo' : 'Mostrar en el catálogo'}
           placement="top"
         >
           <Button
             isIconOnly
-            aria-label={`${producto.activo ? 'Ocultar' : 'Mostrar'} ${producto.nombre} en el catalogo`}
+            aria-label={`${producto.activo ? 'Ocultar' : 'Mostrar'} ${producto.nombre} en el catálogo`}
             className="bg-dorado-primary/20 text-green-primary"
             isDisabled={guardando || cambiandoVisibilidad}
             isLoading={cambiandoVisibilidad}

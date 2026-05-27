@@ -45,7 +45,7 @@ const TablaProductos = ({ cargando = false, error = '', productos, onActualizarP
       <div className="grid gap-6 px-8 pb-8 xl:grid-cols-2">
         {cargando && <TarjetasProductosCargando />}
         {!cargando && productosVisibles.length === 0 && (
-          <MensajeProductos>Todavia no tenes productos publicados.</MensajeProductos>
+          <MensajeProductos>Todavía no tenes productos publicados.</MensajeProductos>
         )}
         {!cargando && productosVisibles.map((producto) => (
           <TarjetaProducto

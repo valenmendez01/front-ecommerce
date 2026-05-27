@@ -16,7 +16,7 @@ import {
   reemplazarArticulosCarrito,
 } from "../data/reglasCarrito";
 
-export default function CarritoView() {
+export default function Carrito() {
   const { usuario } = useAuth();
   const idUsuario = usuario?.idUsuario;
   const [articulos, setArticulos] = useState(() => obtenerArticulosCarrito(idUsuario));
