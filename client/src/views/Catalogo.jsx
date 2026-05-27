@@ -23,81 +23,65 @@ export const Catalogo = () => {
 
   useEffect(() => {
     fetch("/categorias")
-      .then((res) => {
-        if (!res.ok) return res.json().then((err) => Promise.reject(err));
-        return res.json();
-      })
-      .then((json) => setCategorias(json.data))
-      .catch((err) =>
-        addToast({
-          title: "Error al cargar categorías",
-          description: err.message || "Intentá de nuevo más tarde.",
-          color: "danger",
-        })
-      );
+      .then(res => res.json())
+      .then(json => setCategorias(json.data))
+      .catch(err => addToast({ 
+        title: "Error al cargar categorías", 
+        description: err.message, 
+        color: "danger" 
+      }));
   }, []);
 
   useEffect(() => {
     fetch("/selecciones")
-      .then((res) => {
-        if (!res.ok) return res.json().then((err) => Promise.reject(err));
-        return res.json();
-      })
-      .then((json) => setSelecciones(json.data))
-      .catch((err) =>
-        addToast({
-          title: "Error al cargar selecciones",
-          description: err.message || "Intentá de nuevo más tarde.",
-          color: "danger",
-        })
-      );
+      .then(res => res.json())
+      .then(json => setSelecciones(json.data))
+      .catch(err => addToast({ 
+        title: "Error al cargar selecciones", 
+        description: err.message, 
+        color: "danger" 
+      }));
   }, []);
 
   useEffect(() => {
     const buildUrl = () => {
-      const pagination = `page=${pagina}&size=${PAGE_SIZE}`;
+      // Encodea caracteres especiales (espacios, acentos, &, etc.)
+      const params = new URLSearchParams();
+      params.set("page", pagina);
+      params.set("size", PAGE_SIZE);
 
-      if (busqueda.trim()) {
-        return `/productos/filtrar/nombre?nombre=${encodeURIComponent(busqueda)}&${pagination}`;
-      }
-      if (categoriasSeleccionadas.length >= 1) {
-        const params = categoriasSeleccionadas.map(c => `categorias=${c}`).join("&");
-        return `/productos/filtrar/categorias?${params}&${pagination}`;
-      }
-      if (seleccionesSeleccionadas.length >= 1) {
-        const params = seleccionesSeleccionadas.map(s => `selecciones=${s}`).join("&");
-        return `/productos/filtrar/selecciones?${params}&${pagination}`;
-      }
-      if (precioMin > 0 || precioMax < 100000) {
-        return `/productos/filtrar/precio?min=${precioMin}&max=${precioMax}&${pagination}`;
-      }
-      return `/productos?${pagination}`;
+      if (busqueda.trim())        params.set("nombre", busqueda.trim());
+      if (precioMin > 0)          params.set("min", precioMin);
+      if (precioMax < 100000)     params.set("max", precioMax);
+
+      // Ej: ?categorias=ALBUM&categorias=FIGURITA
+      categoriasSeleccionadas.forEach(c => params.append("categorias", c));
+      seleccionesSeleccionadas.forEach(s => params.append("selecciones", s));
+
+      return `/productos/filtrar?${params.toString()}`;
     };
 
     fetch(buildUrl())
-      .then((res) => {
-        if (!res.ok) return res.json().then((err) => Promise.reject(err));
-        return res.json();
-      })
-      .then((json) => {
-        setProductos(Array.isArray(json.data.content) ? json.data.content : []);
+      .then(res => res.json())
+      .then(json => {
+        setProductos(json.data.content || []);
         setTotalPaginas(json.data.totalPages ?? 1);
+        setCargando(false);
       })
-      .catch((err) =>
-        addToast({
-          title: "Error al cargar productos",
-          description: err.message || "Intentá de nuevo más tarde.",
-          color: "danger",
-        })
-      )
-      .finally(() => setCargando(false));
+      .catch(err => addToast({
+        title: "Error al cargar productos",
+        description: err.message || "Intentá de nuevo más tarde.",
+        color: "danger",
+      }));
   }, [categoriasSeleccionadas, seleccionesSeleccionadas, precioMin, precioMax, busqueda, pagina]);
 
   function handleCambioCategoria(categoria) {
     setPagina(0);
     setCategoriasSeleccionadas((categoriasPrevias) =>
       categoriasPrevias.includes(categoria)
+        // Si la categ ya estaba seleccionada, la sacamos
         ? categoriasPrevias.filter((c) => c !== categoria)
+        // Si no estaba seleccionada, la agregamos
         : [...categoriasPrevias, categoria]
     );
   }
