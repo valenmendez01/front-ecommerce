@@ -21,6 +21,7 @@ const crearIdVisual = (usuario) => {
   return `${prefijo}-${String(usuario.idUsuario || 0).padStart(4, '0')}`
 }
 
+// Normaliza el usuario recibido del backend para agregarle campos útiles para la UI
 const normalizarUsuario = (usuario) => {
   if (!usuario) return null
   return {
@@ -53,9 +54,7 @@ const leerUsuarioLocal = () => {
 
 const limpiarUsuarioLocal = () => localStorage.removeItem(USUARIO_KEY)
 
-// Resuelve el estado inicial de sesión una sola vez, sin necesidad de un efecto.
-// Toda la lógica que antes vivía en useEffect ahora ocurre aquí, sincrónicamente
-// durante el primer render, evitando los setCargandoUsuario() dentro de un efecto.
+// Revisa si hay un token, si NO está expirado y si hay un usuario guardado.
 const resolverSesionInicial = () => {
   const tokenActual = getStoredToken()
   if (!tokenActual || estaTokenExpirado(tokenActual)) {
@@ -78,10 +77,9 @@ export const AuthProvider = ({ children }) => {
   const [cargandoUsuario, setCargandoUsuario] = useState(false)
   const [errorSesion, setErrorSesion] = useState('')
 
-  // Extraído como primitivo para que el React Compiler pueda razonar
-  // la dependencia sin ambigüedad (evita inferir el objeto `usuario` completo)
   const usuarioIdActual = usuario?.idUsuario ?? null
 
+  // Borra los tokens del disco, limpia el LocalStorage, vacía el carrito
   const cerrarSesion = useCallback(() => {
     clearStoredToken()
     limpiarUsuarioLocal()
@@ -99,6 +97,7 @@ export const AuthProvider = ({ children }) => {
     setErrorSesion('')
   }, [])
 
+  // Login COMPRADOR - VENDEDOR
   const iniciarSesion = useCallback(async ({ email, contrasena }) => {
     setCargandoUsuario(true)
     try {
@@ -126,6 +125,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [cerrarSesion, guardarSesion, usuarioIdActual])
 
+  // Registro COMPRADOR
   const registrarComprador = useCallback(async ({ nombre, apellido, email, contrasena }) => {
     setCargandoUsuario(true)
     try {
