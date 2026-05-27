@@ -1,5 +1,5 @@
 import { Button } from '@heroui/react'
-import { formatearPesos } from '../../../data/reglasProducto'
+import { formatearPesosVenta } from './formatoVentasVendedor'
 
 const FilaVenta = ({ onVerDetalle, venta }) => (
   <article className="border-b border-slate-100">
@@ -13,7 +13,7 @@ const FilaVenta = ({ onVerDetalle, venta }) => (
         <p className="mt-1 text-sm text-slate-500">Comprador: {venta.comprador}</p>
       </div>
       <p className="font-bold text-slate-700">{venta.cantidad} u.</p>
-      <p className="text-lg font-black text-green-primary">{formatearPesos(venta.total)}</p>
+      <p className="text-lg font-black text-green-primary">{formatearPesosVenta(venta.total)}</p>
       <Button
         className="bg-dorado-primary/20 text-sm font-bold text-green-primary"
         radius="sm"

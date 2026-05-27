@@ -1,12 +1,12 @@
 import { ReceiptText, ShoppingBag, WalletCards } from 'lucide-react'
-import { formatearPesos } from '../../../data/reglasProducto'
 import TarjetaMetrica from '../panel/TarjetaMetrica'
+import { formatearPesosVenta } from './formatoVentasVendedor'
 
 const MetricasVentas = ({ ventas }) => {
   const totalVendido = ventas.reduce((total, venta) => total + venta.total, 0)
   const productosVendidos = ventas.reduce((total, venta) => total + venta.cantidad, 0)
   const metricas = [
-    { titulo: 'Total vendido', valor: formatearPesos(totalVendido), descripcion: 'Importe generado por ventas registradas', Icono: WalletCards, destacar: true },
+    { titulo: 'Total vendido', valor: formatearPesosVenta(totalVendido), descripcion: 'Importe generado por ventas registradas', Icono: WalletCards, destacar: true },
     { titulo: 'Ventas realizadas', valor: ventas.length, descripcion: 'Operaciones registradas', Icono: ReceiptText },
     { titulo: 'Productos vendidos', valor: productosVendidos, descripcion: 'Unidades vendidas en total', Icono: ShoppingBag },
   ]

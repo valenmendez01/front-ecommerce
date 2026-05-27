@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import EncabezadoCuenta from '../components/cuenta/encabezado/EncabezadoCuenta'
 import InformacionPersonal from '../components/cuenta/informacion/InformacionPersonal'
 import TablaPedidos from '../components/cuenta/pedidos/TablaPedidos'
-import PaginaGestion from '../components/layout/PaginaGestion'
-import { normalizarPedidoCuenta } from '../data/pedidosCuenta'
-import { formatearPesos } from '../data/reglasProducto'
+import PaginaPanelUsuario from '../components/panelUsuario/PaginaPanelUsuario'
+import { normalizarPedidoCuenta } from '../components/cuenta/pedidos/datosPedidosCuenta'
+import { formatearPesosPedido } from '../components/cuenta/pedidos/formatoPedidosCuenta'
 
 const MiCuenta = ({ token, usuario, onCerrarSesion }) => {
   const [pedidos, setPedidos] = useState([])
@@ -30,11 +30,11 @@ const MiCuenta = ({ token, usuario, onCerrarSesion }) => {
   const totalGastado = pedidosNormalizados.reduce((total, pedido) => total + pedido.monto, 0)
   const resumen = [
     { titulo: 'Total de pedidos', valor: pedidosNormalizados.length },
-    { titulo: 'Gasto total', valor: formatearPesos(totalGastado), destacar: true },
+    { titulo: 'Gasto total', valor: formatearPesosPedido(totalGastado), destacar: true },
   ]
 
   return (
-    <PaginaGestion mostrarMenuLateral={false} usuario={usuario} onCerrarSesion={onCerrarSesion}>
+    <PaginaPanelUsuario mostrarMenuLateral={false} usuario={usuario} onCerrarSesion={onCerrarSesion}>
       <EncabezadoCuenta resumen={resumen} usuario={usuario} />
       <div className="mt-10">
         <InformacionPersonal usuario={usuario} />
@@ -42,7 +42,7 @@ const MiCuenta = ({ token, usuario, onCerrarSesion }) => {
       <div className="mt-12">
         <TablaPedidos cargando={cargandoPedidos} error={errorPedidos} pedidos={pedidosNormalizados} />
       </div>
-    </PaginaGestion>
+    </PaginaPanelUsuario>
   )
 }
 

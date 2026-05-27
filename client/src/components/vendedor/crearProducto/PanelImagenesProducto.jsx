@@ -1,7 +1,7 @@
 import { Card, CardBody } from '@heroui/react'
 import { X } from 'lucide-react'
-import { MAXIMO_IMAGENES_PRODUCTO } from '../../../data/reglasImagenesProducto'
 import FileUpload from '../../ui/file-upload'
+import { MAXIMO_IMAGENES_PRODUCTO } from './reglasCrearProducto'
 
 const PanelImagenesProducto = ({ imagenes, onCargar, onQuitar }) => {
   const alcanzoMaximo = imagenes.length >= MAXIMO_IMAGENES_PRODUCTO

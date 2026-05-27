@@ -3,7 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import logo from "../../assets/logoHorizontal.png";
 
-export default function HeaderSimple({ accion, textoAccion }) {
+export default function HeaderPanelUsuario({ accion, textoAccion }) {
   return (
     <header className="sticky top-0 z-20 border-b border-dorado-primary/25 bg-green-primary shadow-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">

@@ -1,6 +1,6 @@
 import { Card, CardBody } from '@heroui/react'
 import { Info } from 'lucide-react'
-import { MAXIMO_CARACTERES_NOMBRE_PRODUCTO } from '../../../data/reglasProducto'
+import { MAXIMO_CARACTERES_NOMBRE_PRODUCTO } from './reglasCrearProducto'
 
 const inputClasses =
   'mt-2 w-full rounded-md border border-dorado-primary/35 bg-white px-5 py-4 text-base font-semibold text-slate-800 outline-none transition focus:border-dorado-primary focus:bg-white'

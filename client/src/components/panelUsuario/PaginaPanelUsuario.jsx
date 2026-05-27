@@ -1,7 +1,7 @@
 import Navigation from '../Navigation'
-import MenuLateral from './MenuLateral'
+import MenuLateralPanelUsuario from './MenuLateralPanelUsuario'
 
-const PaginaGestion = ({
+const PaginaPanelUsuario = ({
   children,
   claseContenido = 'max-w-7xl',
   mostrarMenuLateral = true,
@@ -14,7 +14,7 @@ const PaginaGestion = ({
     </div>
 
     <div className="flex flex-1">
-      {mostrarMenuLateral && <MenuLateral usuario={usuario} onCerrarSesion={onCerrarSesion} />}
+      {mostrarMenuLateral && <MenuLateralPanelUsuario usuario={usuario} onCerrarSesion={onCerrarSesion} />}
 
       <main className="flex flex-1 flex-col">
         <div className={`mx-auto w-full ${claseContenido} flex-1 px-8 py-10`}>{children}</div>
@@ -23,4 +23,4 @@ const PaginaGestion = ({
   </div>
 )
 
-export default PaginaGestion
+export default PaginaPanelUsuario

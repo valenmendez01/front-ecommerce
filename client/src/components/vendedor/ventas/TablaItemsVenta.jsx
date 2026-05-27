@@ -1,4 +1,4 @@
-import { formatearPesos } from '../../../data/reglasProducto'
+import { formatearPesosVenta } from './formatoVentasVendedor'
 
 const TablaItemsVenta = ({ venta }) => (
   <div className="mt-5 overflow-hidden rounded-md border border-dorado-primary/30 bg-white">
@@ -23,8 +23,8 @@ const TablaItemsVenta = ({ venta }) => (
           <tr className="border-t border-slate-100" key={`${venta.idVenta}-${item.idProducto || item.nombreProducto}`}>
             <td className="px-4 py-3 font-semibold text-slate-800">{item.nombreProducto}</td>
             <td className="px-4 py-3">{item.cantidad}</td>
-            <td className="px-4 py-3">{formatearPesos(item.precioUnitario)}</td>
-            <td className="px-4 py-3 font-bold text-green-primary">{formatearPesos(item.subtotal)}</td>
+            <td className="px-4 py-3">{formatearPesosVenta(item.precioUnitario)}</td>
+            <td className="px-4 py-3 font-bold text-green-primary">{formatearPesosVenta(item.subtotal)}</td>
           </tr>
         ))}
       </tbody>

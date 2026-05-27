@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import PaginaGestion from '../components/layout/PaginaGestion'
+import PaginaPanelUsuario from '../components/panelUsuario/PaginaPanelUsuario'
 import EncabezadoVentas from '../components/vendedor/ventas/EncabezadoVentas'
 import MetricasVentas from '../components/vendedor/ventas/MetricasVentas'
 import TablaVentas from '../components/vendedor/ventas/TablaVentas'
-import { normalizarVentaVendedor, obtenerVentasPagina } from '../data/ventasVendedor'
+import { normalizarVentaVendedor, obtenerVentasPagina } from '../components/vendedor/ventas/datosVentasVendedor'
 
 const VentasVendedor = ({ token, usuario, onCerrarSesion }) => {
   const [ventas, setVentas] = useState([])
@@ -26,11 +26,11 @@ const VentasVendedor = ({ token, usuario, onCerrarSesion }) => {
   }, [token])
 
   return (
-    <PaginaGestion usuario={usuario} onCerrarSesion={onCerrarSesion}>
+    <PaginaPanelUsuario usuario={usuario} onCerrarSesion={onCerrarSesion}>
       <EncabezadoVentas />
       <MetricasVentas ventas={ventas} />
       <TablaVentas cargando={cargando} error={error} ventas={ventas} />
-    </PaginaGestion>
+    </PaginaPanelUsuario>
   )
 }
 

@@ -1,5 +1,5 @@
-import { formatearPesos } from '../../../data/reglasProducto'
 import TablaItemsVenta from './TablaItemsVenta'
+import { formatearPesosVenta } from './formatoVentasVendedor'
 
 const DatoVenta = ({ titulo, valor }) => (
   <div className="rounded-md bg-white p-4">
@@ -13,7 +13,7 @@ const DetalleVenta = ({ venta }) => (
     <div className="grid gap-4 md:grid-cols-3">
       <DatoVenta titulo="Comprador" valor={venta.comprador} />
       <DatoVenta titulo="Cantidad total" valor={`${venta.cantidad} u.`} />
-      <DatoVenta titulo="Total de la venta" valor={formatearPesos(venta.total)} />
+      <DatoVenta titulo="Total de la venta" valor={formatearPesosVenta(venta.total)} />
     </div>
     <TablaItemsVenta venta={venta} />
   </div>

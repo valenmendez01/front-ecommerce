@@ -1,3 +1,6 @@
+import { calcularPrecioFinalProducto, formatearPesosProducto } from '../productos/reglasProductoVendedor'
+import { obtenerUrlImagenProducto } from '../productos/imagenesProductoDetalle'
+
 const crearIniciales = (nombre = '') => {
   const iniciales = nombre
     .trim()
@@ -10,20 +13,6 @@ const crearIniciales = (nombre = '') => {
 
   return iniciales || 'PR'
 }
-
-const obtenerTipoImagen = (contenido) => {
-  if (contenido?.startsWith('/9j/')) return 'image/jpeg'
-  if (contenido?.startsWith('iVBORw0KGgo')) return 'image/png'
-  if (contenido?.startsWith('UklGR')) return 'image/webp'
-  return 'image/jpeg'
-}
-
-export const obtenerUrlImagenProducto = (imagen) => {
-  const contenido = imagen?.contenidoBase64
-  return contenido ? `data:${obtenerTipoImagen(contenido)};base64,${contenido}` : ''
-}
-
-const obtenerImagen = (producto) => obtenerUrlImagenProducto(producto.imagenes?.find(Boolean))
 
 export const obtenerProductosPagina = (data) => {
   if (Array.isArray(data)) return data
@@ -48,10 +37,23 @@ export const normalizarProductoVendedor = (producto) => ({
   description: producto.description || '',
   seleccion: producto.seleccion || 'NINGUNA',
   imagen: crearIniciales(producto.nombre),
-  imagenUrl: obtenerImagen(producto),
+  imagenUrl: obtenerUrlImagenProducto(producto.imagenes?.find(Boolean)),
   precio: Number(producto.precio || 0),
   stock: Number(producto.stock || 0),
   descuento: Number(producto.descuento || 0),
   destacado: Boolean(producto.destacado),
   activo: producto.activo ?? true,
 })
+
+const obtenerItems = (ventas, idProducto) =>
+  ventas.flatMap((venta) => venta.items || []).filter((item) => item.idProducto === idProducto)
+
+export const agregarDatosDeVentas = (producto, ventas) => {
+  const vendidos = obtenerItems(ventas, producto.idProducto).reduce((total, item) => total + item.cantidad, 0)
+  return {
+    ...producto,
+    vendidos,
+    precioTexto: formatearPesosProducto(producto.precio),
+    precioFinalTexto: formatearPesosProducto(calcularPrecioFinalProducto(producto.precio, producto.descuento)),
+  }
+}

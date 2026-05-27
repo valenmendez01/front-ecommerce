@@ -1,9 +1,15 @@
 import { useState } from 'react'
-import { crearImagenesLocales, liberarImagenesLocales, quitarImagenLocal } from '../../../data/imagenesProducto'
-import { MAXIMO_IMAGENES_PRODUCTO, obtenerErrorCantidadImagenesProducto } from '../../../data/reglasImagenesProducto'
 import AccionesDetalleProducto from './AccionesDetalleProducto'
 import CamposDetalleProducto from './CamposDetalleProducto'
 import ImagenesDetalleProducto from './ImagenesDetalleProducto'
+import {
+  MAXIMO_IMAGENES_PRODUCTO,
+  crearImagenesLocales,
+  liberarImagenesLocales,
+  obtenerErrorCantidadImagenesProducto,
+  obtenerErrorTamanioImagenesProducto,
+  quitarImagenLocal,
+} from './imagenesProductoDetalle'
 
 const DetalleProducto = ({
   borrador,
@@ -32,6 +38,12 @@ const DetalleProducto = ({
   }
 
   const cargarImagenes = (archivos) => {
+    const errorTamanio = obtenerErrorTamanioImagenesProducto(archivos)
+    if (errorTamanio) {
+      setErrorCarga(errorTamanio)
+      return
+    }
+
     if (guardadas.length + imagenesNuevas.length + archivos.length > MAXIMO_IMAGENES_PRODUCTO) {
       setErrorCarga(`Podés cargar como máximo ${MAXIMO_IMAGENES_PRODUCTO} imágenes por producto.`)
       return

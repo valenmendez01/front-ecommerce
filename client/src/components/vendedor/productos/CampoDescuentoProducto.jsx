@@ -1,8 +1,14 @@
 import { Input } from '@heroui/react'
 import { Percent } from 'lucide-react'
-import { obtenerErrorNumeroProducto } from '../../../data/reglasProducto'
 import CampoDetalleProducto from './CampoDetalleProducto'
-import { clasesCampoProducto } from './estilosProducto'
+import { obtenerErrorNumeroProductoVendedor } from './reglasProductoVendedor'
+
+const clasesCampoProducto = {
+  errorMessage: 'font-semibold',
+  input: 'font-bold text-green-primary',
+  inputWrapper:
+    'border border-dorado-primary/35 bg-slate-50 shadow-none data-[hover=true]:bg-slate-50 group-data-[focus=true]:border-dorado-primary group-data-[focus=true]:bg-white',
+}
 
 const CampoDescuentoProducto = ({ borrador, editando, onCambiar, producto }) => (
   <CampoDetalleProducto etiqueta="Descuento">
@@ -12,8 +18,8 @@ const CampoDescuentoProducto = ({ borrador, editando, onCambiar, producto }) => 
         aria-label="Descuento del producto"
         classNames={clasesCampoProducto}
         endContent={<Percent className="text-green-primary" size={16} />}
-        errorMessage={obtenerErrorNumeroProducto(borrador.descuento, 'descuento')}
-        isInvalid={Boolean(obtenerErrorNumeroProducto(borrador.descuento, 'descuento'))}
+        errorMessage={obtenerErrorNumeroProductoVendedor(borrador.descuento, 'descuento')}
+        isInvalid={Boolean(obtenerErrorNumeroProductoVendedor(borrador.descuento, 'descuento'))}
         max="100"
         min="0"
         radius="sm"

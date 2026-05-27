@@ -44,7 +44,7 @@ const UsuarioVendedor = ({ iniciales, usuario }) => {
   )
 }
 
-const MenuLateralVendedor = ({ iniciales, usuario }) => {
+const MenuLateralPanelVendedor = ({ iniciales, usuario }) => {
   const location = useLocation()
 
   return (
@@ -68,13 +68,13 @@ const MenuLateralVendedor = ({ iniciales, usuario }) => {
   )
 }
 
-const MenuLateral = ({ usuario }) => {
+const MenuLateralPanelUsuario = ({ usuario }) => {
   const rolCuenta = usuario.rol === 'VENDEDOR' ? 'vendedor' : 'cliente'
   const iniciales = `${usuario.nombre?.[0] || ''}${usuario.apellido?.[0] || ''}`.toUpperCase()
   const esVendedor = usuario.rol === 'VENDEDOR'
   const opciones = esVendedor ? opcionesVendedor : opcionesCliente
 
-  if (esVendedor) return <MenuLateralVendedor iniciales={iniciales} usuario={usuario} />
+  if (esVendedor) return <MenuLateralPanelVendedor iniciales={iniciales} usuario={usuario} />
 
   return (
     <aside className="flex w-64 shrink-0 flex-col border-r border-dorado-primary/35 bg-white">
@@ -118,4 +118,4 @@ const MenuLateral = ({ usuario }) => {
   )
 }
 
-export default MenuLateral
+export default MenuLateralPanelUsuario

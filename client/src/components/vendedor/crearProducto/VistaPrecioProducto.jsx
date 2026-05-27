@@ -1,4 +1,4 @@
-import { formatearPesos } from '../../../data/reglasProducto'
+import { formatearPesos } from './reglasCrearProducto'
 
 const VistaPrecioProducto = ({ precio, precioFinal, tieneDescuento }) => (
   <div className="mt-6 rounded-md bg-white p-5">

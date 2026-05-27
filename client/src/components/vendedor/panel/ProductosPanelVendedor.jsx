@@ -1,14 +1,10 @@
 import { Package, PackageCheck, PackageX, TriangleAlert } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { crearDatosProducto, normalizarProductoVendedor, obtenerProductosPagina } from '../../../data/productosVendedor'
-import { obtenerVentasPagina } from '../../../data/ventasVendedor'
-import { calcularPrecioFinal, formatearPesos } from '../../../data/reglasProducto'
 import MetricasPanelVendedor from './MetricasPanelVendedor'
 import TablaProductos from './TablaProductos'
-import { guardarImagenesProducto } from '../productos/guardarImagenesProducto'
-
-const obtenerItems = (ventas, idProducto) =>
-  ventas.flatMap((venta) => venta.items || []).filter((item) => item.idProducto === idProducto)
+import { agregarDatosDeVentas, crearDatosProducto, normalizarProductoVendedor, obtenerProductosPagina } from './datosProductosPanel'
+import { obtenerVentasPaginaPanel } from './datosVentasPanel'
+import { guardarImagenesProducto } from '../productos/imagenesProductoDetalle'
 
 const ProductosPanelVendedor = ({ token }) => {
   const [productos, setProductos] = useState([])
@@ -27,7 +23,7 @@ const ProductosPanelVendedor = ({ token }) => {
         if (!respuestaProductos.ok || !respuestaVentas.ok) throw new Error('No se pudo cargar el panel.')
         if (!sigueActivo) return
         setProductos(obtenerProductosPagina(jsonProductos.data).map(normalizarProductoVendedor))
-        setVentas(obtenerVentasPagina(jsonVentas.data))
+        setVentas(obtenerVentasPaginaPanel(jsonVentas.data))
       })
       .catch((fallo) => sigueActivo && setError(fallo.message))
       .finally(() => sigueActivo && setCargando(false))
@@ -56,10 +52,7 @@ const ProductosPanelVendedor = ({ token }) => {
   const cambiarVisibilidadProducto = (producto) =>
     actualizarProducto({ ...producto, activo: !producto.activo })
 
-  const productosConVentas = productos.map((producto) => {
-    const vendidos = obtenerItems(ventas, producto.idProducto).reduce((total, item) => total + item.cantidad, 0)
-    return { ...producto, vendidos, precioTexto: formatearPesos(producto.precio), precioFinalTexto: formatearPesos(calcularPrecioFinal(producto.precio, producto.descuento)) }
-  })
+  const productosConVentas = productos.map((producto) => agregarDatosDeVentas(producto, ventas))
   const activos = productosConVentas.filter((producto) => producto.activo)
   const metricas = [
     { titulo: 'Productos publicados', valor: productos.length, descripcion: 'Total de productos cargados', Icono: Package, destacar: true },

@@ -1,5 +1,5 @@
-import HeaderSimple from "../layout/HeaderSimple";
+import HeaderPanelUsuario from "../panelUsuario/HeaderPanelUsuario";
 
 export default function HeaderCompra({ alVolverCarrito }) {
-  return <HeaderSimple accion={alVolverCarrito} textoAccion="Volver carrito" />;
+  return <HeaderPanelUsuario accion={alVolverCarrito} textoAccion="Volver carrito" />;
 }

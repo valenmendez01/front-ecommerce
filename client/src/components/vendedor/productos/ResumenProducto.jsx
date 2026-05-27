@@ -1,11 +1,17 @@
 import { Button, Chip, Tooltip } from '@heroui/react'
 import { ChevronDown, ChevronUp, Eye, EyeOff } from 'lucide-react'
-import { obtenerEstadoProducto } from '../../../data/reglasProducto'
-import { coloresEstadoProducto } from './estilosProducto'
 import PrecioConDescuento from './PrecioConDescuento'
+import { obtenerEstadoProductoVendedor } from './reglasProductoVendedor'
+
+const coloresEstadoProducto = {
+  ACTIVO: 'bg-dorado-primary/25 text-green-primary',
+  'STOCK BAJO': 'bg-dorado-primary/30 text-green-primary',
+  'SIN STOCK': 'bg-red-100 text-red-700',
+  INACTIVO: 'bg-slate-200 text-slate-600',
+}
 
 const ResumenProducto = ({ abierto, cambiandoVisibilidad, guardando, onAbrir, onCambiarVisibilidad, producto }) => {
-  const estado = obtenerEstadoProducto(producto)
+  const estado = obtenerEstadoProductoVendedor(producto)
 
   return (
     <div className="flex flex-col gap-6 p-6 md:flex-row md:items-center">

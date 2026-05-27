@@ -1,13 +1,10 @@
-import { formatearPesos } from './reglasProducto'
+import { formatearPesosPedido } from './formatoPedidosCuenta'
 
 const formatearFechaPedido = (fecha) => {
   if (!fecha) return 'Sin fecha'
 
   const fechaNormalizada = new Date(`${fecha}T00:00:00`)
-
-  if (Number.isNaN(fechaNormalizada.getTime())) {
-    return fecha
-  }
+  if (Number.isNaN(fechaNormalizada.getTime())) return fecha
 
   return new Intl.DateTimeFormat('es-AR', {
     day: 'numeric',
@@ -28,9 +25,9 @@ const normalizarProductosPedido = (pedido) => {
       idProducto: producto.idProducto,
       nombre: producto.nombreProducto || producto.nombre || 'Producto sin nombre',
       cantidad,
-      precioUnitarioTexto: formatearPesos(precioUnitario),
+      precioUnitarioTexto: formatearPesosPedido(precioUnitario),
       subtotal,
-      subtotalTexto: formatearPesos(subtotal),
+      subtotalTexto: formatearPesosPedido(subtotal),
     }
   })
 }
@@ -48,7 +45,7 @@ export const normalizarPedidoCuenta = (pedido, indice) => {
       : 'Sin productos registrados',
     fecha: formatearFechaPedido(pedido.fechaPedido || pedido.fecha),
     monto,
-    total: formatearPesos(monto),
+    total: formatearPesosPedido(monto),
     productos,
   }
 }

@@ -1,9 +1,15 @@
 import { Input } from '@heroui/react'
 import { DollarSign } from 'lucide-react'
-import { obtenerErrorNumeroProducto } from '../../../data/reglasProducto'
 import CampoDetalleProducto from './CampoDetalleProducto'
-import { clasesCampoProducto } from './estilosProducto'
 import PrecioConDescuento from './PrecioConDescuento'
+import { obtenerErrorNumeroProductoVendedor } from './reglasProductoVendedor'
+
+const clasesCampoProducto = {
+  errorMessage: 'font-semibold',
+  input: 'font-bold text-green-primary',
+  inputWrapper:
+    'border border-dorado-primary/35 bg-slate-50 shadow-none data-[hover=true]:bg-slate-50 group-data-[focus=true]:border-dorado-primary group-data-[focus=true]:bg-white',
+}
 
 const CampoPrecioProducto = ({ borrador, editando, onCambiar, producto }) => (
   <CampoDetalleProducto etiqueta="Precio">
@@ -13,8 +19,8 @@ const CampoPrecioProducto = ({ borrador, editando, onCambiar, producto }) => (
           isRequired
           aria-label="Precio del producto"
           classNames={clasesCampoProducto}
-          errorMessage={obtenerErrorNumeroProducto(borrador.precio, 'precio')}
-          isInvalid={Boolean(obtenerErrorNumeroProducto(borrador.precio, 'precio'))}
+          errorMessage={obtenerErrorNumeroProductoVendedor(borrador.precio, 'precio')}
+          isInvalid={Boolean(obtenerErrorNumeroProductoVendedor(borrador.precio, 'precio'))}
           min="0"
           radius="sm"
           size="sm"

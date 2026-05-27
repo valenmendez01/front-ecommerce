@@ -1,7 +1,13 @@
 import { Input } from '@heroui/react'
-import { obtenerErrorNumeroProducto } from '../../../data/reglasProducto'
 import CampoDetalleProducto from './CampoDetalleProducto'
-import { clasesCampoProducto } from './estilosProducto'
+import { obtenerErrorNumeroProductoVendedor } from './reglasProductoVendedor'
+
+const clasesCampoProducto = {
+  errorMessage: 'font-semibold',
+  input: 'font-bold text-green-primary',
+  inputWrapper:
+    'border border-dorado-primary/35 bg-slate-50 shadow-none data-[hover=true]:bg-slate-50 group-data-[focus=true]:border-dorado-primary group-data-[focus=true]:bg-white',
+}
 
 const CampoStockProducto = ({ borrador, editando, onCambiar, producto }) => (
   <CampoDetalleProducto etiqueta="Stock">
@@ -10,8 +16,8 @@ const CampoStockProducto = ({ borrador, editando, onCambiar, producto }) => (
         isRequired
         aria-label="Stock del producto"
         classNames={clasesCampoProducto}
-        errorMessage={obtenerErrorNumeroProducto(borrador.stock, 'stock')}
-        isInvalid={Boolean(obtenerErrorNumeroProducto(borrador.stock, 'stock'))}
+        errorMessage={obtenerErrorNumeroProductoVendedor(borrador.stock, 'stock')}
+        isInvalid={Boolean(obtenerErrorNumeroProductoVendedor(borrador.stock, 'stock'))}
         min="0"
         radius="sm"
         size="sm"

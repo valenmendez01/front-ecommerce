@@ -1,6 +1,6 @@
 import { Card } from '@heroui/react'
 import { useEffect, useState } from 'react'
-import { normalizarCategorias } from '../../../data/reglasProducto'
+import { normalizarCategoriasProducto } from '../productos/reglasProductoVendedor'
 import EncabezadoProductos from '../productos/EncabezadoProductos'
 import TarjetaProducto from '../productos/TarjetaProducto'
 import TarjetasProductosCargando from '../productos/TarjetasProductosCargando'
@@ -21,7 +21,7 @@ const TablaProductos = ({ cargando = false, error = '', productos, onActualizarP
     let sigueActivo = true
     fetch('/categorias')
       .then((respuesta) => respuesta.json())
-      .then((json) => sigueActivo && setCategorias(normalizarCategorias(json.data)))
+      .then((json) => sigueActivo && setCategorias(normalizarCategoriasProducto(json.data)))
       .catch(() => sigueActivo && setCategorias([]))
 
     return () => {

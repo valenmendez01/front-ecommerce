@@ -1,5 +1,5 @@
-import HeaderSimple from "../layout/HeaderSimple";
+import HeaderPanelUsuario from "../panelUsuario/HeaderPanelUsuario";
 
 export default function HeaderCarrito({ alVolverInicio }) {
-  return <HeaderSimple accion={alVolverInicio} textoAccion="Volver inicio" />;
+  return <HeaderPanelUsuario accion={alVolverInicio} textoAccion="Volver inicio" />;
 }

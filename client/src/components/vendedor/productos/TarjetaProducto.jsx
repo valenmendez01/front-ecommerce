@@ -1,22 +1,14 @@
 import { addToast } from '@heroui/react'
 import { useState } from 'react'
-import { obtenerErrorNumeroProducto } from '../../../data/reglasProducto'
-import DetalleProducto from './DetalleProducto'
+import DetalleTarjetaProducto from './DetalleTarjetaProducto'
+import ErrorAccionProducto from './ErrorAccionProducto'
 import ResumenProducto from './ResumenProducto'
-
+import { obtenerErrorNumeroProductoVendedor } from './reglasProductoVendedor'
 const tieneErroresNumericos = (producto) =>
-  obtenerErrorNumeroProducto(producto.precio, 'precio') ||
-  obtenerErrorNumeroProducto(producto.stock, 'stock') ||
-  obtenerErrorNumeroProducto(producto.descuento, 'descuento')
-
-const TarjetaProducto = ({
-  abierto,
-  categorias,
-  onAbrir,
-  onActualizarProducto,
-  onCambiarVisibilidadProducto,
-  producto,
-}) => {
+  obtenerErrorNumeroProductoVendedor(producto.precio, 'precio') ||
+  obtenerErrorNumeroProductoVendedor(producto.stock, 'stock') ||
+  obtenerErrorNumeroProductoVendedor(producto.descuento, 'descuento')
+const TarjetaProducto = ({ abierto, categorias, onAbrir, onActualizarProducto, onCambiarVisibilidadProducto, producto }) => {
   const [editando, setEditando] = useState(false)
   const [borrador, setBorrador] = useState({ ...producto })
   const [guardando, setGuardando] = useState(false)
@@ -28,7 +20,6 @@ const TarjetaProducto = ({
     const esNumero = ['precio', 'stock', 'descuento'].includes(campo) && valor !== ''
     setBorrador((actual) => ({ ...actual, [campo]: esNumero ? Number(valor) : valor }))
   }
-
   const guardarEdicion = async (cambiosImagenes) => {
     if (tieneErroresNumericos(borrador)) return false
     setGuardando(true)
@@ -51,7 +42,6 @@ const TarjetaProducto = ({
       setGuardando(false)
     }
   }
-
   const cambiarVisibilidadProducto = async () => {
     setCambiandoVisibilidad(true)
     setErrorAccion('')
@@ -70,7 +60,6 @@ const TarjetaProducto = ({
       setCambiandoVisibilidad(false)
     }
   }
-
   const cambiarDetalle = () => {
     if (abierto) {
       setEditando(false)
@@ -80,28 +69,25 @@ const TarjetaProducto = ({
 
     onAbrir()
   }
-
   return (
     <article className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
       <ResumenProducto abierto={abierto} cambiandoVisibilidad={cambiandoVisibilidad} guardando={guardando} onAbrir={cambiarDetalle} onCambiarVisibilidad={cambiarVisibilidadProducto} producto={producto} />
-      {errorAccion && <p className="mx-5 mb-5 rounded-md bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{errorAccion}</p>}
-      {abierto && (
-        <DetalleProducto
-          borrador={borrador}
-          categorias={categorias}
-          editando={editando}
-          eliminando={cambiandoVisibilidad}
-          guardando={guardando}
-          hayErrores={hayErrores}
-          onCambiar={cambiarCampo}
-          onCancelar={() => setEditando(false)}
-          onEditar={() => { setBorrador({ ...producto }); setEditando(true) }}
-          onGuardar={guardarEdicion}
-          producto={producto}
-        />
-      )}
+      <ErrorAccionProducto mensaje={errorAccion} />
+      <DetalleTarjetaProducto
+        abierto={abierto}
+        borrador={borrador}
+        categorias={categorias}
+        editando={editando}
+        eliminando={cambiandoVisibilidad}
+        guardando={guardando}
+        hayErrores={hayErrores}
+        onCambiar={cambiarCampo}
+        onCancelar={() => setEditando(false)}
+        onEditar={() => { setBorrador({ ...producto }); setEditando(true) }}
+        onGuardar={guardarEdicion}
+        producto={producto}
+      />
     </article>
   )
 }
-
 export default TarjetaProducto

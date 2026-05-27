@@ -1,7 +1,6 @@
 import { X } from 'lucide-react'
-import { obtenerUrlImagenProducto } from '../../../data/productosVendedor'
-import { MAXIMO_IMAGENES_PRODUCTO } from '../../../data/reglasImagenesProducto'
 import FileUpload from '../../ui/file-upload'
+import { MAXIMO_IMAGENES_PRODUCTO, obtenerUrlImagenProducto } from './imagenesProductoDetalle'
 
 const ImagenDetalle = ({ nombre, onQuitar, url }) => (
   <div className="relative overflow-hidden rounded-md border border-slate-200 bg-white">

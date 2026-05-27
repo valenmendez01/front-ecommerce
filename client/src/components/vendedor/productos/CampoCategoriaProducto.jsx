@@ -1,10 +1,16 @@
 import { Select, SelectItem } from '@heroui/react'
 import {
-  formatearEtiquetaCategoria,
-  obtenerPrimerValor,
-} from '../../../data/reglasProducto'
+  formatearEtiquetaCategoriaProducto,
+  obtenerPrimerValorProducto,
+} from './reglasProductoVendedor'
 import CampoDetalleProducto from './CampoDetalleProducto'
-import { clasesCampoProducto } from './estilosProducto'
+
+const clasesCampoProducto = {
+  errorMessage: 'font-semibold',
+  trigger:
+    'border border-dorado-primary/35 bg-slate-50 shadow-none data-[hover=true]:bg-slate-50 data-[open=true]:border-dorado-primary',
+  value: 'font-bold text-green-primary',
+}
 
 const CampoCategoriaProducto = ({ borrador, categorias, editando, onCambiar, producto }) => (
   <CampoDetalleProducto etiqueta="Categoría">
@@ -15,14 +21,14 @@ const CampoCategoriaProducto = ({ borrador, categorias, editando, onCambiar, pro
         selectedKeys={[borrador.categoria]}
         size="sm"
         variant="bordered"
-        onSelectionChange={(keys) => onCambiar('categoria', obtenerPrimerValor(keys))}
+        onSelectionChange={(keys) => onCambiar('categoria', obtenerPrimerValorProducto(keys))}
       >
         {categorias.map((categoria) => (
           <SelectItem key={categoria.valor}>{categoria.etiqueta}</SelectItem>
         ))}
       </Select>
     ) : (
-      formatearEtiquetaCategoria(producto.categoria)
+      formatearEtiquetaCategoriaProducto(producto.categoria)
     )}
   </CampoDetalleProducto>
 )

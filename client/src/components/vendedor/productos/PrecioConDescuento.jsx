@@ -1,8 +1,8 @@
-import { calcularPrecioFinal, formatearPesos } from '../../../data/reglasProducto'
+import { calcularPrecioFinalProducto, formatearPesosProducto } from './reglasProductoVendedor'
 
 const PrecioConDescuento = ({ compacto = false, producto }) => {
-  const precioOriginal = formatearPesos(producto.precio)
-  const precioFinal = formatearPesos(calcularPrecioFinal(producto.precio, producto.descuento))
+  const precioOriginal = formatearPesosProducto(producto.precio)
+  const precioFinal = formatearPesosProducto(calcularPrecioFinalProducto(producto.precio, producto.descuento))
 
   if (Number(producto.descuento) <= 0) {
     return <span className="font-black text-green-primary">{precioOriginal}</span>

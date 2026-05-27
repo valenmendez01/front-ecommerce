@@ -1,12 +1,21 @@
 import { addToast } from '@heroui/react'
 import { useEffect, useState } from 'react'
-import PaginaGestion from '../components/layout/PaginaGestion'
+import PaginaPanelUsuario from '../components/panelUsuario/PaginaPanelUsuario'
 import EncabezadoCrearProducto from '../components/vendedor/crearProducto/EncabezadoCrearProducto'
 import FormularioCrearProducto from '../components/vendedor/crearProducto/FormularioCrearProducto'
-import { guardarProducto } from '../components/vendedor/crearProducto/guardarProducto'
-import { crearImagenesLocales, liberarImagenesLocales, quitarImagenLocal } from '../data/imagenesProducto'
-import { MAXIMO_IMAGENES_PRODUCTO, obtenerErrorCantidadImagenesProducto } from '../data/reglasImagenesProducto'
-import { MAXIMO_CARACTERES_NOMBRE_PRODUCTO, calcularPrecioFinal, estadoInicialProducto, normalizarCategorias, normalizarSelecciones, obtenerErroresProducto } from '../data/reglasProducto'
+import { crearImagenesLocales, liberarImagenesLocales, quitarImagenLocal } from '../components/vendedor/crearProducto/imagenesCrearProducto'
+import { cargarOpcionesProducto } from '../components/vendedor/crearProducto/opcionesCrearProducto'
+import { publicarProducto as publicarProductoEnBackend } from '../components/vendedor/crearProducto/publicarProducto'
+import {
+  MAXIMO_CARACTERES_NOMBRE_PRODUCTO,
+  MAXIMO_IMAGENES_PRODUCTO,
+  calcularPrecioFinal,
+  estadoInicialProducto,
+  obtenerErrorCantidadImagenesProducto,
+  obtenerErrorTamanioImagenesProducto,
+  obtenerErroresProducto,
+} from '../components/vendedor/crearProducto/reglasCrearProducto'
+
 const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
   const [producto, setProducto] = useState(estadoInicialProducto)
   const [imagenes, setImagenes] = useState([])
@@ -16,32 +25,11 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
   const [publicando, setPublicando] = useState(false)
   const [categorias, setCategorias] = useState([])
   const [selecciones, setSelecciones] = useState([])
+
   useEffect(() => {
-    let sigueActivo = true
-    Promise.all([fetch('/categorias'), fetch('/selecciones')])
-      .then(async ([respuestaCategorias, respuestaSelecciones]) => {
-        const jsonCategorias = await respuestaCategorias.json()
-        const jsonSelecciones = await respuestaSelecciones.json()
-        if (!sigueActivo) return
-        const categoriasNuevas = normalizarCategorias(jsonCategorias.data)
-        const seleccionesNuevas = normalizarSelecciones(jsonSelecciones.data)
-        setCategorias(categoriasNuevas)
-        setSelecciones(seleccionesNuevas)
-        setProducto((actual) =>
-          categoriasNuevas.some((categoria) => categoria.valor === actual.categoria)
-            ? { ...actual, seleccion: seleccionesNuevas.some((seleccion) => seleccion.valor === actual.seleccion) ? actual.seleccion : seleccionesNuevas[0]?.valor || actual.seleccion }
-            : { ...actual, categoria: categoriasNuevas[0]?.valor || actual.categoria, seleccion: seleccionesNuevas[0]?.valor || actual.seleccion },
-        )
-      })
-      .catch(() => {
-        if (!sigueActivo) return
-        setCategorias([])
-        setSelecciones([])
-      })
-    return () => {
-      sigueActivo = false
-    }
+    return cargarOpcionesProducto(setCategorias, setSelecciones, setProducto)
   }, [])
+
   const errores = obtenerErroresProducto(producto, categorias, selecciones)
   const errorImagenes = obtenerErrorCantidadImagenesProducto(imagenes.length)
   const puedePublicar = Object.values(errores).every((error) => !error) && !errorImagenes
@@ -52,6 +40,13 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
     setMensaje('')
   }
   const cargarImagenes = (archivos) => {
+    const errorTamanio = obtenerErrorTamanioImagenesProducto(archivos)
+    if (errorTamanio) {
+      setTipoMensaje('error')
+      setMensaje(errorTamanio)
+      return
+    }
+
     if (imagenes.length + archivos.length > MAXIMO_IMAGENES_PRODUCTO) {
       setTipoMensaje('error')
       setMensaje(`Podés cargar como máximo ${MAXIMO_IMAGENES_PRODUCTO} imágenes por producto.`)
@@ -71,7 +66,7 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
     setMensaje('')
 
     try {
-      const respuesta = await guardarProducto(producto, imagenes, token)
+      const respuesta = await publicarProductoEnBackend(producto, imagenes, token)
       liberarImagenesLocales(imagenes)
       setProducto(estadoInicialProducto)
       setImagenes([])
@@ -93,7 +88,7 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
     }
   }
   return (
-    <PaginaGestion usuario={usuario} onCerrarSesion={onCerrarSesion}>
+    <PaginaPanelUsuario usuario={usuario} onCerrarSesion={onCerrarSesion}>
       <EncabezadoCrearProducto />
       <FormularioCrearProducto
         categorias={categorias}
@@ -106,7 +101,7 @@ const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
         precioFinal={calcularPrecioFinal(producto.precio, producto.descuento)}
         producto={producto} publicando={publicando} selecciones={selecciones} tipoMensaje={tipoMensaje}
       />
-    </PaginaGestion>
+    </PaginaPanelUsuario>
   )
 }
 
