@@ -8,12 +8,7 @@ export const obtenerImagenProducto = (producto) => {
   if (producto.imagenUrl) return producto.imagenUrl
 
   const contenidoBase64 = producto.imagenes?.find(Boolean)?.contenidoBase64
-
-  if (!contenidoBase64) {
-    return ''
-  }
-
-  return `data:image/jpeg;base64,${contenidoBase64}`
+  return contenidoBase64 ? `data:image/jpeg;base64,${contenidoBase64}` : ''
 }
 
 const obtenerIdProducto = (producto) =>
@@ -82,18 +77,13 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
   const descuento = Number(producto.descuento || 0)
   const precioFinal = Math.round(precioBase * (1 - descuento / 100))
   const stock = obtenerStockProducto(producto)
+  const idProducto = obtenerIdProducto(producto)
 
-  if (stock !== undefined && stock <= 0) {
+  if ((stock !== undefined && stock <= 0) || idProducto == null) {
     return obtenerArticulosCarrito(idUsuario)
   }
 
   const articulos = leerCarrito(idUsuario)
-  const idProducto = obtenerIdProducto(producto)
-
-  if (idProducto == null) {
-    return obtenerArticulosCarrito(idUsuario)
-  }
-
   const articuloExistente = articulos.find((articulo) => articulo.idProducto === idProducto)
   const cantidadPedida = Math.max(1, Number(cantidad || 1))
 
@@ -145,7 +135,6 @@ export const calcularResumenCarrito = (articulos, envio = 0) => {
   )
 
   const descuento = Math.max(subtotalOriginal - subtotal, 0)
-
   const costoEnvio = envio == null ? null : Number(envio || 0)
 
   return {

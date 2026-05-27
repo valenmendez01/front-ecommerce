@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { apiRequest, clearStoredToken, getStoredToken, setStoredToken } from '../lib/api'
-import { vaciarCarrito } from '../data/reglasCarrito'
+import { vaciarCarrito } from '../utils/reglasCarrito'
 import { AuthContext } from './useAuth'
 
 const USUARIO_KEY = 'usuario'
