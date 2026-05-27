@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import PaginaPanelUsuario from '../components/panelUsuario/PaginaPanelUsuario'
-import EncabezadoVentas from '../components/vendedor/ventas/EncabezadoVentas'
-import MetricasVentas from '../components/vendedor/ventas/MetricasVentas'
-import TablaVentas from '../components/vendedor/ventas/TablaVentas'
-import { normalizarVentaVendedor, obtenerVentasPagina } from '../components/vendedor/ventas/datosVentasVendedor'
+import PaginaPanelUsuario from '../components/panelUsuario/estructura/PaginaPanelUsuario'
+import EncabezadoVentas from '../components/vendedor/ventas/encabezado/EncabezadoVentas'
+import MetricasVentas from '../components/vendedor/ventas/metricas/MetricasVentas'
+import TablaVentas from '../components/vendedor/ventas/tabla/TablaVentas'
+import { normalizarVentaVendedor, obtenerVentasPagina } from '../components/vendedor/ventas/datos/datosVentasVendedor'
 
 const VentasVendedor = ({ token, usuario, onCerrarSesion }) => {
   const [ventas, setVentas] = useState([])

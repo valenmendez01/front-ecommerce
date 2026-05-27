@@ -18,6 +18,15 @@ const obtenerImagenProducto = (producto) => {
 const formatearPesos = (precio = 0) =>
   new Intl.NumberFormat("es-AR", { currency: "ARS", style: "currency" }).format(precio)
 
+const formatearCategoria = (categoria = "") => {
+  const etiquetas = {
+    COCA_COLA: "Coca-Cola",
+    EXTRA_STICKERS: "Extra Stickers",
+  }
+
+  return etiquetas[categoria] || categoria
+}
+
 const obtenerPrecioFinal = (producto) => {
   const precio = Number(producto.precio || 0)
   const descuento = Number(producto.descuento || 0)
@@ -42,7 +51,7 @@ const TarjetaProductoDestacadoHome = ({ producto }) => (
 
       <div className="mt-5 flex items-center justify-between gap-3">
         <Chip className="bg-dorado-primary/20 font-black uppercase text-green-primary" size="sm">
-          {producto.categoria}
+          {formatearCategoria(producto.categoria)}
         </Chip>
         {tieneDescuentoProducto(producto) && (
           <Chip className="bg-green-primary text-dorado-primary" size="sm">

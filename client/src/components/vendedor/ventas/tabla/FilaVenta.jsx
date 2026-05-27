@@ -1,0 +1,29 @@
+import { Button } from '@heroui/react'
+import { formatearPesosVenta } from '../datos/formatoVentasVendedor'
+
+const FilaVenta = ({ onVerDetalle, venta }) => (
+  <article className="border-b border-slate-100">
+    <div className="grid gap-4 px-8 py-5 lg:grid-cols-[1fr_1fr_120px_160px_130px] lg:items-center">
+      <div>
+        <p className="text-lg font-black text-green-primary">#{venta.idVentaTexto}</p>
+        <p className="mt-1 text-sm text-slate-500">{venta.fecha}</p>
+      </div>
+      <div>
+        <p className="font-bold text-slate-950">{venta.producto}</p>
+        <p className="mt-1 text-sm text-slate-500">Comprador: {venta.comprador}</p>
+      </div>
+      <p className="font-bold text-slate-700">{venta.cantidad} u.</p>
+      <p className="text-lg font-black text-green-primary">{formatearPesosVenta(venta.total)}</p>
+      <Button
+        className="bg-dorado-primary/20 text-sm font-bold text-green-primary"
+        radius="sm"
+        size="sm"
+        onPress={onVerDetalle}
+      >
+        Ver detalle
+      </Button>
+    </div>
+  </article>
+)
+
+export default FilaVenta

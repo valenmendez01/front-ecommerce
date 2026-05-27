@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import EncabezadoCuenta from '../components/cuenta/encabezado/EncabezadoCuenta'
 import InformacionPersonal from '../components/cuenta/informacion/InformacionPersonal'
-import TablaPedidos from '../components/cuenta/pedidos/TablaPedidos'
-import PaginaPanelUsuario from '../components/panelUsuario/PaginaPanelUsuario'
-import { normalizarPedidoCuenta } from '../components/cuenta/pedidos/datosPedidosCuenta'
-import { formatearPesosPedido } from '../components/cuenta/pedidos/formatoPedidosCuenta'
+import TablaPedidos from '../components/cuenta/pedidos/tabla/TablaPedidos'
+import PaginaPanelUsuario from '../components/panelUsuario/estructura/PaginaPanelUsuario'
+import { normalizarPedidoCuenta } from '../components/cuenta/pedidos/datos/datosPedidosCuenta'
+import { formatearPesosPedido } from '../components/cuenta/pedidos/datos/formatoPedidosCuenta'
 
 const MiCuenta = ({ token, usuario, onCerrarSesion }) => {
   const [pedidos, setPedidos] = useState([])

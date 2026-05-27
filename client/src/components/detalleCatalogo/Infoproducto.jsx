@@ -3,6 +3,15 @@ import { Button } from "@heroui/react";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+const formatearCategoria = (categoria = "") => {
+  const etiquetas = {
+    COCA_COLA: "Coca-Cola",
+    EXTRA_STICKERS: "Extra Stickers",
+  };
+
+  return etiquetas[categoria] || categoria;
+};
+
 export const InfoProducto = ({ producto }) => {
   const { nombre, categoria, precio, descuento, description, stock, disponible } = producto;
   const navigate = useNavigate();
@@ -18,7 +27,7 @@ export const InfoProducto = ({ producto }) => {
       {/* Categoría + Volver */}
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold tracking-widest text-dorado-primary uppercase">
-          {categoria}
+          {formatearCategoria(categoria)}
         </p>
         <Button
           onPress={() => navigate(-1)}

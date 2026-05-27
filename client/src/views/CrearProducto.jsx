@@ -1,11 +1,11 @@
 import { addToast } from '@heroui/react'
 import { useEffect, useState } from 'react'
-import PaginaPanelUsuario from '../components/panelUsuario/PaginaPanelUsuario'
-import EncabezadoCrearProducto from '../components/vendedor/crearProducto/EncabezadoCrearProducto'
-import FormularioCrearProducto from '../components/vendedor/crearProducto/FormularioCrearProducto'
-import { crearImagenesLocales, liberarImagenesLocales, quitarImagenLocal } from '../components/vendedor/crearProducto/imagenesCrearProducto'
-import { cargarOpcionesProducto } from '../components/vendedor/crearProducto/opcionesCrearProducto'
-import { publicarProducto as publicarProductoEnBackend } from '../components/vendedor/crearProducto/publicarProducto'
+import PaginaPanelUsuario from '../components/panelUsuario/estructura/PaginaPanelUsuario'
+import EncabezadoCrearProducto from '../components/vendedor/crearProducto/encabezado/EncabezadoCrearProducto'
+import FormularioCrearProducto from '../components/vendedor/crearProducto/formulario/FormularioCrearProducto'
+import { crearImagenesLocales, liberarImagenesLocales, quitarImagenLocal } from '../components/vendedor/crearProducto/imagenes/imagenesCrearProducto'
+import { cargarOpcionesProducto } from '../components/vendedor/crearProducto/datos/opcionesCrearProducto'
+import { publicarProducto as publicarProductoEnBackend } from '../components/vendedor/crearProducto/datos/publicarProducto'
 import {
   MAXIMO_CARACTERES_NOMBRE_PRODUCTO,
   MAXIMO_IMAGENES_PRODUCTO,
@@ -14,7 +14,7 @@ import {
   obtenerErrorCantidadImagenesProducto,
   obtenerErrorTamanioImagenesProducto,
   obtenerErroresProducto,
-} from '../components/vendedor/crearProducto/reglasCrearProducto'
+} from '../components/vendedor/crearProducto/datos/reglasCrearProducto'
 
 const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
   const [producto, setProducto] = useState(estadoInicialProducto)

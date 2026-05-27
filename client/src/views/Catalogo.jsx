@@ -33,7 +33,7 @@ export const Catalogo = () => {
   );
   const [productos, setProductos] = useState([]);
   const [precioMin, setPrecioMin] = useState(0);
-  const [precioMax, setPrecioMax] = useState(100000);
+  const [precioMax, setPrecioMax] = useState(300000);
   const [busqueda, setBusqueda] = useState("");
   const [pagina, setPagina] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(1);
@@ -71,7 +71,7 @@ export const Catalogo = () => {
 
       if (busqueda.trim())        params.set("nombre", busqueda.trim());
       if (precioMin > 0)          params.set("min", precioMin);
-      if (precioMax < 100000)     params.set("max", precioMax);
+      if (precioMax <= 300000)    params.set("max", precioMax);
 
       // Ej: ?categorias=ALBUM&categorias=FIGURITA
       categoriasSeleccionadas.forEach(c => params.append("categorias", c));

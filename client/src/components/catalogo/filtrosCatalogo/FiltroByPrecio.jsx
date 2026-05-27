@@ -26,7 +26,7 @@ export const FiltroByPrecio = ({ precioMin, precioMax, onChange }) => {
       formatOptions={{ style: "currency", currency: "ARS", maximumFractionDigits: 0}}
       label="Precio"
       minValue={0}
-      maxValue={100000}
+      maxValue={300000}
       step={500}
       value={[precioMin, precioMax]}
       onChange={handleChange}
