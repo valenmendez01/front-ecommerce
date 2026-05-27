@@ -75,24 +75,14 @@ export const Catalogo = () => {
       }));
   }, [categoriasSeleccionadas, seleccionesSeleccionadas, precioMin, precioMax, busqueda, pagina]);
 
-  function handleCambioCategoria(categoria) {
+  function handleCambioCategoria(categorias) {
     setPagina(0);
-    setCategoriasSeleccionadas((categoriasPrevias) =>
-      categoriasPrevias.includes(categoria)
-        // Si la categ ya estaba seleccionada, la sacamos
-        ? categoriasPrevias.filter((c) => c !== categoria)
-        // Si no estaba seleccionada, la agregamos
-        : [...categoriasPrevias, categoria]
-    );
+    setCategoriasSeleccionadas(categorias);
   }
 
   function handleCambioSeleccion(seleccion) {
     setPagina(0);
-    setSeleccionesSeleccionadas((previas) =>
-      previas.includes(seleccion)
-        ? previas.filter((s) => s !== seleccion)
-        : [...previas, seleccion]
-    );
+    setSeleccionesSeleccionadas(seleccion);
   }
 
   function handlePrecioChange(tipo, valor) {
