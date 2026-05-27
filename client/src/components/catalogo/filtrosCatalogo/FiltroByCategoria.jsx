@@ -10,15 +10,7 @@ export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
   return (
     <CheckboxGroup
       value={seleccionadas}
-      onChange={(valoresSeleccionados) => {
-        const agregada = valoresSeleccionados.find(
-          (v) => !seleccionadas.includes(v)
-        );
-        const eliminada = seleccionadas.find(
-          (v) => !valoresSeleccionados.includes(v)
-        );
-        onCambiar(agregada ?? eliminada);
-      }}
+      onChange={onCambiar}
     >
       {categorias.map((cat) => (
         <Checkbox

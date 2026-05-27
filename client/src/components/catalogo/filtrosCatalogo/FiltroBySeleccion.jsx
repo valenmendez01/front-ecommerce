@@ -8,15 +8,7 @@ export const FiltroBySeleccion = ({ selecciones, seleccionadas, onCambiar }) => 
     <div className="max-h-52 overflow-y-auto pr-1">
     <CheckboxGroup
       value={seleccionadas}
-      onChange={(valoresSeleccionados) => {
-        const agregada = valoresSeleccionados.find(
-          (v) => !seleccionadas.includes(v)
-        );
-        const eliminada = seleccionadas.find(
-          (v) => !valoresSeleccionados.includes(v)
-        );
-        onCambiar(agregada ?? eliminada);
-      }}
+      onChange={onCambiar}
     >
       {selecciones.map((sel) => (
         <Checkbox
