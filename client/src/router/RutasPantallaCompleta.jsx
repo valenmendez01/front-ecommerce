@@ -8,8 +8,8 @@ import MiCuenta from "../views/MiCuenta"
 import PanelVendedor from "../views/PanelVendedor"
 import RegistroComprador from "../views/RegistroComprador"
 import VentasVendedor from "../views/VentasVendedor"
-import CarritoView from "../views/carritoView"
-import CompraView from "../views/compraView"
+import Carrito from "../views/Carrito"
+import Compra from "../views/Compra"
 
 const RutasPantallaCompleta = ({ auth }) => {
   const { token, usuario, cerrarSesion, cargandoUsuario } = auth
@@ -27,11 +27,11 @@ const RutasPantallaCompleta = ({ auth }) => {
       <Routes>
         <Route
           path="/carrito"
-          element={requerirSesion(<CarritoView />, { requiereComprador: true })}
+          element={requerirSesion(<Carrito />, { requiereComprador: true })}
         />
         <Route
           path="/compra"
-          element={requerirSesion(<CompraView />, { requiereComprador: true })}
+          element={requerirSesion(<Compra />, { requiereComprador: true })}
         />
         <Route
           path="/iniciar-sesion"

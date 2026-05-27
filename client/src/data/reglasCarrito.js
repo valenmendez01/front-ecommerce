@@ -22,6 +22,18 @@ const obtenerIdProducto = (producto) =>
 const obtenerStockProducto = (producto) =>
   producto.stock == null ? undefined : Number(producto.stock)
 
+const formatearCategoriaProducto = (categoria = '') => {
+  const categorias = {
+    ALBUMES: 'Albumes',
+    COCA_COLA: 'Coca Cola',
+    COMBOS: 'Combos',
+    EXTRA_STICKERS: 'Extra Stickers',
+    FIGURITAS: 'Figuritas',
+  }
+
+  return categorias[categoria] || categoria
+}
+
 const normalizarArticulo = (articulo) => ({
   ...articulo,
   id: obtenerIdProducto(articulo),
@@ -31,6 +43,7 @@ const normalizarArticulo = (articulo) => ({
   precioOriginal: articulo.precioOriginal == null ? null : Number(articulo.precioOriginal),
   descuento: Number(articulo.descuento || 0),
   stock: obtenerStockProducto(articulo),
+  subtitulo: formatearCategoriaProducto(articulo.subtitulo),
 })
 
 const leerCarrito = (idUsuario) => {
@@ -93,7 +106,7 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
     descuento,
     cantidad: stock === undefined ? cantidadPedida : Math.min(cantidadPedida, stock),
     stock,
-    subtitulo: producto.categoria,
+    subtitulo: formatearCategoriaProducto(producto.categoria),
     imagen: obtenerImagenProducto(producto),
   }
 

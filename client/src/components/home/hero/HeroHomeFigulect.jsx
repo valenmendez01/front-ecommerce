@@ -7,7 +7,7 @@ import TextGenerateEffect from "../../ui/text-generate-effect"
 import EscenaHeroColeccion from "./EscenaHeroColeccion"
 
 const textoHero =
-  "Figuritas, álbumes y packs para completar esa colección que empieza con una carta y termina en historia."
+  "Figuritas, álbumes y sobres para completar esa colección que empieza con un jugador y termina en historia."
 
 const entradaContenedor = {
   oculto: {},
@@ -54,8 +54,8 @@ const HeroHomeFigulect = () => (
           className="font-display text-5xl uppercase leading-[0.92] text-white sm:text-6xl lg:text-8xl"
           variants={entradaTitulo}
         >
-          <span className="block">Abrí sobres.</span>
-          <span className="block">Encontrá cracks.</span>
+          <span className="block">Abrí sobres</span>
+          <span className="block">Encontrá cracks</span>
         </motion.h1>
         <motion.div variants={entradaElemento}>
           <TextGenerateEffect
@@ -72,12 +72,6 @@ const HeroHomeFigulect = () => (
               Explorar catálogo
             </Link>
           </HoverBorderGradient>
-          <Link
-            className="rounded-full border border-dorado-primary/45 px-6 py-3 text-sm font-black uppercase text-white transition hover:bg-dorado-primary hover:text-green-primary"
-            to="/productos"
-          >
-            Ver packs
-          </Link>
         </motion.div>
       </motion.div>
 

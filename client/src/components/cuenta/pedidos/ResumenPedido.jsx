@@ -15,7 +15,7 @@ const ResumenPedido = ({ pedido }) => {
   return (
     <div className="rounded-md border border-dorado-primary/30 bg-white p-5">
       <h3 className="text-sm font-black uppercase tracking-widest text-green-primary">
-        Informacion del pedido
+        Información del pedido
       </h3>
       <div className="mt-4 grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-1">
         <DatoPedido titulo="Productos" valor={cantidadProductos} />
