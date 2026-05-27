@@ -11,6 +11,10 @@ import { FlipWords } from "../components/ui/flip-words";
 function obtenerFiltrosDesdeUrl(search, nombreSingular, nombrePlural) {
   const parametros = new URLSearchParams(search);
 
+  console.log("search:", search);
+  console.log(nombreSingular, parametros.getAll(nombreSingular));
+  console.log(nombrePlural, parametros.getAll(nombrePlural));
+
   return [
     ...parametros.getAll(nombreSingular),
     ...parametros.getAll(nombrePlural),
@@ -35,16 +39,6 @@ export const Catalogo = () => {
   const [totalPaginas, setTotalPaginas] = useState(1);
   const PAGE_SIZE = 9;
   const [cargando, setCargando] = useState(true);
-
-  useEffect(() => {
-    setCategoriasSeleccionadas(
-      obtenerFiltrosDesdeUrl(location.search, "categoria", "categorias")
-    );
-    setSeleccionesSeleccionadas(
-      obtenerFiltrosDesdeUrl(location.search, "seleccion", "selecciones")
-    );
-    setPagina(0);
-  }, [location.search]);
 
   useEffect(() => {
     fetch("/categorias")
