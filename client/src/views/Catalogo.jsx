@@ -11,10 +11,6 @@ import { FlipWords } from "../components/ui/flip-words";
 function obtenerFiltrosDesdeUrl(search, nombreSingular, nombrePlural) {
   const parametros = new URLSearchParams(search);
 
-  console.log("search:", search);
-  console.log(nombreSingular, parametros.getAll(nombreSingular));
-  console.log(nombrePlural, parametros.getAll(nombrePlural));
-
   return [
     ...parametros.getAll(nombreSingular),
     ...parametros.getAll(nombrePlural),

@@ -1,6 +1,5 @@
 import { Button } from '@heroui/react'
 import { Pencil, X } from 'lucide-react'
-import StatefulButton from '../../../ui/stateful-button'
 
 const AccionesDetalleProducto = ({
   editando,
@@ -16,19 +15,24 @@ const AccionesDetalleProducto = ({
     <h3 className="text-sm font-black uppercase tracking-widest text-green-primary">
       Detalle del producto
     </h3>
+
     {editando ? (
       <div className="flex gap-2">
-        <StatefulButton
+        <Button
           aria-label="Guardar cambios"
           className="min-w-0 rounded-md bg-dorado-primary px-3 py-2 text-sm font-bold text-green-primary hover:ring-green-primary"
-          disabled={Boolean(hayErrores) || eliminando || guardando}
-          onClick={onGuardar}
+          isDisabled={Boolean(hayErrores) || eliminando || guardando}
+          isLoading={guardando}
+          radius="sm"
+          size="sm"
+          onPress={onGuardar}
         >
           Guardar cambios
-        </StatefulButton>
+        </Button>
+
         <Button
           isIconOnly
-          aria-label="Cancelar edicion"
+          aria-label="Cancelar edición"
           className="bg-slate-100 text-slate-600"
           radius="sm"
           size="sm"
@@ -40,7 +44,7 @@ const AccionesDetalleProducto = ({
     ) : (
       <Button
         isIconOnly
-        aria-label={`Editar ${producto.nombre}`}
+        aria-label={`Editar ${producto?.nombre ?? 'producto'}`}
         className="bg-dorado-primary/25 text-green-primary"
         radius="sm"
         size="sm"
