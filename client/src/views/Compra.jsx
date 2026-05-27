@@ -13,7 +13,7 @@ import TituloCompra from "../components/compra/TituloCompra";
 import { confirmarPedido } from "../data/confirmarPedido";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
-import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../data/reglasCarrito";
+import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../utils/reglasCarrito";
 
 export default function Compra() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
@@ -48,10 +48,7 @@ export default function Compra() {
       .then((mensajeBack) => {
         vaciarCarrito(usuario.idUsuario);
         setConfirmado(true);
-        addToast({
-          color: "success",
-          title: mensajeBack,
-        });
+        addToast({ color: "success", title: mensajeBack });
       })
       .catch((error) => {
         const mensaje = `No se pudo confirmar el pedido: ${error.message}`;
@@ -66,9 +63,7 @@ export default function Compra() {
     setCostoEnvio(datosEnvio.costoEnvio);
   };
 
-  if (confirmado) {
-    return <PedidoConfirmado alVolverInicio={() => navigate("/")} />;
-  }
+  if (confirmado) return <PedidoConfirmado alVolverInicio={() => navigate("/")} />;
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden font-sans text-slate-950">
@@ -88,18 +83,11 @@ export default function Compra() {
 
           <div className="lg:col-span-1">
             <div className="sticky top-24">
-              <ResumenPago
-                articulos={articulos}
-                resumen={resumen}
-                puedeConfirmar={puedeConfirmar}
-                cargando={cargandoConfirmar}
-                alConfirmar={confirmarCompra}
-              />
+              <ResumenPago articulos={articulos} resumen={resumen} puedeConfirmar={puedeConfirmar} cargando={cargandoConfirmar} alConfirmar={confirmarCompra} />
             </div>
           </div>
         </div>
       </main>
-
     </div>
   );
 }

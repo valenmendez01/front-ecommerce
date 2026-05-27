@@ -2,14 +2,11 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
 
-import { formatearPesos } from "../../../data/reglasProducto";
+import ControlesCantidad from "./ControlesCantidad";
 import ImagenProducto from "./ImagenProducto";
+import PrecioItemCarrito from "./PrecioItemCarrito";
 
 export default function ItemCarrito({ articulo, alActualizarCantidad, alEliminar }) {
-  const sinMasStock = articulo.stock && articulo.cantidad >= articulo.stock;
-  const precioOriginalTotal = articulo.precioOriginal ? articulo.precioOriginal * articulo.cantidad : 0;
-  const precioFinalTotal = articulo.precio * articulo.cantidad;
-
   return (
     <motion.div
       layout
@@ -44,32 +41,12 @@ export default function ItemCarrito({ articulo, alActualizarCantidad, alEliminar
         )}
 
         <div className="flex items-center gap-3 mt-3">
-          <div className="flex items-center border border-dorado-primary/50 rounded-lg overflow-hidden bg-white">
-            <Button
-              isIconOnly
-              size="sm"
-              variant="light"
-              radius="none"
-              onPress={() => alActualizarCantidad(articulo.id, articulo.cantidad - 1)}
-              className="min-w-8 h-8 text-black text-sm font-bold"
-            >
-              -
-            </Button>
-            <span className="px-3 py-1 text-sm font-semibold text-black border-x border-dorado-primary/40">
-              {articulo.cantidad}
-            </span>
-            <Button
-              isIconOnly
-              size="sm"
-              variant="light"
-              radius="none"
-              isDisabled={sinMasStock}
-              onPress={() => alActualizarCantidad(articulo.id, articulo.cantidad + 1)}
-              className="min-w-8 h-8 text-black text-sm font-bold"
-            >
-              +
-            </Button>
-          </div>
+          <ControlesCantidad
+            cantidad={articulo.cantidad}
+            stock={articulo.stock}
+            alRestar={() => alActualizarCantidad(articulo.id, articulo.cantidad - 1)}
+            alSumar={() => alActualizarCantidad(articulo.id, articulo.cantidad + 1)}
+          />
 
           <Button
             size="sm"
@@ -84,22 +61,7 @@ export default function ItemCarrito({ articulo, alActualizarCantidad, alEliminar
         </div>
       </div>
 
-      <div className="text-right shrink-0">
-        {articulo.precioOriginal && (
-          <p className="text-xs text-white/50 line-through">{formatearPesos(precioOriginalTotal)}</p>
-        )}
-        <p className="font-bold text-white">{formatearPesos(precioFinalTotal)}</p>
-        {articulo.descuento > 0 && (
-          <span className="text-[10px] font-bold text-black bg-dorado-primary px-1.5 py-0.5 rounded">
-            -{articulo.descuento}%
-          </span>
-        )}
-        {articulo.badge && !articulo.descuento && (
-          <span className="text-[10px] font-bold text-black bg-dorado-primary px-1.5 py-0.5 rounded">
-            {articulo.badge}
-          </span>
-        )}
-      </div>
+      <PrecioItemCarrito articulo={articulo} />
     </motion.div>
   );
 }
