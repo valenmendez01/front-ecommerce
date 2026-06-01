@@ -8,6 +8,8 @@ import logo from "../assets/logoHorizontal.png"
 import { useAuth } from "../context/useAuth"
 import { motion } from "framer-motion"
 import { Button } from "@heroui/react"
+import { useEffect, useState } from "react"
+import { CARRITO_EVENTO, obtenerArticulosCarrito } from "../lib/reglasCarrito"
 
 export default function Navigation() {
   const { pathname } = useLocation()
@@ -15,6 +17,23 @@ export default function Navigation() {
   const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
   const esVendedor = usuario?.rol === "VENDEDOR"
   const esComprador = usuario?.rol === "COMPRADOR"
+  const [cantidadCarrito, setCantidadCarrito] = useState(0)
+
+  useEffect(() => {
+    const actualizarCantidadCarrito = () => {
+      const articulos = obtenerArticulosCarrito(usuario?.idUsuario)
+      setCantidadCarrito(articulos.reduce((total, articulo) => total + articulo.cantidad, 0))
+    }
+
+    actualizarCantidadCarrito()
+    window.addEventListener(CARRITO_EVENTO, actualizarCantidadCarrito)
+    window.addEventListener("storage", actualizarCantidadCarrito)
+
+    return () => {
+      window.removeEventListener(CARRITO_EVENTO, actualizarCantidadCarrito)
+      window.removeEventListener("storage", actualizarCantidadCarrito)
+    }
+  }, [usuario?.idUsuario])
 
   const manejarCierreSesion = () => {
     cerrarSesion()
@@ -72,9 +91,16 @@ export default function Navigation() {
           {/* Acciones */}
           <div className="flex items-center gap-2">
             {esComprador && (
-              <Button as={Link} to="/carrito" className="relative z-20 mr-4 flex items-center px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white" variant="outline" isIconOnly aria-label="Carrito">
-                <ShoppingCart size={20} />
-              </Button>
+              <div className="relative z-20 mr-4 flex overflow-visible">
+                <Button as={Link} to="/carrito" className="flex items-center overflow-visible px-2 py-1 transition-colors duration-300 text-white/80 hover:text-white" variant="outline" isIconOnly aria-label="Carrito">
+                  <ShoppingCart size={20} />
+                </Button>
+                {cantidadCarrito > 0 && (
+                  <span className="pointer-events-none absolute right-1 top-1 z-30 flex h-5 min-w-5 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full bg-dorado-primary px-1 text-[10px] font-black text-black">
+                    {cantidadCarrito > 99 ? "99+" : cantidadCarrito}
+                  </span>
+                )}
+              </div>
             )}
 
             {esVendedor ? (

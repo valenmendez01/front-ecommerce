@@ -70,7 +70,7 @@ export default function Carrito() {
                   alEliminar={eliminarArticulo}
                 />
               ))}
-              <ProductosRecomendados />
+              <ProductosRecomendados articulosCarrito={articulos} />
             </div>
 
             <div className="lg:col-span-1">
