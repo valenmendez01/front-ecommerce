@@ -19,7 +19,7 @@ export const normalizarCategoriasProducto = (categorias) =>
 
 export const obtenerPrimerValorProducto = (valores) => Array.from(valores)[0]
 
-export const MAXIMO_ENTERO_PRODUCTO = 2147483647
+export const MAXIMO_STOCK_PRODUCTO = 10000
 
 export const obtenerErrorNumeroProductoVendedor = (valor, tipo) => {
   const numero = Number(valor)
@@ -28,7 +28,7 @@ export const obtenerErrorNumeroProductoVendedor = (valor, tipo) => {
   if (valor === '' || Number.isNaN(numero)) return 'Este campo es obligatorio.'
   if (numero < 0) return 'El valor no puede ser negativo.'
   if (debeSerEntero && !Number.isInteger(numero)) return 'El valor debe ser un numero entero.'
-  if (debeSerEntero && numero > MAXIMO_ENTERO_PRODUCTO) return 'El valor ingresado es demasiado grande.'
+  if (tipo === 'stock' && numero > MAXIMO_STOCK_PRODUCTO) return `El stock no puede superar ${MAXIMO_STOCK_PRODUCTO} unidades.`
   if (tipo === 'descuento' && numero > 100) return 'El descuento no puede superar el 100%.'
 
   return ''

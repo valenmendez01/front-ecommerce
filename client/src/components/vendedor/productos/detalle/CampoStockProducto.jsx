@@ -1,6 +1,6 @@
 import { Input } from '@heroui/react'
 import CampoDetalleProducto from './CampoDetalleProducto'
-import { MAXIMO_ENTERO_PRODUCTO, obtenerErrorNumeroProductoVendedor } from '../datos/reglasProductoVendedor'
+import { MAXIMO_STOCK_PRODUCTO, obtenerErrorNumeroProductoVendedor } from '../datos/reglasProductoVendedor'
 
 const clasesCampoProducto = {
   errorMessage: 'font-semibold',
@@ -18,7 +18,7 @@ const CampoStockProducto = ({ borrador, editando, onCambiar, producto }) => (
         classNames={clasesCampoProducto}
         errorMessage={obtenerErrorNumeroProductoVendedor(borrador.stock, 'stock')}
         isInvalid={Boolean(obtenerErrorNumeroProductoVendedor(borrador.stock, 'stock'))}
-        max={String(MAXIMO_ENTERO_PRODUCTO)}
+        max={String(MAXIMO_STOCK_PRODUCTO)}
         min="0"
         radius="sm"
         size="sm"
