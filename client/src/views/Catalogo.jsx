@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Filtros } from "../components/catalogo/filtrosCatalogo/Filtros";
 import { ListaProductos } from "../components/catalogo/productos/ListaProductos";
 import { Divider } from "@heroui/react";
@@ -17,8 +17,16 @@ function obtenerFiltrosDesdeUrl(search, nombreSingular, nombrePlural) {
   ];
 }
 
+function obtenerPaginaDesdeUrl(search) {
+  const parametros = new URLSearchParams(search);
+  const paginaUrl = Number(parametros.get("pagina"));
+
+  return Number.isFinite(paginaUrl) && paginaUrl > 0 ? paginaUrl - 1 : 0;
+}
+
 export const Catalogo = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [categorias, setCategorias] = useState([]);
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState(() =>
     obtenerFiltrosDesdeUrl(location.search, "categoria", "categorias")
@@ -31,10 +39,23 @@ export const Catalogo = () => {
   const [precioMin, setPrecioMin] = useState(0);
   const [precioMax, setPrecioMax] = useState(300000);
   const [busqueda, setBusqueda] = useState("");
-  const [pagina, setPagina] = useState(0);
+  const [pagina, setPagina] = useState(() => obtenerPaginaDesdeUrl(location.search));
   const [totalPaginas, setTotalPaginas] = useState(1);
   const PAGE_SIZE = 9;
   const [cargando, setCargando] = useState(true);
+
+  function cambiarPaginaEnUrl(nuevaPagina) {
+    const parametros = new URLSearchParams(location.search);
+
+    if (nuevaPagina > 1) {
+      parametros.set("pagina", nuevaPagina);
+    } else {
+      parametros.delete("pagina");
+    }
+
+    const query = parametros.toString();
+    navigate(`${location.pathname}${query ? `?${query}` : ""}`, { replace: true });
+  }
 
   useEffect(() => {
     fetch("/categorias")
@@ -57,6 +78,10 @@ export const Catalogo = () => {
         color: "danger" 
       }));
   }, []);
+
+  useEffect(() => {
+    setPagina(obtenerPaginaDesdeUrl(location.search));
+  }, [location.search]);
 
   useEffect(() => {
     const buildUrl = () => {
@@ -92,11 +117,13 @@ export const Catalogo = () => {
 
   function handleCambioCategoria(categorias) {
     setPagina(0);
+    cambiarPaginaEnUrl(1);
     setCategoriasSeleccionadas(categorias);
   }
 
   function handleCambioSeleccion(seleccion) {
     setPagina(0);
+    cambiarPaginaEnUrl(1);
     setSeleccionesSeleccionadas(seleccion);
   }
 
@@ -143,7 +170,7 @@ export const Catalogo = () => {
                   productos={productos}
                   pagina={pagina + 1}
                   totalPaginas={totalPaginas}
-                  onCambioPagina={(p) => { setPagina(p - 1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                  onCambioPagina={(p) => { setPagina(p - 1); cambiarPaginaEnUrl(p); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                 />
             }
           </div>
