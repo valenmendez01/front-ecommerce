@@ -1,6 +1,10 @@
+import { useSelector } from "react-redux";
 import { CheckboxGroup, Checkbox } from "@heroui/react";
 
-export const FiltroBySeleccion = ({ selecciones, seleccionadas, onCambiar }) => {
+export const FiltroBySeleccion = ({ seleccionadas, onCambiar }) => {
+
+  const selecciones = useSelector(state => state.productos.selecciones)
+
   const capitalizar = (str) =>
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 

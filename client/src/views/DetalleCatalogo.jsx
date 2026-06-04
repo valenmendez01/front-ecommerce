@@ -1,34 +1,23 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Card, Divider } from "@heroui/react";
 import { GaleriaProducto } from "../components/detalleCatalogo/Galeriaproducto";
 import { InfoProducto } from "../components/detalleCatalogo/Infoproducto";
 import { AccionesProducto } from "../components/detalleCatalogo/Accionesproducto";
-
+import { SkeletonDetalle } from "../components/detalleCatalogo/SkeletonDetalle";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductoDetalle } from "../redux/catalogoSlice";
 
 export const DetalleCatalogo = () => {
   const { id } = useParams();
-  const [producto, setProducto] = useState(null);
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState("");
+  const dispatch = useDispatch()
+  const { productoDetalle: producto, loadingDetalle: cargando, error } = useSelector(state => state.productos)
 
   useEffect(() => {
-    fetch(`/productos/${id}`)
-      .then(async (res) => {
-        const json = await res.json();
-        if (!res.ok || !json.data) {
-          throw new Error(json.mensaje || json.message || "Producto no encontrado.");
-        }
-        setProducto(json.data);
-      })
-      .catch(() => {
-        setProducto(null);
-        setError("Producto no encontrado.");
-      })
-      .finally(() => setCargando(false));
-  }, [id]);
+    dispatch(fetchProductoDetalle(id))
+  }, [dispatch, id])
 
-  if (cargando) return <p className="p-6">Cargando...</p>;
+  if (cargando || !producto) return <SkeletonDetalle />;
 
   if (error) {
     return (
