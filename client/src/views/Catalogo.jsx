@@ -28,7 +28,8 @@ function obtenerPaginaDesdeUrl(search) {
 
 export const Catalogo = () => {
   const location = useLocation();
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { productos, totalPaginas, loading: cargando, error } = useSelector(state => state.productos);
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState(() =>
     obtenerFiltrosDesdeUrl(location.search, "categoria", "categorias")
@@ -39,7 +40,7 @@ export const Catalogo = () => {
   const [precioMin, setPrecioMin] = useState(0);
   const [precioMax, setPrecioMax] = useState(300000);
   const [busqueda, setBusqueda] = useState("");
-  const [pagina, setPagina] = useState(0);
+  const [pagina, setPagina] = useState(() => obtenerPaginaDesdeUrl(location.search));
   const PAGE_SIZE = 9;
 
   useEffect(() => { 
@@ -74,16 +75,29 @@ export const Catalogo = () => {
     }
   }, [error]);
 
+  function actualizarUrl({ cats, sels, pag } = {}) {
+    const categorias = cats ?? categoriasSeleccionadas;
+    const selecciones = sels ?? seleccionesSeleccionadas;
+    const p = pag ?? pagina + 1;
+
+    const params = new URLSearchParams();
+    if (p > 1) params.set("pagina", p);
+    categorias.forEach(c => params.append("categoria", c));
+    selecciones.forEach(s => params.append("seleccion", s));
+
+    navigate(`?${params.toString()}`, { replace: true });
+  }
+
   function handleCambioCategoria(categorias) {
     setPagina(0);
-    cambiarPaginaEnUrl(1);
     setCategoriasSeleccionadas(categorias);
+    actualizarUrl({ cats: categorias, pag: 1 });
   }
 
   function handleCambioSeleccion(seleccion) {
     setPagina(0);
-    cambiarPaginaEnUrl(1);
     setSeleccionesSeleccionadas(seleccion);
+    actualizarUrl({ sels: seleccion, pag: 1 });
   }
 
   function handlePrecioChange(tipo, valor) {
@@ -129,7 +143,11 @@ export const Catalogo = () => {
                   productos={productos}
                   pagina={pagina + 1}
                   totalPaginas={totalPaginas}
-                  onCambioPagina={(p) => { setPagina(p - 1); cambiarPaginaEnUrl(p); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                  onCambioPagina={(p) => {
+                    setPagina(p - 1);
+                    actualizarUrl({ pag: p });
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
                 />
             }
           </div>
