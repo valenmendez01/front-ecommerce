@@ -1,4 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom"
+import { useEffect } from "react"
 import { useAuth } from "./context/useAuth"
 import PantallaCargandoSesion from "./components/login/PantallaCargandoSesion"
 import RutasPantallaCompleta from "./router/RutasPantallaCompleta"
@@ -9,6 +10,10 @@ function App() {
   const { pathname } = useLocation()
   const auth = useAuth()
   const { cargandoUsuario, usuario } = auth
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   if (cargandoUsuario) {
     return <PantallaCargandoSesion />

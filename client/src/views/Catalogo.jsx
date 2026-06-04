@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Filtros } from "../components/catalogo/filtrosCatalogo/Filtros";
 import { ListaProductos } from "../components/catalogo/productos/ListaProductos";
 import { Divider } from "@heroui/react";
@@ -17,6 +17,13 @@ function obtenerFiltrosDesdeUrl(search, nombreSingular, nombrePlural) {
     ...parametros.getAll(nombreSingular),
     ...parametros.getAll(nombrePlural),
   ];
+}
+
+function obtenerPaginaDesdeUrl(search) {
+  const parametros = new URLSearchParams(search);
+  const paginaUrl = Number(parametros.get("pagina"));
+
+  return Number.isFinite(paginaUrl) && paginaUrl > 0 ? paginaUrl - 1 : 0;
 }
 
 export const Catalogo = () => {
@@ -69,11 +76,13 @@ export const Catalogo = () => {
 
   function handleCambioCategoria(categorias) {
     setPagina(0);
+    cambiarPaginaEnUrl(1);
     setCategoriasSeleccionadas(categorias);
   }
 
   function handleCambioSeleccion(seleccion) {
     setPagina(0);
+    cambiarPaginaEnUrl(1);
     setSeleccionesSeleccionadas(seleccion);
   }
 
@@ -120,7 +129,7 @@ export const Catalogo = () => {
                   productos={productos}
                   pagina={pagina + 1}
                   totalPaginas={totalPaginas}
-                  onCambioPagina={(p) => { setPagina(p - 1); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                  onCambioPagina={(p) => { setPagina(p - 1); cambiarPaginaEnUrl(p); window.scrollTo({ top: 0, behavior: "smooth" }); }}
                 />
             }
           </div>
