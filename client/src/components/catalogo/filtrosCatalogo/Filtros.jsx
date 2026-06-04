@@ -17,7 +17,7 @@ export const Filtros = ({
   return (
     <Card className="my-6 px-5 py-2">
       <Accordion
-        selectionMode="multiple"
+        selectionMode="single"
         defaultExpandedKeys={["categoria"]}
         variant="light"
       >
