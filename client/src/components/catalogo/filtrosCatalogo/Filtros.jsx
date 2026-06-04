@@ -4,10 +4,10 @@ import { FiltroByPrecio } from "./FiltroByPrecio";
 import { FiltroBySeleccion } from "./FiltroBySeleccion";
 
 export const Filtros = ({
-  categorias,
+  //categorias,
   categoriasSeleccionadas,
   onCambiarCategoria,
-  selecciones,
+  //selecciones,
   seleccionesSeleccionadas,
   onCambiarSeleccion,
   precioMin,
@@ -29,7 +29,7 @@ export const Filtros = ({
           classNames={{ title: "font-heading font-semibold text-lg text-[var(--color-green-primary)]", trigger: "cursor-pointer" }}
         >
           <FiltroByCategoria
-            categorias={categorias}
+            //categorias={categorias}
             seleccionadas={categoriasSeleccionadas}
             onCambiar={onCambiarCategoria}
           />
@@ -43,7 +43,7 @@ export const Filtros = ({
           classNames={{ title: "font-heading font-semibold text-lg text-[var(--color-green-primary)]", trigger: "cursor-pointer" }}
         >
           <FiltroBySeleccion
-            selecciones={selecciones}
+            //selecciones={selecciones}
             seleccionadas={seleccionesSeleccionadas}
             onCambiar={onCambiarSeleccion}
           />

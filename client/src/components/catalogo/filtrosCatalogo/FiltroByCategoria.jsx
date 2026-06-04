@@ -1,7 +1,11 @@
+import { useSelector } from "react-redux";
 import { CheckboxGroup, Checkbox } from "@heroui/react";
 
-export const FiltroByCategoria = ({ categorias, seleccionadas, onCambiar }) => {
+export const FiltroByCategoria = ({ seleccionadas, onCambiar }) => {
   
+  // PREGUNTAR si categorias lo saco del store o lo paso como prop desde Catalogo
+  const categorias = useSelector(state => state.productos.categorias);
+
   const formatearTexto = (str) => {
     const textoSinGuiones = str.replace(/_/g, " ");
     return textoSinGuiones.charAt(0).toUpperCase() + textoSinGuiones.slice(1).toLowerCase();

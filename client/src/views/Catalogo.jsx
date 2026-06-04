@@ -7,6 +7,8 @@ import { GooeyInput } from "../components/ui/gooey-input";
 import { SkeletonCatalogo } from "../components/catalogo/productos/SkeletonCatalogo";
 import { addToast } from "@heroui/react";
 import { FlipWords } from "../components/ui/flip-words";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductos, fetchCategorias, fetchSelecciones } from "../redux/catalogoSlice";
 
 function obtenerFiltrosDesdeUrl(search, nombreSingular, nombrePlural) {
   const parametros = new URLSearchParams(search);
@@ -26,94 +28,51 @@ function obtenerPaginaDesdeUrl(search) {
 
 export const Catalogo = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-  const [categorias, setCategorias] = useState([]);
+  const dispatch = useDispatch()
+  const { productos, totalPaginas, loading: cargando, error } = useSelector(state => state.productos);
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState(() =>
     obtenerFiltrosDesdeUrl(location.search, "categoria", "categorias")
   );
-  const [selecciones, setSelecciones] = useState([]);
   const [seleccionesSeleccionadas, setSeleccionesSeleccionadas] = useState(() =>
     obtenerFiltrosDesdeUrl(location.search, "seleccion", "selecciones")
   );
-  const [productos, setProductos] = useState([]);
   const [precioMin, setPrecioMin] = useState(0);
   const [precioMax, setPrecioMax] = useState(300000);
   const [busqueda, setBusqueda] = useState("");
-  const [pagina, setPagina] = useState(() => obtenerPaginaDesdeUrl(location.search));
-  const [totalPaginas, setTotalPaginas] = useState(1);
+  const [pagina, setPagina] = useState(0);
   const PAGE_SIZE = 9;
-  const [cargando, setCargando] = useState(true);
 
-  function cambiarPaginaEnUrl(nuevaPagina) {
-    const parametros = new URLSearchParams(location.search);
-
-    if (nuevaPagina > 1) {
-      parametros.set("pagina", nuevaPagina);
-    } else {
-      parametros.delete("pagina");
-    }
-
-    const query = parametros.toString();
-    navigate(`${location.pathname}${query ? `?${query}` : ""}`, { replace: true });
-  }
+  useEffect(() => { 
+    dispatch(fetchCategorias()) 
+  }, [dispatch])
 
   useEffect(() => {
-    fetch("/categorias")
-      .then(res => res.json())
-      .then(json => setCategorias(json.data))
-      .catch(err => addToast({ 
-        title: "Error al cargar categorías", 
-        description: err.message, 
-        color: "danger" 
-      }));
-  }, []);
+    dispatch(fetchSelecciones()) 
+  }, [dispatch])
 
   useEffect(() => {
-    fetch("/selecciones")
-      .then(res => res.json())
-      .then(json => setSelecciones(json.data))
-      .catch(err => addToast({ 
-        title: "Error al cargar selecciones", 
-        description: err.message, 
-        color: "danger" 
-      }));
-  }, []);
+    // Encodea caracteres especiales (espacios, acentos, &, etc.)
+    const params = new URLSearchParams()
+    params.set("page", pagina)
+    params.set("size", PAGE_SIZE)
+    if (busqueda.trim())      params.set("nombre", busqueda.trim())
+    if (precioMin > 0)        params.set("min", precioMin)
+    if (precioMax <= 300000)  params.set("max", precioMax)
+    // Ej: ?categorias=ALBUM&categorias=FIGURITA
+    categoriasSeleccionadas.forEach(c => params.append("categorias", c))
+    seleccionesSeleccionadas.forEach(s => params.append("selecciones", s))
+    dispatch(fetchProductos(params.toString()))
+  }, [dispatch, categoriasSeleccionadas, seleccionesSeleccionadas, precioMin, precioMax, busqueda, pagina]);
 
   useEffect(() => {
-    setPagina(obtenerPaginaDesdeUrl(location.search));
-  }, [location.search]);
-
-  useEffect(() => {
-    const buildUrl = () => {
-      // Encodea caracteres especiales (espacios, acentos, &, etc.)
-      const params = new URLSearchParams();
-      params.set("page", pagina);
-      params.set("size", PAGE_SIZE);
-
-      if (busqueda.trim())        params.set("nombre", busqueda.trim());
-      if (precioMin > 0)          params.set("min", precioMin);
-      if (precioMax <= 300000)    params.set("max", precioMax);
-
-      // Ej: ?categorias=ALBUM&categorias=FIGURITA
-      categoriasSeleccionadas.forEach(c => params.append("categorias", c));
-      seleccionesSeleccionadas.forEach(s => params.append("selecciones", s));
-
-      return `/productos/filtrar?${params.toString()}`;
-    };
-
-    fetch(buildUrl())
-      .then(res => res.json())
-      .then(json => {
-        setProductos(json.data.content || []);
-        setTotalPaginas(json.data.totalPages ?? 1);
-        setCargando(false);
-      })
-      .catch(err => addToast({
-        title: "Error al cargar productos",
-        description: err.message || "Intentá de nuevo más tarde.",
+    if (error) {
+      addToast({
+        title: "Error",
+        description: error,
         color: "danger",
-      }));
-  }, [categoriasSeleccionadas, seleccionesSeleccionadas, precioMin, precioMax, busqueda, pagina]);
+      })
+    }
+  }, [error]);
 
   function handleCambioCategoria(categorias) {
     setPagina(0);
@@ -150,10 +109,10 @@ export const Catalogo = () => {
       <div className="flex">
         <aside className="w-90 shrink-0 p-6 sticky top-24 self-start">
           <Filtros
-            categorias={categorias}
+            //categorias={categorias}
             categoriasSeleccionadas={categoriasSeleccionadas}
             onCambiarCategoria={handleCambioCategoria}
-            selecciones={selecciones}
+            //selecciones={selecciones}
             seleccionesSeleccionadas={seleccionesSeleccionadas} 
             onCambiarSeleccion={handleCambioSeleccion}
             precioMin={precioMin}
