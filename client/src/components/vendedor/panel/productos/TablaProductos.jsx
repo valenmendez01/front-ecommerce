@@ -1,9 +1,11 @@
 import { Card } from '@heroui/react'
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { normalizarCategoriasProducto } from '../../productos/datos/reglasProductoVendedor'
 import EncabezadoProductos from '../../productos/encabezado/EncabezadoProductos'
 import TarjetaProducto from '../../productos/tarjeta/TarjetaProducto'
 import TarjetasProductosCargando from '../../productos/carga/TarjetasProductosCargando'
+import { fetchCategorias } from '../../../../redux/catalogoSlice'
 
 const MensajeProductos = ({ children }) => (
   <div className="rounded-md border border-slate-200 bg-slate-50 px-6 py-12 text-center font-semibold text-slate-500 xl:col-span-2">
@@ -12,22 +14,16 @@ const MensajeProductos = ({ children }) => (
 )
 
 const TablaProductos = ({ cargando = false, error = '', productos, onActualizarProducto, onCambiarVisibilidadProducto }) => {
+  const dispatch = useDispatch()
+  const categoriasOriginales = useSelector((state) => state.productos.categorias)
   const [mostrarTodos, setMostrarTodos] = useState(false)
   const [productoAbierto, setProductoAbierto] = useState(null)
-  const [categorias, setCategorias] = useState([])
   const productosVisibles = mostrarTodos ? productos : productos.slice(0, 2)
+  const categorias = normalizarCategoriasProducto(categoriasOriginales)
 
   useEffect(() => {
-    let sigueActivo = true
-    fetch('/categorias')
-      .then((respuesta) => respuesta.json())
-      .then((json) => sigueActivo && setCategorias(normalizarCategoriasProducto(json.data)))
-      .catch(() => sigueActivo && setCategorias([]))
-
-    return () => {
-      sigueActivo = false
-    }
-  }, [])
+    if (categoriasOriginales.length === 0) dispatch(fetchCategorias())
+  }, [categoriasOriginales.length, dispatch])
 
   const cambiarVista = () => {
     setMostrarTodos(!mostrarTodos)

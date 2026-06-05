@@ -1,11 +1,13 @@
 import { addToast } from '@heroui/react'
 import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import PaginaPanelUsuario from '../components/panelUsuario/estructura/PaginaPanelUsuario'
 import EncabezadoCrearProducto from '../components/vendedor/crearProducto/encabezado/EncabezadoCrearProducto'
 import FormularioCrearProducto from '../components/vendedor/crearProducto/formulario/FormularioCrearProducto'
 import { crearImagenesLocales, liberarImagenesLocales, quitarImagenLocal } from '../components/vendedor/crearProducto/imagenes/imagenesCrearProducto'
-import { cargarOpcionesProducto } from '../components/vendedor/crearProducto/datos/opcionesCrearProducto'
+import { actualizarOpcionesProducto } from '../components/vendedor/crearProducto/datos/opcionesCrearProducto'
 import { publicarProducto as publicarProductoEnBackend } from '../components/vendedor/crearProducto/datos/publicarProducto'
+import { fetchCategorias, fetchSelecciones } from '../redux/catalogoSlice'
 import {
   MAXIMO_CARACTERES_NOMBRE_PRODUCTO,
   MAXIMO_IMAGENES_PRODUCTO,
@@ -14,21 +16,32 @@ import {
   obtenerErrorCantidadImagenesProducto,
   obtenerErrorTamanioImagenesProducto,
   obtenerErroresProducto,
+  normalizarOpciones,
 } from '../components/vendedor/crearProducto/datos/reglasCrearProducto'
 
 const CrearProducto = ({ token, usuario, onCerrarSesion }) => {
+  const dispatch = useDispatch()
+  const categoriasOriginales = useSelector((state) => state.productos.categorias)
+  const seleccionesOriginales = useSelector((state) => state.productos.selecciones)
   const [producto, setProducto] = useState(estadoInicialProducto)
   const [imagenes, setImagenes] = useState([])
   const [mensaje, setMensaje] = useState('')
   const [tipoMensaje, setTipoMensaje] = useState('exito')
   const [mostrarErrores, setMostrarErrores] = useState(false)
   const [publicando, setPublicando] = useState(false)
-  const [categorias, setCategorias] = useState([])
-  const [selecciones, setSelecciones] = useState([])
+  const categorias = normalizarOpciones(categoriasOriginales)
+  const selecciones = normalizarOpciones(seleccionesOriginales)
 
   useEffect(() => {
-    return cargarOpcionesProducto(setCategorias, setSelecciones, setProducto)
-  }, [])
+    if (categoriasOriginales.length === 0) dispatch(fetchCategorias())
+    if (seleccionesOriginales.length === 0) dispatch(fetchSelecciones())
+  }, [categoriasOriginales.length, dispatch, seleccionesOriginales.length])
+
+  useEffect(() => {
+    if (categorias.length > 0 && selecciones.length > 0) {
+      setProducto((actual) => actualizarOpcionesProducto(actual, categorias, selecciones))
+    }
+  }, [categoriasOriginales, seleccionesOriginales])
 
   const errores = obtenerErroresProducto(producto, categorias, selecciones)
   const errorImagenes = obtenerErrorCantidadImagenesProducto(imagenes.length)

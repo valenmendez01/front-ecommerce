@@ -14,6 +14,21 @@ export const clearStoredToken = () => {
   localStorage.removeItem(TOKEN_STORAGE_KEY)
 }
 
+const esErrorTemporalServidor = (response, message) => {
+  const mensaje = message?.toLowerCase() || ''
+  return [502, 503, 504].includes(response.status) || mensaje.includes('bad gateway')
+}
+
+const obtenerMensajeError = (response, payload) => {
+  const message = payload?.mensaje || payload?.message || response.statusText
+
+  if (esErrorTemporalServidor(response, message)) {
+    return 'El servidor tardó demasiado en responder. Intentá nuevamente en unos segundos.'
+  }
+
+  return message
+}
+
 export const apiRequest = async (endpoint, options = {}) => {
   const { auth = true, headers, body, ...fetchOptions } = options
   const token = getStoredToken()
@@ -43,7 +58,7 @@ export const apiRequest = async (endpoint, options = {}) => {
   }
 
   if (!response.ok) {
-    const message = payload?.mensaje || payload?.message || response.statusText
+    const message = obtenerMensajeError(response, payload)
     const error = new Error(message)
     error.status = response.status
     error.payload = payload

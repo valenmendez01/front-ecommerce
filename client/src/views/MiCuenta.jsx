@@ -1,30 +1,20 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import EncabezadoCuenta from '../components/cuenta/encabezado/EncabezadoCuenta'
 import InformacionPersonal from '../components/cuenta/informacion/InformacionPersonal'
 import TablaPedidos from '../components/cuenta/pedidos/tabla/TablaPedidos'
 import PaginaPanelUsuario from '../components/panelUsuario/estructura/PaginaPanelUsuario'
 import { normalizarPedidoCuenta } from '../components/cuenta/pedidos/datos/datosPedidosCuenta'
 import { formatearPesosPedido } from '../components/cuenta/pedidos/datos/formatoPedidosCuenta'
+import { fetchPedidosComprador } from '../redux/pedidosSlice'
 
 const MiCuenta = ({ token, usuario, onCerrarSesion }) => {
-  const [pedidos, setPedidos] = useState([])
-  const [cargandoPedidos, setCargandoPedidos] = useState(true)
-  const [errorPedidos, setErrorPedidos] = useState('')
+  const dispatch = useDispatch()
+  const { pedidos, loading: cargandoPedidos, error: errorPedidos } = useSelector((state) => state.pedidos)
 
   useEffect(() => {
-    let sigueActivo = true
-
-    fetch('/pedidos/comprador', { headers: { Authorization: `Bearer ${token}` } })
-      .then(async (respuesta) => {
-        const json = await respuesta.json()
-        if (!respuesta.ok) throw new Error(json.mensaje || json.message || 'No se pudieron cargar tus pedidos.')
-        if (sigueActivo) setPedidos(json.data?.content || [])
-      })
-      .catch((error) => sigueActivo && setErrorPedidos(error.message))
-      .finally(() => sigueActivo && setCargandoPedidos(false))
-
-    return () => { sigueActivo = false }
-  }, [token])
+    dispatch(fetchPedidosComprador(token))
+  }, [dispatch, token])
 
   const pedidosNormalizados = pedidos.map(normalizarPedidoCuenta)
   const totalGastado = pedidosNormalizados.reduce((total, pedido) => total + pedido.monto, 0)

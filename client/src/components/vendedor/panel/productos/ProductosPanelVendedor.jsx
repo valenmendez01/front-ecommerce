@@ -1,35 +1,40 @@
 import { Package, PackageCheck, PackageX, TriangleAlert } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import MetricasPanelVendedor from '../metricas/MetricasPanelVendedor'
 import TablaProductos from './TablaProductos'
 import { agregarDatosDeVentas, crearDatosProducto, normalizarProductoVendedor, obtenerProductosPagina } from '../datos/datosProductosPanel'
 import { obtenerVentasPaginaPanel } from '../datos/datosVentasPanel'
 import { guardarImagenesProducto } from '../../productos/imagenes/imagenesProductoDetalle'
+import {
+  actualizarProductoVendedorGuardado,
+  fetchProductoVendedorPorId,
+  fetchProductosVendedor,
+} from '../../../../redux/productosVendedorSlice'
+import { fetchVentasVendedor } from '../../../../redux/ventasSlice'
 
 const ProductosPanelVendedor = ({ token }) => {
-  const [productos, setProductos] = useState([])
-  const [ventas, setVentas] = useState([])
-  const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState('')
+  const dispatch = useDispatch()
+  const {
+    productos: productosOriginales,
+    loading: cargandoProductos,
+    error: errorProductos,
+  } = useSelector((state) => state.productosVendedor)
+  const {
+    ventas: ventasOriginales,
+    loading: cargandoVentas,
+    error: errorVentas,
+  } = useSelector((state) => state.ventas)
 
   useEffect(() => {
-    let sigueActivo = true
-    const headers = { Authorization: `Bearer ${token}` }
+    dispatch(fetchProductosVendedor(token))
+    dispatch(fetchVentasVendedor(token))
+  }, [dispatch, token])
 
-    Promise.all([fetch('/productos/vendedor', { headers }), fetch('/ventas/vendedor', { headers })])
-      .then(async ([respuestaProductos, respuestaVentas]) => {
-        const jsonProductos = await respuestaProductos.json()
-        const jsonVentas = await respuestaVentas.json()
-        if (!respuestaProductos.ok || !respuestaVentas.ok) throw new Error('No se pudo cargar el panel.')
-        if (!sigueActivo) return
-        setProductos(obtenerProductosPagina(jsonProductos.data).map(normalizarProductoVendedor))
-        setVentas(obtenerVentasPaginaPanel(jsonVentas.data))
-      })
-      .catch((fallo) => sigueActivo && setError(fallo.message))
-      .finally(() => sigueActivo && setCargando(false))
-
-    return () => { sigueActivo = false }
-  }, [token])
+  const productos = obtenerProductosPagina(productosOriginales).map(normalizarProductoVendedor)
+  const ventas = obtenerVentasPaginaPanel(ventasOriginales)
+  const cargando = cargandoProductos || cargandoVentas
+  const error = errorProductos || errorVentas || ''
 
   const actualizarProducto = async (producto, cambiosImagenes) => {
     const respuesta = await fetch(`/productos/${producto.idProducto}`, {
@@ -40,8 +45,11 @@ const ProductosPanelVendedor = ({ token }) => {
     const json = await respuesta.json()
     if (!respuesta.ok) throw new Error(json.mensaje || json.message || 'No se pudo actualizar el producto.')
     const resultadoImagenes = await guardarImagenesProducto(producto.idProducto, cambiosImagenes, token)
-    const guardado = normalizarProductoVendedor(resultadoImagenes?.producto || json.data)
-    setProductos((actuales) => actuales.map((actual) => actual.idProducto === guardado.idProducto ? guardado : actual))
+    const productoGuardado = resultadoImagenes
+      ? await dispatch(fetchProductoVendedorPorId({ idProducto: producto.idProducto, token })).unwrap()
+      : json.data
+    const guardado = normalizarProductoVendedor(productoGuardado)
+    if (!resultadoImagenes) dispatch(actualizarProductoVendedorGuardado(productoGuardado))
     return {
       mensaje: json.mensaje || json.message || resultadoImagenes?.mensaje || 'Producto actualizado correctamente',
       mensajeImagenes: resultadoImagenes?.mensaje,

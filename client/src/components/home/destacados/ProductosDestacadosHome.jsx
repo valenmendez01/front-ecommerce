@@ -1,26 +1,19 @@
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchProductosDestacadosHome } from "../../../redux/homeSlice"
 import TarjetaProductoDestacadoHome from "./TarjetaProductoDestacadoHome"
 import TarjetaProductoDestacadoSkeleton from "./TarjetaProductoDestacadoSkeleton"
 
-const obtenerProductosPagina = (data) => {
-  if (Array.isArray(data)) return data
-  return data?.content || []
-}
-
 const ProductosDestacadosHome = () => {
-  const [productos, setProductos] = useState([])
-  const [cargando, setCargando] = useState(true)
+  const dispatch = useDispatch()
+  const { productosDestacados, loadingDestacados } = useSelector((state) => state.home)
 
   useEffect(() => {
-    fetch("/productos/destacados?page=0&size=4")
-      .then((respuesta) => respuesta.json())
-      .then((json) => setProductos(obtenerProductosPagina(json.data)))
-      .catch(() => setProductos([]))
-      .finally(() => setCargando(false))
-  }, [])
+    dispatch(fetchProductosDestacadosHome())
+  }, [dispatch])
 
-  if (!cargando && productos.length === 0) return null
+  if (!loadingDestacados && productosDestacados.length === 0) return null
 
   return (
     <section className="bg-white px-6 py-24 text-green-primary">
@@ -47,9 +40,9 @@ const ProductosDestacadosHome = () => {
         </div>
 
         <div className="mt-12 flex flex-wrap justify-center gap-6">
-          {cargando
+          {loadingDestacados
             ? [0, 1, 2, 3].map((item) => <TarjetaProductoDestacadoSkeleton key={item} />)
-            : productos.map((producto, index) => (
+            : productosDestacados.map((producto, index) => (
                 <motion.div
                   className="h-full w-full md:w-[calc(50%-0.75rem)] xl:w-[calc(25%-1.125rem)]"
                   initial={{ filter: "blur(10px)", opacity: 0, scale: 0.94, y: 82 }}

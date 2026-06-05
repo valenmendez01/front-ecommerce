@@ -25,6 +25,17 @@ const leerRespuesta = async (respuesta) => {
   }
 };
 
+const obtenerMensajeErrorPedido = (respuesta, json) => {
+  const mensaje = json?.mensaje || json?.message || respuesta.statusText;
+  const mensajeMinuscula = mensaje?.toLowerCase() || "";
+
+  if ([502, 503, 504].includes(respuesta.status) || mensajeMinuscula.includes("bad gateway")) {
+    return "El servidor tardó demasiado en confirmar el pedido. Revisá tus pedidos antes de volver a intentarlo.";
+  }
+
+  return mensaje || "No se pudo confirmar el pedido.";
+};
+
 export default function Compra() {
   const [envioGuardado, setEnvioGuardado] = useState(false);
   const [costoEnvio, setCostoEnvio] = useState(null);
@@ -57,7 +68,7 @@ export default function Compra() {
     });
 
     const json = await leerRespuesta(respuesta);
-    if (!respuesta.ok) throw new Error(json?.mensaje || json?.message || respuesta.statusText);
+    if (!respuesta.ok) throw new Error(obtenerMensajeErrorPedido(respuesta, json));
     return json?.mensaje || "Pedido confirmado";
   };
 

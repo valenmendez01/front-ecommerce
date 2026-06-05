@@ -1,29 +1,21 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import PaginaPanelUsuario from '../components/panelUsuario/estructura/PaginaPanelUsuario'
 import EncabezadoVentas from '../components/vendedor/ventas/encabezado/EncabezadoVentas'
 import MetricasVentas from '../components/vendedor/ventas/metricas/MetricasVentas'
 import TablaVentas from '../components/vendedor/ventas/tabla/TablaVentas'
 import { normalizarVentaVendedor, obtenerVentasPagina } from '../components/vendedor/ventas/datos/datosVentasVendedor'
+import { fetchVentasVendedor } from '../redux/ventasSlice'
 
 const VentasVendedor = ({ token, usuario, onCerrarSesion }) => {
-  const [ventas, setVentas] = useState([])
-  const [cargando, setCargando] = useState(true)
-  const [error, setError] = useState('')
+  const dispatch = useDispatch()
+  const { ventas: ventasOriginales, loading: cargando, error } = useSelector((state) => state.ventas)
 
   useEffect(() => {
-    let sigueActivo = true
+    dispatch(fetchVentasVendedor(token))
+  }, [dispatch, token])
 
-    fetch('/ventas/vendedor', { headers: { Authorization: `Bearer ${token}` } })
-      .then(async (respuesta) => {
-        const json = await respuesta.json()
-        if (!respuesta.ok) throw new Error(json.mensaje || json.message || 'No se pudieron cargar tus ventas.')
-        if (sigueActivo) setVentas(obtenerVentasPagina(json.data).map(normalizarVentaVendedor))
-      })
-      .catch((fallo) => sigueActivo && setError(fallo.message))
-      .finally(() => sigueActivo && setCargando(false))
-
-    return () => { sigueActivo = false }
-  }, [token])
+  const ventas = obtenerVentasPagina(ventasOriginales).map(normalizarVentaVendedor)
 
   return (
     <PaginaPanelUsuario usuario={usuario} onCerrarSesion={onCerrarSesion}>

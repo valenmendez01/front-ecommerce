@@ -88,8 +88,5 @@ export const guardarImagenesProducto = async (idProducto, cambios, token) => {
 
   if (nuevas.length === 0 && quitadas.length === 0) return null
 
-  const respuesta = await fetch(`/productos/${idProducto}`, { headers })
-  const json = await respuesta.json()
-  if (!respuesta.ok) throw new Error(json.mensaje || json.message || 'No se pudo recargar el producto.')
-  return { producto: json.data, mensaje: mensajes[mensajes.length - 1] || json.mensaje || json.message }
+  return { mensaje: mensajes[mensajes.length - 1] }
 }
