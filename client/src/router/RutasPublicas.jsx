@@ -1,4 +1,5 @@
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes, useLocation } from "react-router-dom"
+import FranjaBanderasCatalogo from "../components/catalogo/FranjaBanderasCatalogo"
 import Navigation from "../components/Navigation"
 import { StickyBanner } from "../components/ui/sticky-banner"
 import { Footer } from "../components/Footer"
@@ -7,6 +8,8 @@ import { DetalleCatalogo } from "../views/DetalleCatalogo"
 import Home from "../views/Home"
 
 const RutasPublicas = () => {
+  const { pathname } = useLocation()
+
   return (
     <>
       <div className="sticky top-0 z-50 grid" style={{ gridTemplateRows: "auto auto" }}>
@@ -17,6 +20,8 @@ const RutasPublicas = () => {
         </StickyBanner>
         <Navigation />
       </div>
+
+      {pathname === "/productos" && <FranjaBanderasCatalogo />}
 
       <div className="mx-auto flex max-w-400 flex-col">
         <main className="w-full px-6 pt-4">

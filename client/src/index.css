@@ -36,6 +36,22 @@
   }
 }
 
+@keyframes banderas-catalogo {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 0.625rem));
+  }
+}
+
+@layer utilities {
+  .animate-banderas-catalogo {
+    animation: banderas-catalogo 95s linear 1s infinite;
+  }
+}
+
 /* Uso
   Titulo: className="font-display uppercase tracking-wide text-5xl"
   Subtitulo: className="font-heading font-semibold text-xl"
