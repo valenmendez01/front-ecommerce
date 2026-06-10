@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,7 +15,6 @@ import {
 } from "../lib/reglasCarrito";
 import {
   actualizarCantidadCarrito,
-  cargarCarritoUsuario,
   eliminarDelCarrito,
 } from "../redux/carritoSlice";
 
@@ -26,10 +24,6 @@ export default function Carrito() {
   const dispatch = useDispatch();
   const articulos = useSelector((state) => state.carrito.articulos);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    dispatch(cargarCarritoUsuario(idUsuario));
-  }, [dispatch, idUsuario]);
 
   const actualizarCantidad = (id, nuevaCantidad) => {
     dispatch(actualizarCantidadCarrito({ id, idUsuario, nuevaCantidad }));

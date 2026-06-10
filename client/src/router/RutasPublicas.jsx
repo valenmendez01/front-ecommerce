@@ -24,7 +24,7 @@ const RutasPublicas = () => {
       {pathname === "/productos" && <FranjaBanderasCatalogo />}
 
       <div className="mx-auto flex max-w-400 flex-col">
-        <main className="w-full px-6 pt-4">
+        <main className={`w-full px-6 ${pathname === "/productos" ? "pt-0" : "pt-4"}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/productos" element={<Catalogo />} />

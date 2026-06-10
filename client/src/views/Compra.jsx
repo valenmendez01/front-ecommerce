@@ -14,7 +14,7 @@ import TituloCompra from "../components/compra/TituloCompra";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
 import { calcularResumenCarrito } from "../lib/reglasCarrito";
-import { cargarCarritoUsuario, vaciarCarritoRedux } from "../redux/carritoSlice";
+import { vaciarCarritoRedux } from "../redux/carritoSlice";
 import {
   confirmarPedidoCompra,
   guardarEnvioCompra,
@@ -38,9 +38,8 @@ export default function Compra() {
   } = useSelector((state) => state.compra);
 
   useEffect(() => {
-    dispatch(cargarCarritoUsuario(usuario?.idUsuario));
     return () => dispatch(reiniciarCompra());
-  }, [dispatch, usuario?.idUsuario]);
+  }, [dispatch]);
 
   const resumen = calcularResumenCarrito(articulos, envioGuardado ? costoEnvio : null);
   const esComprador = usuario?.rol === "COMPRADOR";

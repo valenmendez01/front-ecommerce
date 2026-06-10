@@ -29,7 +29,7 @@ const GrupoBanderas = () => (
 const FranjaBanderasCatalogo = () => (
   <div
     aria-hidden="true"
-    className="w-full overflow-hidden bg-white py-3"
+    className="w-full overflow-hidden bg-white pb-0 pt-3"
   >
     <div className="pl-5">
       <div className="flex w-max gap-5 animate-banderas-catalogo">
