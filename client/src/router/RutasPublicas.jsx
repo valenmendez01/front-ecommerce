@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import FranjaBanderasCatalogo from "../components/catalogo/FranjaBanderasCatalogo"
-import Navigation from "../components/Navigation"
-import { StickyBanner } from "../components/ui/sticky-banner"
+import EncabezadoGeneral from "../components/EncabezadoGeneral"
 import { Footer } from "../components/Footer"
 import { Catalogo } from "../views/Catalogo"
 import { DetalleCatalogo } from "../views/DetalleCatalogo"
@@ -12,14 +11,7 @@ const RutasPublicas = () => {
 
   return (
     <>
-      <div className="sticky top-0 z-50 grid" style={{ gridTemplateRows: "auto auto" }}>
-        <StickyBanner className="bg-linear-to-b from-dorado-primary to-dorado-primary/90">
-          <p className="text-white text-sm drop-shadow-md">
-            ⚡ ¡Comprá hoy y recibí tu pedido <b>en menos de 24 hs</b>!
-          </p>
-        </StickyBanner>
-        <Navigation />
-      </div>
+      <EncabezadoGeneral />
 
       {pathname === "/productos" && <FranjaBanderasCatalogo />}
 

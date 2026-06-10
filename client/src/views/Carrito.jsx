@@ -1,74 +1,73 @@
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { Button } from "@heroui/react"
+import { ArrowLeft } from "lucide-react"
 
-import ArticuloCarrito from "../components/carrito/items/ItemCarrito";
-import BarraPagoMovil from "../components/carrito/BarraPagoMovil";
-import CarritoVacio from "../components/carrito/CarritoVacio";
-import HeaderCarrito from "../components/carrito/HeaderCarrito";
-import ProductosRecomendados from "../components/carrito/items/ItemsRecomendados";
-import ResumenCarrito from "../components/carrito/ResumenCarrito";
-import TituloCarrito from "../components/carrito/TituloCarrito";
-import copaMundo from "../assets/copa-mundo.png";
-import { useAuth } from "../context/useAuth";
-import {
-  calcularResumenCarrito,
-} from "../lib/reglasCarrito";
-import {
-  actualizarCantidadCarrito,
-  eliminarDelCarrito,
-} from "../redux/carritoSlice";
+import ArticuloCarrito from "../components/carrito/items/ItemCarrito"
+import BarraPagoMovil from "../components/carrito/BarraPagoMovil"
+import CarritoVacio from "../components/carrito/CarritoVacio"
+import ProductosRecomendados from "../components/carrito/items/ItemsRecomendados"
+import ResumenCarrito from "../components/carrito/ResumenCarrito"
+import TituloCarrito from "../components/carrito/TituloCarrito"
+import copaMundo from "../assets/copa-mundo.png"
+import { useCarrito } from "../lib/useCarrito"
 
 export default function Carrito() {
-  const { usuario } = useAuth();
-  const idUsuario = usuario?.idUsuario;
-  const dispatch = useDispatch();
-  const articulos = useSelector((state) => state.carrito.articulos);
-  const navigate = useNavigate();
-
-  const actualizarCantidad = (id, nuevaCantidad) => {
-    dispatch(actualizarCantidadCarrito({ id, idUsuario, nuevaCantidad }));
-  };
-
-  const eliminarArticulo = (id) => {
-    dispatch(eliminarDelCarrito({ id, idUsuario }));
-  };
-
-  const resumen = calcularResumenCarrito(articulos);
+  const carrito = useCarrito()
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden font-sans text-slate-950">
-      <img src={copaMundo} alt="" className="absolute -right-48 top-16 w-[900px] opacity-5 pointer-events-none select-none" />
-      <HeaderCarrito alVolverInicio={() => navigate("/")} />
+      <img
+        src={copaMundo}
+        alt=""
+        className="absolute -right-48 top-16 w-[900px] opacity-5 pointer-events-none select-none"
+      />
 
       <main className="max-w-6xl mx-auto px-6 py-16">
+        <Button
+          className="mb-6 text-green-primary"
+          startContent={<ArrowLeft size={17} />}
+          variant="light"
+          onPress={carrito.volverPaginaAnterior}
+        >
+          Volver
+        </Button>
+
         <TituloCarrito />
 
-        {articulos.length === 0 ? (
+        {carrito.articulos.length === 0 ? (
           <CarritoVacio />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 flex flex-col gap-4">
-              {articulos.map((articulo) => (
+              {carrito.articulos.map((articulo) => (
                 <ArticuloCarrito
                   key={articulo.id}
                   articulo={articulo}
-                  alActualizarCantidad={actualizarCantidad}
-                  alEliminar={eliminarArticulo}
+                  alActualizarCantidad={carrito.actualizarCantidad}
+                  alEliminar={carrito.eliminarArticulo}
                 />
               ))}
-              <ProductosRecomendados articulosCarrito={articulos} />
+
+              <ProductosRecomendados articulosCarrito={carrito.articulos} />
             </div>
 
             <div className="lg:col-span-1">
               <div className="sticky top-24">
-                <ResumenCarrito resumen={resumen} alProcederAlPago={() => navigate("/compra")} />
+                <ResumenCarrito
+                  resumen={carrito.resumen}
+                  alProcederAlPago={carrito.irAlPago}
+                />
               </div>
             </div>
           </div>
         )}
       </main>
 
-      {articulos.length > 0 && <BarraPagoMovil subtotal={resumen.total} alIrAlPago={() => navigate("/compra")} />}
+      {carrito.articulos.length > 0 && (
+        <BarraPagoMovil
+          subtotal={carrito.resumen.total}
+          alIrAlPago={carrito.irAlPago}
+        />
+      )}
     </div>
-  );
+  )
 }

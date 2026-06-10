@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
+import { useDispatch } from 'react-redux'
+
 import { apiRequest, clearStoredToken, getStoredToken, setStoredToken } from '../lib/api'
-import { vaciarCarrito } from '../lib/reglasCarrito'
+import { limpiarCarritosPersistidos } from '../redux/carritoSlice'
 import { AuthContext } from './useAuth'
 
 const USUARIO_KEY = 'usuario'
@@ -72,22 +74,22 @@ const resolverSesionInicial = () => {
 }
 
 export const AuthProvider = ({ children }) => {
+  const dispatch = useDispatch()
   const [usuario, setUsuario] = useState(() => resolverSesionInicial().usuario)
   const [token, setToken] = useState(() => resolverSesionInicial().token)
   const [cargandoUsuario, setCargandoUsuario] = useState(false)
   const [errorSesion, setErrorSesion] = useState('')
-
   const usuarioIdActual = usuario?.idUsuario ?? null
 
-  // Borra los tokens del disco, limpia el LocalStorage, vacía el carrito
+  // Borra los tokens del disco, limpia el LocalStorage y los carritos persistidos
   const cerrarSesion = useCallback(() => {
     clearStoredToken()
     limpiarUsuarioLocal()
-    vaciarCarrito()
+    dispatch(limpiarCarritosPersistidos())
     setToken(null)
     setUsuario(null)
     setErrorSesion('')
-  }, [])
+  }, [dispatch])
 
   const guardarSesion = useCallback((tokenNuevo, usuarioNormalizado) => {
     setStoredToken(tokenNuevo)
@@ -106,12 +108,11 @@ export const AuthProvider = ({ children }) => {
         method: 'POST',
         body: { email, contrasena },
       })
-
       const usuarioNormalizado = normalizarUsuario(respuesta.usuario)
       if (!usuarioNormalizado) throw new Error('No se pudo obtener el usuario autenticado.')
 
       if (usuarioIdActual && usuarioIdActual !== usuarioNormalizado.idUsuario) {
-        vaciarCarrito()
+        dispatch(limpiarCarritosPersistidos())
       }
 
       guardarSesion(respuesta.access_token, usuarioNormalizado)
@@ -123,7 +124,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setCargandoUsuario(false)
     }
-  }, [cerrarSesion, guardarSesion, usuarioIdActual])
+  }, [cerrarSesion, dispatch, guardarSesion, usuarioIdActual])
 
   // Registro COMPRADOR
   const registrarComprador = useCallback(async ({ nombre, apellido, email, contrasena }) => {
@@ -134,12 +135,11 @@ export const AuthProvider = ({ children }) => {
         method: 'POST',
         body: { nombre, apellido, email, contrasena },
       })
-
       const usuarioNormalizado = normalizarUsuario(respuesta.usuario)
       if (!usuarioNormalizado) throw new Error('No se pudo obtener el usuario registrado.')
 
       if (usuarioIdActual && usuarioIdActual !== usuarioNormalizado.idUsuario) {
-        vaciarCarrito()
+        dispatch(limpiarCarritosPersistidos())
       }
 
       guardarSesion(respuesta.access_token, usuarioNormalizado)
@@ -151,7 +151,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setCargandoUsuario(false)
     }
-  }, [cerrarSesion, guardarSesion, usuarioIdActual])
+  }, [cerrarSesion, dispatch, guardarSesion, usuarioIdActual])
 
   const value = useMemo(
     () => ({
