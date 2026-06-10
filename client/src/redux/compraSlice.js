@@ -41,6 +41,10 @@ export const confirmarPedidoCompra = createAsyncThunk(
       return rejectWithValue(obtenerMensajeErrorPedido(error))
     }
   },
+  {
+    condition: (_, { getState }) =>
+      !getState().compra.cargandoConfirmar,
+  },
 )
 const compraSlice = createSlice({
   name: 'compra',

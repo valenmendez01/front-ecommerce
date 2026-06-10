@@ -1,15 +1,5 @@
 import { motion } from "framer-motion";
-
-const obtenerMarcaTarjeta = (numero = "") => {
-  const digitos = numero.replace(/\D/g, "");
-  if (/^4/.test(digitos)) return "visa";
-  if (/^5[1-5]/.test(digitos)) return "mastercard";
-  if (digitos.length >= 4) {
-    const prefijo = Number(digitos.slice(0, 4));
-    if (prefijo >= 2221 && prefijo <= 2720) return "mastercard";
-  }
-  return "generica";
-};
+import { obtenerMarcaTarjeta } from "../../../lib/useFormularioPago";
 
 const estilosMarca = {
   generica: "from-zinc-800 via-zinc-700 to-zinc-900",
@@ -33,7 +23,7 @@ const LogoTarjeta = ({ marca }) => {
 };
 
 export default function TarjetaPagoAnimada({ cvvActivo, formulario }) {
-  const marca = obtenerMarcaTarjeta(formulario.numero);
+  const marca = obtenerMarcaTarjeta(formulario.numero.replace(/\D/g, "")) || "generica";
   const numeroVisible = formulario.numero || "**** **** **** ****";
   const titularVisible = formulario.titular || "Nombre y apellido";
   const vencimientoVisible = formulario.vencimiento || "MM/AA";

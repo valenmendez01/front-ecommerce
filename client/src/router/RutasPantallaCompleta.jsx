@@ -1,4 +1,5 @@
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes, useLocation } from "react-router-dom"
+import EncabezadoGeneral from "../components/EncabezadoGeneral"
 import { Footer } from "../components/Footer"
 import PantallaCargandoSesion from "../components/login/PantallaCargandoSesion"
 import useRequiereSesion from "./useRequiereSesion"
@@ -12,8 +13,10 @@ import Carrito from "../views/Carrito"
 import Compra from "../views/Compra"
 
 const RutasPantallaCompleta = ({ auth }) => {
+  const { pathname } = useLocation()
   const { token, usuario, cerrarSesion, cargandoUsuario } = auth
   const { requerirSesion } = useRequiereSesion()
+  const mostrarNavegacionGeneral = pathname === '/carrito' || pathname === '/compra'
   const destinoUsuarioAutenticado = usuario?.rol === 'VENDEDOR' ? '/panel-vendedor' : '/mi-cuenta'
 
   const redirectSiAutenticado = (elemento) => {
@@ -24,6 +27,8 @@ const RutasPantallaCompleta = ({ auth }) => {
 
   return (
     <>
+      {mostrarNavegacionGeneral && <EncabezadoGeneral />}
+
       <Routes>
         <Route
           path="/carrito"

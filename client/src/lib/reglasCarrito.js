@@ -1,8 +1,3 @@
-const CARRITO_STORAGE_KEY = 'figullect_carrito'
-
-const obtenerClaveCarrito = (idUsuario) =>
-  idUsuario ? `${CARRITO_STORAGE_KEY}_${idUsuario}` : CARRITO_STORAGE_KEY
-
 export const obtenerImagenProducto = (producto) => {
   if (producto.imagen) return producto.imagen
   if (producto.imagenUrl) return producto.imagenUrl
@@ -41,38 +36,7 @@ const normalizarArticulo = (articulo) => ({
   subtitulo: formatearCategoriaProducto(articulo.subtitulo),
 })
 
-const leerCarrito = (idUsuario) => {
-  try {
-    const articulos = JSON.parse(localStorage.getItem(obtenerClaveCarrito(idUsuario)) || '[]')
-    return Array.isArray(articulos) ? articulos.map(normalizarArticulo) : []
-  } catch {
-    return []
-  }
-}
-
-const guardarCarrito = (articulos, idUsuario) => {
-  localStorage.setItem(obtenerClaveCarrito(idUsuario), JSON.stringify(articulos.map(normalizarArticulo)))
-}
-
-export const obtenerArticulosCarrito = (idUsuario) => leerCarrito(idUsuario)
-
-export const reemplazarArticulosCarrito = (articulos, idUsuario) => {
-  guardarCarrito(articulos, idUsuario)
-  return obtenerArticulosCarrito(idUsuario)
-}
-
-export const vaciarCarrito = (idUsuario) => {
-  if (idUsuario) {
-    localStorage.removeItem(obtenerClaveCarrito(idUsuario))
-    return
-  }
-
-  Object.keys(localStorage)
-    .filter((clave) => clave === CARRITO_STORAGE_KEY || clave.startsWith(`${CARRITO_STORAGE_KEY}_`))
-    .forEach((clave) => localStorage.removeItem(clave))
-}
-
-export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
+export const agregarProductoAlCarrito = (articulos, producto, cantidad = 1) => {
   const precioBase = Number(producto.precio || 0)
   const descuento = Number(producto.descuento || 0)
   const precioFinal = Math.round(precioBase * (1 - descuento / 100))
@@ -80,11 +44,13 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
   const idProducto = obtenerIdProducto(producto)
 
   if ((stock !== undefined && stock <= 0) || idProducto == null) {
-    return obtenerArticulosCarrito(idUsuario)
+    return articulos
   }
 
-  const articulos = leerCarrito(idUsuario)
-  const articuloExistente = articulos.find((articulo) => articulo.idProducto === idProducto)
+  const articulosNormalizados = articulos.map(normalizarArticulo)
+  const articuloExistente = articulosNormalizados.find(
+    (articulo) => articulo.idProducto === idProducto,
+  )
   const cantidadPedida = Math.max(1, Number(cantidad || 1))
 
   const articuloProducto = {
@@ -101,7 +67,7 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
   }
 
   const articulosActualizados = articuloExistente
-    ? articulos.map((articulo) =>
+    ? articulosNormalizados.map((articulo) =>
         articulo.idProducto === idProducto
           ? {
               ...articulo,
@@ -117,10 +83,9 @@ export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
             }
           : articulo,
       )
-    : [...articulos, articuloProducto]
+    : [...articulosNormalizados, articuloProducto]
 
-  guardarCarrito(articulosActualizados, idUsuario)
-  return obtenerArticulosCarrito(idUsuario)
+  return articulosActualizados
 }
 
 export const calcularResumenCarrito = (articulos, envio = 0) => {
