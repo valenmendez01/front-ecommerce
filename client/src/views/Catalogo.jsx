@@ -106,8 +106,8 @@ export const Catalogo = () => {
   }
 
   return (
-    <div className="flex flex-col font-sans max-w-7xl mx-auto w-full mt-8">
-      <div className="flex items-center justify-between px-6 py-4">
+    <div className="flex flex-col font-sans max-w-7xl mx-auto w-full">
+      <div className="flex items-center justify-between px-6 pb-4 pt-4">
         <h1 className="font-display uppercase text-5xl text-green-primary">
           Encontrá tu próxima<FlipWords words={["figurita", "joya", "estrella", "sorpresa"]} />
         </h1>

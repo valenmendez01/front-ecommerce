@@ -1,19 +1,26 @@
 import { Navigate, useLocation } from "react-router-dom"
 import { useEffect } from "react"
+import { useDispatch } from "react-redux"
 import { useAuth } from "./context/useAuth"
 import PantallaCargandoSesion from "./components/login/PantallaCargandoSesion"
 import RutasPantallaCompleta from "./router/RutasPantallaCompleta"
 import RutasPublicas from "./router/RutasPublicas"
 import { rutasPantallaCompleta, esRutaPermitidaParaVendedor } from "./router/constants"
+import { cargarCarritoUsuario } from "./redux/carritoSlice"
 
 function App() {
   const { pathname } = useLocation()
+  const dispatch = useDispatch()
   const auth = useAuth()
   const { cargandoUsuario, usuario } = auth
 
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+
+  useEffect(() => {
+    dispatch(cargarCarritoUsuario(usuario?.idUsuario))
+  }, [dispatch, usuario?.idUsuario])
 
   if (cargandoUsuario) {
     return <PantallaCargandoSesion />

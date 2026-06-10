@@ -8,9 +8,7 @@ import logo from "../assets/logoHorizontal.png"
 import { useAuth } from "../context/useAuth"
 import { motion } from "framer-motion"
 import { Button } from "@heroui/react"
-import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { cargarCarritoUsuario } from "../redux/carritoSlice"
+import { useSelector } from "react-redux"
 
 export default function Navigation() {
   const { pathname } = useLocation()
@@ -18,14 +16,9 @@ export default function Navigation() {
   const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
   const esVendedor = usuario?.rol === "VENDEDOR"
   const esComprador = usuario?.rol === "COMPRADOR"
-  const dispatch = useDispatch()
   const cantidadCarrito = useSelector((state) =>
     state.carrito.articulos.reduce((total, articulo) => total + articulo.cantidad, 0),
   )
-
-  useEffect(() => {
-    dispatch(cargarCarritoUsuario(usuario?.idUsuario))
-  }, [dispatch, usuario?.idUsuario])
 
   const manejarCierreSesion = () => {
     cerrarSesion()
