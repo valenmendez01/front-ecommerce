@@ -8,8 +8,9 @@ import logo from "../assets/logoHorizontal.png"
 import { useAuth } from "../context/useAuth"
 import { motion } from "framer-motion"
 import { Button } from "@heroui/react"
-import { useEffect, useState } from "react"
-import { CARRITO_EVENTO, obtenerArticulosCarrito } from "../lib/reglasCarrito"
+import { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { cargarCarritoUsuario } from "../redux/carritoSlice"
 
 export default function Navigation() {
   const { pathname } = useLocation()
@@ -17,23 +18,14 @@ export default function Navigation() {
   const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
   const esVendedor = usuario?.rol === "VENDEDOR"
   const esComprador = usuario?.rol === "COMPRADOR"
-  const [cantidadCarrito, setCantidadCarrito] = useState(0)
+  const dispatch = useDispatch()
+  const cantidadCarrito = useSelector((state) =>
+    state.carrito.articulos.reduce((total, articulo) => total + articulo.cantidad, 0),
+  )
 
   useEffect(() => {
-    const actualizarCantidadCarrito = () => {
-      const articulos = obtenerArticulosCarrito(usuario?.idUsuario)
-      setCantidadCarrito(articulos.reduce((total, articulo) => total + articulo.cantidad, 0))
-    }
-
-    actualizarCantidadCarrito()
-    window.addEventListener(CARRITO_EVENTO, actualizarCantidadCarrito)
-    window.addEventListener("storage", actualizarCantidadCarrito)
-
-    return () => {
-      window.removeEventListener(CARRITO_EVENTO, actualizarCantidadCarrito)
-      window.removeEventListener("storage", actualizarCantidadCarrito)
-    }
-  }, [usuario?.idUsuario])
+    dispatch(cargarCarritoUsuario(usuario?.idUsuario))
+  }, [dispatch, usuario?.idUsuario])
 
   const manejarCierreSesion = () => {
     cerrarSesion()

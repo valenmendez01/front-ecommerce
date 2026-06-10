@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import ArticuloCarrito from "../components/carrito/items/ItemCarrito";
 import BarraPagoMovil from "../components/carrito/BarraPagoMovil";
@@ -12,39 +13,30 @@ import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
 import {
   calcularResumenCarrito,
-  obtenerArticulosCarrito,
-  reemplazarArticulosCarrito,
 } from "../lib/reglasCarrito";
+import {
+  actualizarCantidadCarrito,
+  cargarCarritoUsuario,
+  eliminarDelCarrito,
+} from "../redux/carritoSlice";
 
 export default function Carrito() {
   const { usuario } = useAuth();
   const idUsuario = usuario?.idUsuario;
-  const [articulos, setArticulos] = useState(() => obtenerArticulosCarrito(idUsuario));
+  const dispatch = useDispatch();
+  const articulos = useSelector((state) => state.carrito.articulos);
   const navigate = useNavigate();
 
   useEffect(() => {
-    reemplazarArticulosCarrito(articulos, idUsuario);
-  }, [articulos, idUsuario]);
+    dispatch(cargarCarritoUsuario(idUsuario));
+  }, [dispatch, idUsuario]);
 
   const actualizarCantidad = (id, nuevaCantidad) => {
-    if (nuevaCantidad < 1) {
-      eliminarArticulo(id);
-      return;
-    }
-
-    setArticulos((prev) =>
-      prev.map((articulo) => {
-        if (articulo.id !== id) return articulo;
-
-        const stock = Number(articulo.stock ?? nuevaCantidad);
-        const cantidad = Math.min(nuevaCantidad, stock);
-        return { ...articulo, cantidad };
-      }),
-    );
+    dispatch(actualizarCantidadCarrito({ id, idUsuario, nuevaCantidad }));
   };
 
   const eliminarArticulo = (id) => {
-    setArticulos((prev) => prev.filter((articulo) => articulo.id !== id));
+    dispatch(eliminarDelCarrito({ id, idUsuario }));
   };
 
   const resumen = calcularResumenCarrito(articulos);

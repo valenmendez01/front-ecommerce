@@ -1,5 +1,4 @@
 const CARRITO_STORAGE_KEY = 'figullect_carrito'
-export const CARRITO_EVENTO = 'figullect_carrito_actualizado'
 
 const obtenerClaveCarrito = (idUsuario) =>
   idUsuario ? `${CARRITO_STORAGE_KEY}_${idUsuario}` : CARRITO_STORAGE_KEY
@@ -53,7 +52,6 @@ const leerCarrito = (idUsuario) => {
 
 const guardarCarrito = (articulos, idUsuario) => {
   localStorage.setItem(obtenerClaveCarrito(idUsuario), JSON.stringify(articulos.map(normalizarArticulo)))
-  window.dispatchEvent(new Event(CARRITO_EVENTO))
 }
 
 export const obtenerArticulosCarrito = (idUsuario) => leerCarrito(idUsuario)
@@ -66,14 +64,12 @@ export const reemplazarArticulosCarrito = (articulos, idUsuario) => {
 export const vaciarCarrito = (idUsuario) => {
   if (idUsuario) {
     localStorage.removeItem(obtenerClaveCarrito(idUsuario))
-    window.dispatchEvent(new Event(CARRITO_EVENTO))
     return
   }
 
   Object.keys(localStorage)
     .filter((clave) => clave === CARRITO_STORAGE_KEY || clave.startsWith(`${CARRITO_STORAGE_KEY}_`))
     .forEach((clave) => localStorage.removeItem(clave))
-  window.dispatchEvent(new Event(CARRITO_EVENTO))
 }
 
 export const agregarProductoAlCarrito = (producto, cantidad = 1, idUsuario) => {
