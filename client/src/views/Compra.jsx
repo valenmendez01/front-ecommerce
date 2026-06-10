@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { addToast } from "@heroui/react";
 
 import AccordionEnvio from "../components/compra/envio/Envio";
@@ -12,97 +13,61 @@ import ResumenPago from "../components/compra/pago/ResumenPago";
 import TituloCompra from "../components/compra/TituloCompra";
 import copaMundo from "../assets/copa-mundo.png";
 import { useAuth } from "../context/useAuth";
-import { calcularResumenCarrito, obtenerArticulosCarrito, vaciarCarrito } from "../lib/reglasCarrito";
-
-const leerRespuesta = async (respuesta) => {
-  const texto = await respuesta.text();
-  if (!texto) return null;
-
-  try {
-    return JSON.parse(texto);
-  } catch {
-    return { mensaje: texto };
-  }
-};
-
-const obtenerMensajeErrorPedido = (respuesta, json) => {
-  const mensaje = json?.mensaje || json?.message || respuesta.statusText;
-  const mensajeMinuscula = mensaje?.toLowerCase() || "";
-
-  if ([502, 503, 504].includes(respuesta.status) || mensajeMinuscula.includes("bad gateway")) {
-    return "El servidor tardó demasiado en confirmar el pedido. Revisá tus pedidos antes de volver a intentarlo.";
-  }
-
-  return mensaje || "No se pudo confirmar el pedido.";
-};
+import { calcularResumenCarrito } from "../lib/reglasCarrito";
+import { cargarCarritoUsuario, vaciarCarritoRedux } from "../redux/carritoSlice";
+import {
+  confirmarPedidoCompra,
+  guardarEnvioCompra,
+  guardarPagoCompra,
+  registrarErrorCompra,
+  reiniciarCompra,
+} from "../redux/compraSlice";
 
 export default function Compra() {
-  const [envioGuardado, setEnvioGuardado] = useState(false);
-  const [costoEnvio, setCostoEnvio] = useState(null);
-  const [pagoGuardado, setPagoGuardado] = useState(false);
-  const [confirmado, setConfirmado] = useState(false);
-  const [cargandoConfirmar, setCargandoConfirmar] = useState(false);
-  const [errorConfirmar, setErrorConfirmar] = useState(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { usuario, token } = useAuth();
+  const articulos = useSelector((state) => state.carrito.articulos);
+  const {
+    cargandoConfirmar,
+    confirmado,
+    costoEnvio,
+    envioGuardado,
+    errorConfirmar,
+    pagoGuardado,
+  } = useSelector((state) => state.compra);
 
-  const articulos = obtenerArticulosCarrito(usuario?.idUsuario);
+  useEffect(() => {
+    dispatch(cargarCarritoUsuario(usuario?.idUsuario));
+    return () => dispatch(reiniciarCompra());
+  }, [dispatch, usuario?.idUsuario]);
+
   const resumen = calcularResumenCarrito(articulos, envioGuardado ? costoEnvio : null);
   const esComprador = usuario?.rol === "COMPRADOR";
   const puedeConfirmar = envioGuardado && pagoGuardado && articulos.length > 0 && esComprador;
 
-  const confirmarPedido = async () => {
-    const respuesta = await fetch("/pedidos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        idUsuario: usuario.idUsuario,
-        items: articulos.map((articulo) => ({
-          idProducto: articulo.id,
-          cantidad: articulo.cantidad,
-        })),
-      }),
-    });
-
-    const json = await leerRespuesta(respuesta);
-    if (!respuesta.ok) throw new Error(obtenerMensajeErrorPedido(respuesta, json));
-    return json?.mensaje || "Pedido confirmado";
-  };
-
   const confirmarCompra = () => {
+    if (cargandoConfirmar) return;
+
     if (!usuario) {
-      setErrorConfirmar("Tenés que iniciar sesión para confirmar el pedido.");
+      dispatch(registrarErrorCompra("Tenés que iniciar sesión para confirmar el pedido."));
       return;
     }
 
     if (!esComprador) {
-      setErrorConfirmar("Solo una cuenta compradora puede confirmar pedidos.");
+      dispatch(registrarErrorCompra("Solo una cuenta compradora puede confirmar pedidos."));
       return;
     }
 
-    setCargandoConfirmar(true);
-    setErrorConfirmar(null);
-
-    confirmarPedido()
+    dispatch(confirmarPedidoCompra({ articulos, token, usuario }))
+      .unwrap()
       .then((mensajeBack) => {
-        vaciarCarrito(usuario.idUsuario);
-        setConfirmado(true);
+        dispatch(vaciarCarritoRedux(usuario.idUsuario));
         addToast({ color: "success", title: mensajeBack });
       })
       .catch((error) => {
-        const mensaje = `No se pudo confirmar el pedido: ${error.message}`;
-        setErrorConfirmar(mensaje);
-        addToast({ color: "danger", title: error.message });
-      })
-      .finally(() => setCargandoConfirmar(false));
-  };
-
-  const guardarEnvio = (datosEnvio) => {
-    setEnvioGuardado(true);
-    setCostoEnvio(datosEnvio.costoEnvio);
+        addToast({ color: "danger", title: error });
+      });
   };
 
   if (confirmado) return <PedidoConfirmado alVolverInicio={() => navigate("/")} />;
@@ -119,8 +84,8 @@ export default function Compra() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 flex flex-col gap-5">
             <PanelPedido articulos={articulos} />
-            <AccordionEnvio alGuardar={guardarEnvio} />
-            <AccordionPago alGuardar={() => setPagoGuardado(true)} />
+            <AccordionEnvio alGuardar={(datosEnvio) => dispatch(guardarEnvioCompra(datosEnvio))} />
+            <AccordionPago alGuardar={() => dispatch(guardarPagoCompra())} />
           </div>
 
           <div className="lg:col-span-1">

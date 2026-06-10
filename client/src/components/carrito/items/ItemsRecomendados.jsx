@@ -1,18 +1,25 @@
+import { useEffect } from "react";
 import { Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import { HoverEffect } from "../../ui/card-hover-effect";
 import ItemRecomendado from "./ItemRecomendado";
 import RecomendadosSkeleton from "./RecomendadosSkeleton";
-import useProductosRecomendados from "./useProductosRecomendados";
+import { fetchRecomendadosCarrito } from "../../../redux/recomendadosCarritoSlice";
 
 const obtenerIdsCarrito = (articulos) =>
   articulos.map((articulo) => articulo.idProducto ?? articulo.id).join(",");
 
 export default function ItemsRecomendados({ articulosCarrito = [] }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const idsCarrito = obtenerIdsCarrito(articulosCarrito);
-  const { cargando, recomendados } = useProductosRecomendados(idsCarrito);
+  const { cargando, productos: recomendados } = useSelector((state) => state.recomendadosCarrito);
+
+  useEffect(() => {
+    dispatch(fetchRecomendadosCarrito(idsCarrito));
+  }, [dispatch, idsCarrito]);
 
   if (!cargando && recomendados.length === 0) return null;
 
