@@ -121,7 +121,7 @@ export const Catalogo = () => {
       <Divider orientation="horizontal" />
 
       <div className="flex">
-        <aside className="w-90 shrink-0 p-6 sticky top-24 self-start">
+        <aside className="w-90 shrink-0 px-6 pb-6 pt-1 sticky top-24 self-start">
           <Filtros
             //categorias={categorias}
             categoriasSeleccionadas={categoriasSeleccionadas}
@@ -135,8 +135,8 @@ export const Catalogo = () => {
           />
         </aside>
 
-        <main className="flex-1 p-6 md:p-8">
-          <div className="px-6 py-4 mb-6">
+        <main className="flex-1 px-6 pb-6 pt-1 md:px-8 md:pb-8 md:pt-1">
+          <div className="mt-6 px-6 pb-4 mb-6">
             {cargando
               ? <SkeletonCatalogo cantidad={9} />
               : <ListaProductos
