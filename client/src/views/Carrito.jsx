@@ -9,7 +9,6 @@ import ProductosRecomendados from "../components/carrito/items/ItemsRecomendados
 import ResumenCarrito from "../components/carrito/ResumenCarrito";
 import TituloCarrito from "../components/carrito/TituloCarrito";
 import copaMundo from "../assets/copa-mundo.png";
-import { useAuth } from "../context/useAuth";
 import {
   calcularResumenCarrito,
 } from "../lib/reglasCarrito";
@@ -19,7 +18,7 @@ import {
 } from "../redux/carritoSlice";
 
 export default function Carrito() {
-  const { usuario } = useAuth();
+  const usuario = useSelector((state) => state.user.usuario);
   const idUsuario = usuario?.idUsuario;
   const dispatch = useDispatch();
   const articulos = useSelector((state) => state.carrito.articulos);

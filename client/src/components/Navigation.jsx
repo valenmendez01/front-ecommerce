@@ -5,15 +5,16 @@ import {
 import { LogIn, LogOut, ShoppingCart } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import logo from "../assets/logoHorizontal.png"
-import { useAuth } from "../context/useAuth"
 import { motion } from "framer-motion"
 import { Button } from "@heroui/react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { cerrarSesion } from "../redux/userSlice"
 
 export default function Navigation() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
+  const dispatch = useDispatch()
+  const { cargandoUsuario, usuario } = useSelector((state) => state.user)
   const esVendedor = usuario?.rol === "VENDEDOR"
   const esComprador = usuario?.rol === "COMPRADOR"
   const cantidadCarrito = useSelector((state) =>
@@ -21,7 +22,7 @@ export default function Navigation() {
   )
 
   const manejarCierreSesion = () => {
-    cerrarSesion()
+    dispatch(cerrarSesion())
     navigate("/iniciar-sesion")
   }
 

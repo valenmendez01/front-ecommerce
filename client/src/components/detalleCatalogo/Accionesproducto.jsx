@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { useAuth } from "../../context/useAuth";
+import { useDispatch, useSelector } from "react-redux";
 import { agregarAlCarrito as agregarAlCarritoRedux } from "../../redux/carritoSlice";
 import { AddToCartButton } from "../ui/AddToCartButton";
 
@@ -11,7 +10,7 @@ export const AccionesProducto = ({ producto }) => {
   const [mensaje, setMensaje] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-  const { usuario } = useAuth();
+  const usuario = useSelector((state) => state.user.usuario);
   const dispatch = useDispatch();
   const stock = producto?.stock == null ? undefined : Number(producto.stock);
   const sinStock = stock !== undefined && stock <= 0;

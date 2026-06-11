@@ -6,6 +6,7 @@ import homeSlice from './homeSlice'
 import pedidosSlice from './pedidosSlice'
 import productosVendedorSlice from './productosVendedorSlice'
 import recomendadosCarritoSlice from './recomendadosCarritoSlice'
+import userSlice from './userSlice'
 import ventasSlice from './ventasSlice'
 
 export const store = configureStore(
@@ -18,6 +19,7 @@ export const store = configureStore(
             pedidos: pedidosSlice,
             productosVendedor: productosVendedorSlice,
             recomendadosCarrito: recomendadosCarritoSlice,
+            user: userSlice,
             ventas: ventasSlice,
         }
     }

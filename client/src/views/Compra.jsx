@@ -12,7 +12,6 @@ import PedidoConfirmado from "../components/compra/PedidoConfirmado";
 import ResumenPago from "../components/compra/pago/ResumenPago";
 import TituloCompra from "../components/compra/TituloCompra";
 import copaMundo from "../assets/copa-mundo.png";
-import { useAuth } from "../context/useAuth";
 import { calcularResumenCarrito } from "../lib/reglasCarrito";
 import { vaciarCarritoRedux } from "../redux/carritoSlice";
 import {
@@ -26,7 +25,7 @@ import {
 export default function Compra() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { usuario, token } = useAuth();
+  const { usuario, token } = useSelector((state) => state.user);
   const articulos = useSelector((state) => state.carrito.articulos);
   const {
     cargandoConfirmar,
