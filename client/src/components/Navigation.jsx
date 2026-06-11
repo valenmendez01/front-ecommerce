@@ -5,17 +5,17 @@ import {
 import { LogIn, LogOut, ShoppingCart } from "lucide-react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import logo from "../assets/logoHorizontal.png"
-import { useAuth } from "../context/useAuth"
 import { motion } from "framer-motion"
 import { Button } from "@heroui/react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { seleccionarArticulosCarrito } from "../redux/carritoSlice"
+import { cerrarSesion } from "../redux/userSlice"
 
 export default function Navigation() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const { cargandoUsuario, cerrarSesion, usuario } = useAuth()
-
+  const dispatch = useDispatch()
+  const { cargandoUsuario, usuario } = useSelector((state) => state.user)
   const esVendedor = usuario?.rol === "VENDEDOR"
   const esComprador = usuario?.rol === "COMPRADOR"
   const carritoActivo = pathname === "/carrito" || pathname === "/compra"
@@ -28,13 +28,13 @@ export default function Navigation() {
   )
 
   const manejarCierreSesion = () => {
-    cerrarSesion()
+    dispatch(cerrarSesion())
     navigate("/iniciar-sesion")
   }
 
   const navItemsComprador = [
     { name: "Home", link: "/" },
-    { name: "Catálogo", link: "/productos" },
+    { name: "CatÃ¡logo", link: "/productos" },
     ...(esComprador ? [{ name: "Mi cuenta", link: "/mi-cuenta" }] : []),
   ]
 
@@ -122,7 +122,7 @@ export default function Navigation() {
               <Button
                 className="relative z-20 mr-4 flex items-center px-2 py-1 text-white/80 transition-colors duration-300 hover:text-white"
                 isIconOnly
-                aria-label="Cerrar sesión"
+                aria-label="Cerrar sesiÃ³n"
                 onPress={manejarCierreSesion}
                 variant="outline"
               >
@@ -137,7 +137,7 @@ export default function Navigation() {
                 to="/iniciar-sesion"
                 variant="outline"
               >
-                Iniciar sesión
+                Iniciar sesiÃ³n
               </Button>
             )}
           </div>

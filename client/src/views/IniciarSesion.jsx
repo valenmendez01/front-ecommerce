@@ -8,7 +8,8 @@ import LayoutAuth from '../components/auth/estructura/LayoutAuth'
 import TarjetaFormularioAuth from '../components/auth/estructura/TarjetaFormularioAuth'
 import FormularioLogin from '../components/auth/formularios/FormularioLogin'
 import PanelPresentacionAuth from '../components/auth/presentacion/PanelPresentacionAuth'
-import { useAuth } from '../context/useAuth'
+import { useDispatch } from 'react-redux'
+import { iniciarSesion } from '../redux/userSlice'
 
 const obtenerMensajeLogin = (error) => {
   if (error?.status === 401 || error?.status === 403 || error?.status === 404) {
@@ -30,7 +31,7 @@ const beneficiosLogin = [
 const IniciarSesion = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { iniciarSesion } = useAuth()
+  const dispatch = useDispatch()
   const [credenciales, setCredenciales] = useState({ email: '', contrasena: '' })
   const [error, setError] = useState('')
   const [enviando, setEnviando] = useState(false)
@@ -46,7 +47,7 @@ const IniciarSesion = () => {
     setError('')
 
     try {
-      const usuario = await iniciarSesion(credenciales)
+      const { usuario } = await dispatch(iniciarSesion(credenciales)).unwrap()
       navigate(usuario.rol === 'VENDEDOR' ? '/panel-vendedor' : '/', { replace: true })
     } catch (loginError) {
       const mensaje = obtenerMensajeLogin(loginError)

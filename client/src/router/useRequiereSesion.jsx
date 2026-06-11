@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from "react-router-dom"
-import { useAuth } from "../context/useAuth"
+import { useSelector } from "react-redux"
 import PantallaCargandoSesion from "../components/login/PantallaCargandoSesion"
 
 // Es un custom Hook que devuelve una función (requerirSesion) que actúa como un guardia de rutas
@@ -8,7 +8,7 @@ import PantallaCargandoSesion from "../components/login/PantallaCargandoSesion"
 
 const useRequiereSesion = () => {
   const { pathname } = useLocation()
-  const { cargandoUsuario, usuario } = useAuth()
+  const { cargandoUsuario, usuario } = useSelector((state) => state.user)
 
   const requerirSesion = (
     elemento,

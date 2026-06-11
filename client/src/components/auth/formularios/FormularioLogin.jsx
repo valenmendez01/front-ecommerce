@@ -24,6 +24,7 @@ const FormularioLogin = ({ credenciales, error, enviando, locationState, onCampo
       <CampoFormularioAuth
         icono={LockKeyhole}
         label="Contrasena"
+        mostrarTogglePassword
         type="password"
         value={credenciales.contrasena}
         onChange={(value) => onCampoChange('contrasena', value)}

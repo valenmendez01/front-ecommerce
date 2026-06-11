@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { useAuth } from '../context/useAuth'
 import {
   seleccionarArticulosCarrito,
   vaciarCarritoRedux,
@@ -20,7 +19,7 @@ import { calcularResumenCarrito } from './reglasCarrito'
 export const useCompra = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { usuario, token } = useAuth()
+  const { usuario, token } = useSelector((state) => state.user)
   const articulos = useSelector(seleccionarArticulosCarrito)
   const compra = useSelector((state) => state.compra)
 

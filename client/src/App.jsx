@@ -1,7 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom"
 import { useEffect } from "react"
-import { useDispatch } from "react-redux"
-import { useAuth } from "./context/useAuth"
+import { useDispatch, useSelector } from "react-redux"
 import PantallaCargandoSesion from "./components/login/PantallaCargandoSesion"
 import RutasPantallaCompleta from "./router/RutasPantallaCompleta"
 import RutasPublicas from "./router/RutasPublicas"
@@ -11,8 +10,7 @@ import { cargarCarritoUsuario } from "./redux/carritoSlice"
 function App() {
   const { pathname } = useLocation()
   const dispatch = useDispatch()
-  const auth = useAuth()
-  const { cargandoUsuario, usuario } = auth
+  const { cargandoUsuario, usuario } = useSelector((state) => state.user)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -33,7 +31,7 @@ function App() {
 
   // Si la ruta es de pantalla completa (sin navbar o banner), renderiza las rutas de pantalla completa
   if (rutasPantallaCompleta.some((ruta) => pathname.startsWith(ruta))) {
-    return <RutasPantallaCompleta auth={auth} />
+    return <RutasPantallaCompleta />
   }
 
   return <RutasPublicas />

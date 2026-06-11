@@ -7,7 +7,8 @@ import LayoutAuth from '../components/auth/estructura/LayoutAuth'
 import TarjetaFormularioAuth from '../components/auth/estructura/TarjetaFormularioAuth'
 import FormularioRegistro from '../components/auth/formularios/FormularioRegistro'
 import PanelPresentacionAuth from '../components/auth/presentacion/PanelPresentacionAuth'
-import { useAuth } from '../context/useAuth'
+import { useDispatch } from 'react-redux'
+import { registrarComprador } from '../redux/userSlice'
 
 const obtenerMensajeRegistro = (error) => {
   if (error?.status === 409) {
@@ -29,7 +30,7 @@ const beneficiosRegistro = [
 
 const RegistroComprador = () => {
   const navigate = useNavigate()
-  const { registrarComprador } = useAuth()
+  const dispatch = useDispatch()
   const [datos, setDatos] = useState({ nombre: '', apellido: '', email: '', contrasena: '' })
   const [error, setError] = useState('')
   const [enviando, setEnviando] = useState(false)
@@ -45,7 +46,7 @@ const RegistroComprador = () => {
     setError('')
 
     try {
-      await registrarComprador(datos)
+      await dispatch(registrarComprador(datos)).unwrap()
       navigate('/', { replace: true })
     } catch (registroError) {
       const mensaje = obtenerMensajeRegistro(registroError)

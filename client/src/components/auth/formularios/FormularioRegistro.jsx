@@ -38,6 +38,7 @@ const FormularioRegistro = ({ datos, error, enviando, onCampoChange, onSubmit })
       <CampoFormularioAuth
         icono={LockKeyhole}
         label="Contraseña"
+        mostrarTogglePassword
         type="password"
         value={datos.contrasena}
         onChange={(value) => onCampoChange('contrasena', value)}
