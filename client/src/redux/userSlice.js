@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { apiRequest, clearStoredToken, getStoredToken, setStoredToken } from '../lib/api'
-import { vaciarCarrito } from '../lib/reglasCarrito'
+import { limpiarCarritosPersistidos } from './carritoSlice'
 
 const USUARIO_KEY = 'usuario'
 
@@ -84,7 +84,7 @@ const guardarSesion = (token, usuario) => {
     guardarUsuarioLocal(usuario)
 }
 
-const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { rejectWithValue }) => {
+const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { dispatch, rejectWithValue }) => {
     try {
         const respuesta = await apiRequest(endpoint, {
             auth: false,
@@ -96,7 +96,7 @@ const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { rejectWi
         if (!usuarioNormalizado) throw new Error('No se pudo obtener el usuario autenticado.')
 
         if (usuarioActualId && usuarioActualId !== usuarioNormalizado.idUsuario) {
-            vaciarCarrito()
+            dispatch(limpiarCarritosPersistidos())
         }
 
         guardarSesion(respuesta.access_token, usuarioNormalizado)
@@ -106,7 +106,7 @@ const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { rejectWi
         }
     } catch (error) {
         limpiarSesionLocal()
-        vaciarCarrito()
+        dispatch(limpiarCarritosPersistidos())
         return rejectWithValue(obtenerErrorRechazo(error))
     }
 }
@@ -200,7 +200,7 @@ export const { limpiarErrorSesion, limpiarSesion } = userSlice.actions
 
 export const cerrarSesion = () => (dispatch) => {
     limpiarSesionLocal()
-    vaciarCarrito()
+    dispatch(limpiarCarritosPersistidos())
     dispatch(limpiarSesion())
 }
 

@@ -23,6 +23,7 @@
     "react-dropzone": "^15.0.0",
     "react-redux": "^9.3.0",
     "react-router-dom": "^7.15.1",
+    "redux-persist": "^6.0.0",
     "router-dom": "^3.0.3",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.4"

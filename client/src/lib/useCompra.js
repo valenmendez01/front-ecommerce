@@ -1,0 +1,74 @@
+import { addToast } from '@heroui/react'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
+
+import {
+  seleccionarArticulosCarrito,
+  vaciarCarritoRedux,
+} from '../redux/carritoSlice'
+import {
+  confirmarPedidoCompra,
+  guardarEnvioCompra,
+  guardarPagoCompra,
+  registrarErrorCompra,
+  reiniciarCompra,
+} from '../redux/compraSlice'
+import { calcularResumenCarrito } from './reglasCarrito'
+
+export const useCompra = () => {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { usuario, token } = useSelector((state) => state.user)
+  const articulos = useSelector(seleccionarArticulosCarrito)
+  const compra = useSelector((state) => state.compra)
+
+  useEffect(() => () => dispatch(reiniciarCompra()), [dispatch])
+
+  const esComprador = usuario?.rol === 'COMPRADOR'
+  const puedeConfirmar = Boolean(
+    compra.envioGuardado &&
+    compra.pagoGuardado &&
+    articulos.length > 0 &&
+    esComprador,
+  )
+
+  const confirmar = async () => {
+    if (compra.cargandoConfirmar) return
+
+    if (!usuario || !esComprador) {
+      const mensaje = usuario
+        ? 'Solo una cuenta compradora puede confirmar pedidos.'
+        : 'Tenés que iniciar sesión para confirmar el pedido.'
+      dispatch(registrarErrorCompra(mensaje))
+      return
+    }
+
+    try {
+      const mensaje = await dispatch(
+        confirmarPedidoCompra({ articulos, token, usuario }),
+      ).unwrap()
+      dispatch(vaciarCarritoRedux())
+      addToast({ color: 'success', title: mensaje })
+    } catch (error) {
+      addToast({ color: 'danger', title: error })
+    }
+  }
+
+  return {
+    ...compra,
+    articulos,
+    esComprador,
+    esVendedor: Boolean(usuario && !esComprador),
+    puedeConfirmar,
+    resumen: calcularResumenCarrito(
+      articulos,
+      compra.envioGuardado ? compra.costoEnvio : null,
+    ),
+    confirmar,
+    guardarEnvio: (datos) => dispatch(guardarEnvioCompra(datos)),
+    guardarPago: () => dispatch(guardarPagoCompra()),
+    irAlCarrito: () => navigate('/carrito'),
+    irAlInicio: () => navigate('/'),
+  }
+}

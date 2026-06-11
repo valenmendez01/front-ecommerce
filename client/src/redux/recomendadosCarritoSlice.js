@@ -48,26 +48,61 @@ export const fetchRecomendadosCarrito = createAsyncThunk(
         return id && !excluidos.has(Number(id)) && Number(producto.stock ?? 0) > 0
       })
       .map(normalizar)
-    return elegirVariados(productos)
+    return {
+      clave: idsCarrito || '',
+      productos: elegirVariados(productos),
+    }
+  },
+  {
+    condition: (idsCarrito, { getState }) => {
+      const recomendados = getState().recomendadosCarrito
+      const clave = idsCarrito || ''
+
+      if (
+        recomendados.cargando &&
+        recomendados.claveSolicitada === clave
+      ) {
+        return false
+      }
+
+      return recomendados.clave !== clave
+    },
   },
 )
 
 const recomendadosCarritoSlice = createSlice({
   name: 'recomendadosCarrito',
-  initialState: { cargando: false, productos: [] },
+  initialState: {
+    cargando: false,
+    clave: null,
+    claveSolicitada: null,
+    productos: [],
+    requestId: null,
+  },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchRecomendadosCarrito.pending, (state) => {
+      .addCase(fetchRecomendadosCarrito.pending, (state, action) => {
         state.cargando = true
+        state.claveSolicitada = action.meta.arg || ''
+        state.requestId = action.meta.requestId
       })
       .addCase(fetchRecomendadosCarrito.fulfilled, (state, action) => {
+        if (state.requestId !== action.meta.requestId) return
+
         state.cargando = false
-        state.productos = action.payload
+        state.clave = action.payload.clave
+        state.claveSolicitada = null
+        state.productos = action.payload.productos
+        state.requestId = null
       })
-      .addCase(fetchRecomendadosCarrito.rejected, (state) => {
+      .addCase(fetchRecomendadosCarrito.rejected, (state, action) => {
+        if (state.requestId !== action.meta.requestId) return
+
         state.cargando = false
+        state.claveSolicitada = null
         state.productos = []
+        state.requestId = null
       })
   },
 })

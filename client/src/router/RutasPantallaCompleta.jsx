@@ -1,5 +1,6 @@
-import { Navigate, Route, Routes } from "react-router-dom"
+import { Navigate, Route, Routes, useLocation } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
+import EncabezadoGeneral from "../components/EncabezadoGeneral"
 import { Footer } from "../components/Footer"
 import PantallaCargandoSesion from "../components/login/PantallaCargandoSesion"
 import useRequiereSesion from "./useRequiereSesion"
@@ -14,9 +15,11 @@ import Compra from "../views/Compra"
 import { cerrarSesion } from "../redux/userSlice"
 
 const RutasPantallaCompleta = () => {
+  const { pathname } = useLocation()
   const dispatch = useDispatch()
   const { token, usuario, cargandoUsuario } = useSelector((state) => state.user)
   const { requerirSesion } = useRequiereSesion()
+  const mostrarNavegacionGeneral = pathname === '/carrito' || pathname === '/compra'
   const destinoUsuarioAutenticado = usuario?.rol === 'VENDEDOR' ? '/panel-vendedor' : '/mi-cuenta'
   const cerrarSesionUsuario = () => dispatch(cerrarSesion())
 
@@ -28,6 +31,8 @@ const RutasPantallaCompleta = () => {
 
   return (
     <>
+      {mostrarNavegacionGeneral && <EncabezadoGeneral />}
+
       <Routes>
         <Route
           path="/carrito"
