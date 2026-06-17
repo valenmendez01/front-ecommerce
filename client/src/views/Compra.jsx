@@ -53,6 +53,9 @@ export default function Compra() {
 
             <AccordionPago
               alGuardar={compra.guardarPago}
+              alPagarPaypal={compra.pagarConPaypal}
+              cargandoPaypal={compra.cargandoPaypal}
+              puedePagarPaypal={compra.puedePagarPaypal}
             />
           </div>
 

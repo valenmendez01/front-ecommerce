@@ -1,4 +1,4 @@
-import { formatearPesos } from "../../../data/reglasProducto";
+import { formatearPesos } from "../../../lib/reglasProducto";
 
 export default function PrecioItemCarrito({ articulo }) {
   const precioOriginalTotal = articulo.precioOriginal ? articulo.precioOriginal * articulo.cantidad : 0;

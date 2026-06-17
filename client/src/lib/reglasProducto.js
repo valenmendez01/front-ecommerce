@@ -44,13 +44,13 @@ export const obtenerErroresProducto = (producto, categorias = [], selecciones = 
       : producto.nombre.trim().length > MAXIMO_CARACTERES_NOMBRE_PRODUCTO
         ? `El nombre no puede superar ${MAXIMO_CARACTERES_NOMBRE_PRODUCTO} caracteres.`
         : '',
-    description: producto.description.trim() ? '' : 'La descripcion es obligatoria.',
+    description: producto.description.trim() ? '' : 'La descripción es obligatoria.',
     categoria: valoresCategorias.includes(producto.categoria)
       ? ''
-      : 'Selecciona una categoria valida.',
+      : 'Seleccioná una categoría válida.',
     seleccion: valoresSelecciones.includes(producto.seleccion)
       ? ''
-      : 'Selecciona una seleccion valida.',
+      : 'Seleccioná una selección válida.',
     stock:
       producto.stock !== '' && !Number.isNaN(stock) && stock >= 0
         ? ''

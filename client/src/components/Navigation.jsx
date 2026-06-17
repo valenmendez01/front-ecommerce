@@ -34,7 +34,7 @@ export default function Navigation() {
 
   const navItemsComprador = [
     { name: "Home", link: "/" },
-    { name: "CatÃ¡logo", link: "/productos" },
+    { name: "Catálogo", link: "/productos" },
     ...(esComprador ? [{ name: "Mi cuenta", link: "/mi-cuenta" }] : []),
   ]
 
@@ -122,7 +122,7 @@ export default function Navigation() {
               <Button
                 className="relative z-20 mr-4 flex items-center px-2 py-1 text-white/80 transition-colors duration-300 hover:text-white"
                 isIconOnly
-                aria-label="Cerrar sesiÃ³n"
+                aria-label="Cerrar sesión"
                 onPress={manejarCierreSesion}
                 variant="outline"
               >
@@ -137,7 +137,7 @@ export default function Navigation() {
                 to="/iniciar-sesion"
                 variant="outline"
               >
-                Iniciar sesiÃ³n
+                Iniciar sesión
               </Button>
             )}
           </div>

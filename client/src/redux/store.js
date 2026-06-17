@@ -16,6 +16,7 @@ import catalogoSlice from './catalogoSlice'
 import compraSlice from './compraSlice'
 import homeSlice from './homeSlice'
 import pedidosSlice from './pedidosSlice'
+import paypalSlice from './paypalSlice'
 import productosVendedorSlice from './productosVendedorSlice'
 import recomendadosCarritoSlice from './recomendadosCarritoSlice'
 import userSlice from './userSlice'
@@ -74,6 +75,7 @@ export const store = configureStore({
     productos: catalogoSlice,
     home: homeSlice,
     pedidos: pedidosSlice,
+    paypal: paypalSlice,
     productosVendedor: productosVendedorSlice,
     recomendadosCarrito: recomendadosCarritoSlice,
     user: userPersistido,
