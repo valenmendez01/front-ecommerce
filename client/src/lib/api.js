@@ -1,19 +1,3 @@
-// Constante de almacenamiento del token en localStorage
-export const TOKEN_STORAGE_KEY = 'figullect_access_token'
-
-// Funcion para leer el token
-export const getStoredToken = () => localStorage.getItem(TOKEN_STORAGE_KEY)
-
-// Funcion para guardar el token
-export const setStoredToken = (token) => {
-  localStorage.setItem(TOKEN_STORAGE_KEY, token)
-}
-
-// Funcion para eliminar el token
-export const clearStoredToken = () => {
-  localStorage.removeItem(TOKEN_STORAGE_KEY)
-}
-
 const esErrorTemporalServidor = (response, message) => {
   const mensaje = message?.toLowerCase() || ''
   return [502, 503, 504].includes(response.status) || mensaje.includes('bad gateway')
@@ -30,8 +14,7 @@ const obtenerMensajeError = (response, payload) => {
 }
 
 export const apiRequest = async (endpoint, options = {}) => {
-  const { auth = true, headers, body, ...fetchOptions } = options
-  const token = getStoredToken()
+  const { auth = true, headers, body, token, ...fetchOptions } = options
   const requestHeaders = new Headers(headers)
 
   if (auth && token) {

@@ -6,6 +6,7 @@ import RutasPantallaCompleta from "./router/RutasPantallaCompleta"
 import RutasPublicas from "./router/RutasPublicas"
 import { rutasPantallaCompleta, esRutaPermitidaParaVendedor } from "./router/constants"
 import { cargarCarritoUsuario } from "./redux/carritoSlice"
+import { validarSesionPersistida } from "./redux/userSlice"
 
 function App() {
   const { pathname } = useLocation()
@@ -15,6 +16,10 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+
+  useEffect(() => {
+    dispatch(validarSesionPersistida())
+  }, [dispatch])
 
   useEffect(() => {
     dispatch(cargarCarritoUsuario(usuario?.idUsuario))
