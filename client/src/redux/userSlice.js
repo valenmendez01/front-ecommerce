@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { apiRequest, clearStoredToken, getStoredToken, setStoredToken } from '../lib/api'
+import { apiRequest } from '../lib/api'
 import { limpiarCarritosPersistidos } from './carritoSlice'
-
-const USUARIO_KEY = 'usuario'
 
 const formatearFecha = (fecha) => {
     if (!fecha) return ''
@@ -39,50 +37,11 @@ const estaTokenExpirado = (token) => {
     }
 }
 
-const guardarUsuarioLocal = (usuario) =>
-    localStorage.setItem(USUARIO_KEY, JSON.stringify(usuario))
-
-const leerUsuarioLocal = () => {
-    try {
-        return JSON.parse(localStorage.getItem(USUARIO_KEY))
-    } catch {
-        return null
-    }
-}
-
-const limpiarUsuarioLocal = () => localStorage.removeItem(USUARIO_KEY)
-
-const limpiarSesionLocal = () => {
-    clearStoredToken()
-    limpiarUsuarioLocal()
-}
-
-const resolverSesionInicial = () => {
-    const tokenActual = getStoredToken()
-    if (!tokenActual || estaTokenExpirado(tokenActual)) {
-        limpiarSesionLocal()
-        return { usuario: null, token: null }
-    }
-
-    const usuarioGuardado = leerUsuarioLocal()
-    if (!usuarioGuardado) {
-        limpiarSesionLocal()
-        return { usuario: null, token: null }
-    }
-
-    return { usuario: usuarioGuardado, token: tokenActual }
-}
-
 const obtenerErrorRechazo = (error) => ({
     message: error.message,
     status: error.status,
     payload: error.payload,
 })
-
-const guardarSesion = (token, usuario) => {
-    setStoredToken(token)
-    guardarUsuarioLocal(usuario)
-}
 
 const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { dispatch, rejectWithValue }) => {
     try {
@@ -99,13 +58,11 @@ const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { dispatch
             dispatch(limpiarCarritosPersistidos())
         }
 
-        guardarSesion(respuesta.access_token, usuarioNormalizado)
         return {
             token: respuesta.access_token,
             usuario: usuarioNormalizado,
         }
     } catch (error) {
-        limpiarSesionLocal()
         dispatch(limpiarCarritosPersistidos())
         return rejectWithValue(obtenerErrorRechazo(error))
     }
@@ -135,17 +92,23 @@ export const registrarComprador = createAsyncThunk(
     }
 )
 
-const sesionInicial = resolverSesionInicial()
-
 const userSlice = createSlice({
     name: 'user',
     initialState: {
-        usuario: sesionInicial.usuario,
-        token: sesionInicial.token,
+        usuario: null,
+        token: null,
         cargandoUsuario: false,
         errorSesion: '',
     },
     reducers: {
+        validarSesionPersistida: (state) => {
+            if (!state.token || estaTokenExpirado(state.token)) {
+                state.usuario = null
+                state.token = null
+                state.errorSesion = ''
+                state.cargandoUsuario = false
+            }
+        },
         limpiarSesion: (state) => {
             state.usuario = null
             state.token = null
@@ -196,10 +159,9 @@ const userSlice = createSlice({
     }
 })
 
-export const { limpiarErrorSesion, limpiarSesion } = userSlice.actions
+export const { limpiarErrorSesion, limpiarSesion, validarSesionPersistida } = userSlice.actions
 
 export const cerrarSesion = () => (dispatch) => {
-    limpiarSesionLocal()
     dispatch(limpiarCarritosPersistidos())
     dispatch(limpiarSesion())
 }

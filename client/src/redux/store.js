@@ -57,6 +57,16 @@ const carritoPersistido = persistReducer(
   carritoSlice,
 )
 
+const userPersistido = persistReducer(
+  {
+    key: 'user',
+    version: 1,
+    storage,
+    whitelist: ['usuario', 'token'],
+  },
+  userSlice,
+)
+
 export const store = configureStore({
   reducer: {
     carrito: carritoPersistido,
@@ -66,7 +76,7 @@ export const store = configureStore({
     pedidos: pedidosSlice,
     productosVendedor: productosVendedorSlice,
     recomendadosCarrito: recomendadosCarritoSlice,
-    user: userSlice,
+    user: userPersistido,
     ventas: ventasSlice,
   },
   middleware: (getDefaultMiddleware) =>
