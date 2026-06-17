@@ -1,12 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
 const obtenerMensajeErrorPedido = (error) => {
   const estado = error.response?.status
   const data = error.response?.data
-  const mensaje = typeof data === 'string'
-    ? data
-    : data?.mensaje || data?.message || data?.error || error.message
+  const mensaje =
+    typeof data === 'string'
+      ? data
+      : data?.mensaje || data?.message || data?.error || error.message
   const mensajeMinuscula = mensaje?.toLowerCase() || ''
 
   if ([502, 503, 504].includes(estado) || mensajeMinuscula.includes('bad gateway')) {
@@ -15,6 +18,8 @@ const obtenerMensajeErrorPedido = (error) => {
 
   return mensaje || 'No se pudo confirmar el pedido.'
 }
+
+// ─── Thunks ──────────────────────────────────────────────────────────────────
 
 export const confirmarPedidoCompra = createAsyncThunk(
   'compra/confirmarPedidoCompra',
@@ -41,6 +46,8 @@ export const confirmarPedidoCompra = createAsyncThunk(
     condition: (_, { getState }) => !getState().compra.cargandoConfirmar,
   },
 )
+
+// ─── Slice ───────────────────────────────────────────────────────────────────
 
 const compraSlice = createSlice({
   name: 'compra',
@@ -87,8 +94,7 @@ const compraSlice = createSlice({
       })
       .addCase(confirmarPedidoCompra.rejected, (state, action) => {
         state.cargandoConfirmar = false
-        const mensaje = action.payload || 'No se pudo confirmar el pedido.'
-        state.errorConfirmar = `No se pudo confirmar el pedido: ${mensaje}`
+        state.errorConfirmar = action.payload || 'No se pudo confirmar el pedido.'
       })
   },
 })
