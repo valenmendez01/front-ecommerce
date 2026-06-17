@@ -1,5 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { REHYDRATE } from 'redux-persist'
 import { agregarProductoAlCarrito } from '../lib/reglasCarrito'
+
+// ─── Helpers ────────────────────────────────────────────────────────────────
 
 const obtenerCantidadValida = (articulo, nuevaCantidad) => {
   const stock = Number(articulo.stock ?? nuevaCantidad)
@@ -13,6 +16,8 @@ const obtenerCarritoPorIdUsuario = (state, idUsuario) => {
   const clave = obtenerClaveUsuario(idUsuario)
   return state.carritosPorUsuario[clave] ?? []
 }
+
+// ─── Slice ───────────────────────────────────────────────────────────────────
 
 const carritoSlice = createSlice({
   name: 'carrito',
@@ -54,49 +59,43 @@ const carritoSlice = createSlice({
       const clave = obtenerClaveUsuario(state.idUsuario)
       state.carritosPorUsuario[clave] = []
     },
+
     carritosLimpiados: (state) => {
       state.idUsuario = null
       state.carritosPorUsuario = {}
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(REHYDRATE, (state, action) => {
+      if (action.payload?.carrito) {
+        state.idUsuario = action.payload.carrito.idUsuario
+        state.carritosPorUsuario = action.payload.carrito.carritosPorUsuario
+      }
+    })
+  },
 })
 
-const {
-  cantidadActualizada,
-  carritosLimpiados,
+export const {
   carritoUsuarioCargado,
-  carritoVaciado,
   productoAgregado,
+  cantidadActualizada,
   productoEliminado,
+  carritoVaciado,
+  carritosLimpiados,
 } = carritoSlice.actions
 
-export const cargarCarritoUsuario = (idUsuario) => (dispatch) => {
-  dispatch(carritoUsuarioCargado(idUsuario ?? null))
-}
+// ─── Thunks ──────────────────────────────────────────────────────────────────
 
 export const agregarAlCarrito =
   ({ cantidad, idUsuario, producto }) =>
   (dispatch, getState) => {
     const state = getState().carrito
     const usuarioActual = idUsuario ?? state.idUsuario ?? null
+    const articulosActuales = obtenerCarritoPorIdUsuario(state, usuarioActual)
 
-    const articulosActuales = obtenerCarritoPorIdUsuario(
-      state,
-      usuarioActual,
-    )
+    const articulos = agregarProductoAlCarrito(articulosActuales, producto, cantidad)
 
-    const articulos = agregarProductoAlCarrito(
-      articulosActuales,
-      producto,
-      cantidad,
-    )
-
-    dispatch(
-      productoAgregado({
-        articulos,
-        idUsuario: usuarioActual,
-      }),
-    )
+    dispatch(productoAgregado({ articulos, idUsuario: usuarioActual }))
   }
 
 export const actualizarCantidadCarrito =
@@ -105,16 +104,14 @@ export const actualizarCantidadCarrito =
     const state = getState().carrito
     const actuales = obtenerCarritoPorIdUsuario(state, state.idUsuario)
 
-    const articulos = Number(nuevaCantidad) < 1
-      ? actuales.filter((articulo) => articulo.id !== id)
-      : actuales.map((articulo) =>
-          articulo.id === id
-            ? {
-                ...articulo,
-                cantidad: obtenerCantidadValida(articulo, nuevaCantidad),
-              }
-            : articulo,
-        )
+    const articulos =
+      Number(nuevaCantidad) < 1
+        ? actuales.filter((articulo) => articulo.id !== id)
+        : actuales.map((articulo) =>
+            articulo.id === id
+              ? { ...articulo, cantidad: obtenerCantidadValida(articulo, nuevaCantidad) }
+              : articulo
+          )
 
     dispatch(cantidadActualizada(articulos))
   }
@@ -125,24 +122,14 @@ export const eliminarDelCarrito =
     const state = getState().carrito
     const actuales = obtenerCarritoPorIdUsuario(state, state.idUsuario)
 
-    const articulos = actuales.filter((articulo) => articulo.id !== id)
-
-    dispatch(productoEliminado(articulos))
+    dispatch(productoEliminado(actuales.filter((articulo) => articulo.id !== id)))
   }
 
-export const vaciarCarritoRedux = () => (dispatch) => {
-  dispatch(carritoVaciado())
-}
-
-export const limpiarCarritosPersistidos = () => (dispatch) => {
-  dispatch(carritosLimpiados())
-}
+// ─── Selectores ──────────────────────────────────────────────────────────────
 
 export const seleccionarArticulosCarrito = (state) => {
-  const carrito = state.carrito
-  const clave = obtenerClaveUsuario(carrito.idUsuario)
-
-  return carrito.carritosPorUsuario[clave] ?? []
+  const clave = obtenerClaveUsuario(state.carrito.idUsuario)
+  return state.carrito.carritosPorUsuario[clave] ?? []
 }
 
 export default carritoSlice.reducer

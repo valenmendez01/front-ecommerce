@@ -76,6 +76,7 @@ const recomendadosCarritoSlice = createSlice({
     cargando: false,
     clave: null,
     claveSolicitada: null,
+    error: null,
     productos: [],
     requestId: null,
   },
@@ -84,6 +85,7 @@ const recomendadosCarritoSlice = createSlice({
     builder
       .addCase(fetchRecomendadosCarrito.pending, (state, action) => {
         state.cargando = true
+        state.error = null
         state.claveSolicitada = action.meta.arg || ''
         state.requestId = action.meta.requestId
       })
@@ -101,6 +103,7 @@ const recomendadosCarritoSlice = createSlice({
 
         state.cargando = false
         state.claveSolicitada = null
+        state.error = action.error.message || 'No se pudieron cargar los recomendados.'
         state.productos = []
         state.requestId = null
       })

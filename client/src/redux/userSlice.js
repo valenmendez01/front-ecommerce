@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { apiRequest } from '../lib/api'
 import { limpiarCarritosPersistidos } from './carritoSlice'
+import { REHYDRATE } from 'redux-persist'
 
 const formatearFecha = (fecha) => {
     if (!fecha) return ''
@@ -63,7 +64,8 @@ const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { dispatch
             usuario: usuarioNormalizado,
         }
     } catch (error) {
-        dispatch(limpiarCarritosPersistidos())
+        // No limpiamos el carrito en caso de error: puede ser contraseña
+        // incorrecta o falla de red, no un cambio de usuario.
         return rejectWithValue(obtenerErrorRechazo(error))
     }
 }
@@ -101,6 +103,8 @@ const userSlice = createSlice({
         errorSesion: '',
     },
     reducers: {
+        // Puede mantenerse como guardia adicional en rutas protegidas,
+        // pero ya no es necesaria para limpiar tokens expirados al arrancar.
         validarSesionPersistida: (state) => {
             if (!state.token || estaTokenExpirado(state.token)) {
                 state.usuario = null
@@ -121,6 +125,18 @@ const userSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            .addCase(REHYDRATE, (state, action) => {
+                const persistido = action.payload?.user
+                // Solo restauramos la sesión si el token existe y no expiró.
+                if (persistido?.token && !estaTokenExpirado(persistido.token)) {
+                    state.usuario = persistido.usuario
+                    state.token = persistido.token
+                } else {
+                    state.usuario = null
+                    state.token = null
+                }
+            })
+
             // iniciarSesion
             .addCase(iniciarSesion.pending, (state) => {
                 state.cargandoUsuario = true
@@ -156,7 +172,7 @@ const userSlice = createSlice({
                 state.token = null
                 state.errorSesion = action.payload?.message || action.error.message
             })
-    }
+    },
 })
 
 export const { limpiarErrorSesion, limpiarSesion, validarSesionPersistida } = userSlice.actions
