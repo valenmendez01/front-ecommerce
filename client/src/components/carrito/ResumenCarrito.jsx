@@ -1,6 +1,6 @@
 import { Button } from "@heroui/react";
 import { motion } from "framer-motion";
-import { formatearPesos } from "../../data/reglasProducto";
+import { formatearPesos } from "../../lib/reglasProducto";
 import { SpotlightCard } from "../ui/spotlight-card";
 
 export default function ResumenCarrito({ resumen, alProcederAlPago }) {

@@ -29,11 +29,7 @@ export const confirmarPedidoCompra = createAsyncThunk(
             cantidad: articulo.cantidad,
           })),
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        { headers: { Authorization: `Bearer ${token}` } },
       )
 
       return data?.mensaje || data?.message || 'Pedido confirmado'
@@ -42,10 +38,10 @@ export const confirmarPedidoCompra = createAsyncThunk(
     }
   },
   {
-    condition: (_, { getState }) =>
-      !getState().compra.cargandoConfirmar,
+    condition: (_, { getState }) => !getState().compra.cargandoConfirmar,
   },
 )
+
 const compraSlice = createSlice({
   name: 'compra',
   initialState: {
@@ -63,6 +59,9 @@ const compraSlice = createSlice({
     },
     guardarPagoCompra: (state) => {
       state.pagoGuardado = true
+    },
+    limpiarErrorCompra: (state) => {
+      state.errorConfirmar = null
     },
     registrarErrorCompra: (state, action) => {
       state.errorConfirmar = action.payload
@@ -97,6 +96,7 @@ const compraSlice = createSlice({
 export const {
   guardarEnvioCompra,
   guardarPagoCompra,
+  limpiarErrorCompra,
   registrarErrorCompra,
   reiniciarCompra,
 } = compraSlice.actions

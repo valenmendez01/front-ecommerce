@@ -1,4 +1,4 @@
-import { formatearPesos } from "../../data/reglasProducto";
+import { formatearPesos } from "../../lib/reglasProducto";
 import ImagenProducto from "../carrito/items/ImagenProducto";
 import { motion } from "framer-motion";
 

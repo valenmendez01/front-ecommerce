@@ -1,7 +1,7 @@
 import { Button } from "@heroui/react";
 import { ArrowRight } from "lucide-react";
 
-import { formatearPesos } from "../../data/reglasProducto";
+import { formatearPesos } from "../../lib/reglasProducto";
 
 export default function BarraPagoMovil({ subtotal, alIrAlPago }) {
   return (

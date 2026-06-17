@@ -1,5 +1,5 @@
 import { Card } from "../../ui/card-hover-effect";
-import { formatearPesos } from "../../../data/reglasProducto";
+import { formatearPesos } from "../../../lib/reglasProducto";
 import ImagenProducto from "./ImagenProducto";
 
 export default function ItemRecomendado({ articulo }) {
