@@ -11,10 +11,10 @@ const paises = [
 
 const GrupoBanderas = () => (
   <div className="flex shrink-0 items-center gap-5">
-    {paises.map((pais) => (
+    {paises.map((pais, index) => (
       <div
+        key={index}
         className="h-9 w-14 shrink-0 overflow-hidden rounded-sm border border-green-primary/15 bg-white shadow-sm"
-        key={pais}
       >
         <img
           alt=""

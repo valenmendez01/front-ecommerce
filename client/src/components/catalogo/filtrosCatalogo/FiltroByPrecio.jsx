@@ -27,7 +27,7 @@ export const FiltroByPrecio = ({ precioMin, precioMax, onChange }) => {
       label="Precio"
       minValue={0}
       maxValue={300000}
-      step={500}
+      step={5000}
       value={[precioMin, precioMax]}
       onChange={handleChange}
       showOutline={true}
