@@ -1,9 +1,16 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { CheckboxGroup, Checkbox } from "@heroui/react";
+import { useEffect } from "react";
+import { fetchSelecciones } from "../../../redux/catalogoSlice";
 
 export const FiltroBySeleccion = ({ seleccionadas, onCambiar }) => {
 
-  const selecciones = useSelector(state => state.productos.selecciones)
+  const dispatch = useDispatch();
+  const selecciones = useSelector(state => state.productos.selecciones);
+
+  useEffect(() => {
+    if (selecciones.length === 0) dispatch(fetchSelecciones())
+  }, [dispatch, selecciones.length])
 
   const capitalizar = (str) =>
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();

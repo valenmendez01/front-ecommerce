@@ -11,11 +11,19 @@ import { fetchProductoDetalle } from "../redux/catalogoSlice";
 export const DetalleCatalogo = () => {
   const { id } = useParams();
   const dispatch = useDispatch()
-  const { productoDetalle: producto, loadingDetalle: cargando, error } = useSelector(state => state.productos)
+  const { 
+    productoDetalle: producto, 
+    productoDetalleId,         // ← nuevo
+    loadingDetalle: cargando, 
+    error 
+  } = useSelector(state => state.productos)
 
   useEffect(() => {
+    // ← Guard: si el producto ya está en el store con el mismo id, no re-fetchear
+    if (productoDetalleId === String(id)) return;
+
     dispatch(fetchProductoDetalle(id))
-  }, [dispatch, id])
+  }, [dispatch, id, productoDetalleId])
 
   if (cargando || !producto) return <SkeletonDetalle />;
 
