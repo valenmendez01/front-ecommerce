@@ -20,7 +20,7 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '^/(api/v1/auth|categorias|productos|pedidos|usuarios|ventas|selecciones|pagos)': proxyBackend,
+      '^/(api/v1/auth|api/v1/asistente|categorias|productos|pedidos|usuarios|ventas|selecciones|pagos)': proxyBackend,
     }
   }
 })

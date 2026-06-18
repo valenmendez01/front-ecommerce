@@ -9,6 +9,7 @@ import { addToast } from "@heroui/react";
 import { FlipWords } from "../components/ui/flip-words";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductos, fetchCategorias, fetchSelecciones } from "../redux/catalogoSlice";
+import { AsistenteWidget } from "../components/asistenteFigullect/AsistenteWidget";
 
 function obtenerFiltrosDesdeUrl(search, nombreSingular, nombrePlural) {
   const parametros = new URLSearchParams(search);
@@ -105,6 +106,32 @@ export const Catalogo = () => {
     if (tipo === "max") setPrecioMax(valor);
   }
 
+  function aplicarFiltrosDesdeAsistente({
+    categorias = [],
+    selecciones = [],
+    nombre = "",
+    precioMin: nuevoPrecioMin = null,
+    precioMax: nuevoPrecioMax = null,
+  }) {
+    const nuevasCategorias = categorias.length > 0 ? categorias : [];
+    const nuevasSelecciones = selecciones.length > 0 ? selecciones : [];
+
+    setPagina(0);
+    setCategoriasSeleccionadas(nuevasCategorias);
+    setSeleccionesSeleccionadas(nuevasSelecciones);
+    setBusqueda(nombre);
+
+    if (nuevoPrecioMin !== null) setPrecioMin(nuevoPrecioMin);
+    if (nuevoPrecioMax !== null) setPrecioMax(nuevoPrecioMax);
+
+    actualizarUrl({
+      cats: nuevasCategorias,
+      sels: nuevasSelecciones,
+      pag: 1,
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   return (
     <div className="flex flex-col font-sans max-w-7xl mx-auto w-full">
       <div className="flex items-center justify-between px-6 pb-4 pt-4">
@@ -153,6 +180,18 @@ export const Catalogo = () => {
           </div>
         </main>
       </div>
+
+      <AsistenteWidget
+        filtrosActuales={{
+          categorias: categoriasSeleccionadas,
+          selecciones: seleccionesSeleccionadas,
+          precioMin,
+          precioMax,
+          busqueda,
+          pagina: pagina + 1,
+        }}
+        onAplicarFiltro={aplicarFiltrosDesdeAsistente}
+      />
     </div>
   );
 };

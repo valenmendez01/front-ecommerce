@@ -8,15 +8,19 @@ import { normalizarPedidoCuenta } from '../components/cuenta/pedidos/datos/datos
 import { formatearPesosPedido } from '../components/cuenta/pedidos/datos/formatoPedidosCuenta'
 import { fetchPedidosComprador } from '../redux/pedidosSlice'
 
+const obtenerNumeroId = (valor) => Number(valor) || 0
+
 const MiCuenta = ({ token, usuario, onCerrarSesion }) => {
   const dispatch = useDispatch()
   const { pedidos, loading: cargandoPedidos, error: errorPedidos } = useSelector((state) => state.pedidos)
 
   useEffect(() => {
-    dispatch(fetchPedidosComprador(token))
-  }, [dispatch, token])
+    dispatch(fetchPedidosComprador({ token, usuarioId: usuario?.idUsuario }))
+  }, [dispatch, token, usuario?.idUsuario])
 
-  const pedidosNormalizados = pedidos.map(normalizarPedidoCuenta)
+  const pedidosNormalizados = pedidos
+    .map(normalizarPedidoCuenta)
+    .sort((pedidoA, pedidoB) => obtenerNumeroId(pedidoB.idPedido) - obtenerNumeroId(pedidoA.idPedido))
   const totalGastado = pedidosNormalizados.reduce((total, pedido) => total + pedido.monto, 0)
   const resumen = [
     { titulo: 'Total de pedidos', valor: pedidosNormalizados.length },

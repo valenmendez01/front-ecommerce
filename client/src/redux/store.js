@@ -21,6 +21,7 @@ import productosVendedorSlice from './productosVendedorSlice'
 import recomendadosCarritoSlice from './recomendadosCarritoSlice'
 import userSlice from './userSlice'
 import ventasSlice from './ventasSlice'
+import asistenteSlice from './asistenteSlice'
 
 const storage = storageModule.default ?? storageModule
 
@@ -80,11 +81,13 @@ export const store = configureStore({
     recomendadosCarrito: recomendadosCarritoSlice,
     user: userPersistido,
     ventas: ventasSlice,
+    asistente: asistenteSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        ignoredActionPaths: ['meta.arg.cambios', 'meta.arg.imagenes'],
       },
     }),
 })

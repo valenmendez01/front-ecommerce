@@ -3,17 +3,19 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import MetricasPanelVendedor from '../metricas/MetricasPanelVendedor'
 import TablaProductos from './TablaProductos'
-import { agregarDatosDeVentas, crearDatosProducto, normalizarProductoVendedor, obtenerProductosPagina } from '../datos/datosProductosPanel'
+import { agregarDatosDeVentas, normalizarProductoVendedor, obtenerProductosPagina } from '../datos/datosProductosPanel'
 import { obtenerVentasPaginaPanel } from '../datos/datosVentasPanel'
-import { guardarImagenesProducto } from '../../productos/imagenes/imagenesProductoDetalle'
 import {
-  actualizarProductoVendedorGuardado,
-  fetchProductoVendedorPorId,
+  actualizarProductoVendedor,
   fetchProductosVendedor,
+  guardarImagenesProductoVendedor,
 } from '../../../../redux/productosVendedorSlice'
 import { fetchVentasVendedor } from '../../../../redux/ventasSlice'
 
-const ProductosPanelVendedor = ({ token }) => {
+const tieneCambiosImagenes = (cambiosImagenes) =>
+  Boolean(cambiosImagenes?.nuevas?.length || cambiosImagenes?.quitadas?.length)
+
+const ProductosPanelVendedor = ({ token, usuarioId }) => {
   const dispatch = useDispatch()
   const {
     productos: productosOriginales,
@@ -27,9 +29,9 @@ const ProductosPanelVendedor = ({ token }) => {
   } = useSelector((state) => state.ventas)
 
   useEffect(() => {
-    dispatch(fetchProductosVendedor(token))
-    dispatch(fetchVentasVendedor(token))
-  }, [dispatch, token])
+    dispatch(fetchProductosVendedor({ token, usuarioId }))
+    dispatch(fetchVentasVendedor({ token, usuarioId }))
+  }, [dispatch, token, usuarioId])
 
   const productos = obtenerProductosPagina(productosOriginales).map(normalizarProductoVendedor)
   const ventas = obtenerVentasPaginaPanel(ventasOriginales)
@@ -37,21 +39,29 @@ const ProductosPanelVendedor = ({ token }) => {
   const error = errorProductos || errorVentas || ''
 
   const actualizarProducto = async (producto, cambiosImagenes) => {
-    const respuesta = await fetch(`/productos/${producto.idProducto}`, {
-      method: 'PUT',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(crearDatosProducto(producto)),
+    const resultadoProducto = await dispatch(
+      actualizarProductoVendedor({ producto, token })
+    ).unwrap().catch((error) => {
+      throw new Error(error || 'No se pudo actualizar el producto.')
     })
-    const json = await respuesta.json()
-    if (!respuesta.ok) throw new Error(json.mensaje || json.message || 'No se pudo actualizar el producto.')
-    const resultadoImagenes = await guardarImagenesProducto(producto.idProducto, cambiosImagenes, token)
-    const productoGuardado = resultadoImagenes
-      ? await dispatch(fetchProductoVendedorPorId({ idProducto: producto.idProducto, token })).unwrap()
-      : json.data
+
+    const resultadoImagenes = tieneCambiosImagenes(cambiosImagenes)
+      ? await dispatch(
+          guardarImagenesProductoVendedor({
+            cambios: cambiosImagenes,
+            idProducto: producto.idProducto,
+            token,
+          })
+        ).unwrap().catch((error) => {
+          throw new Error(error || 'No se pudieron guardar las imagenes.')
+        })
+      : null
+
+    const productoGuardado = resultadoImagenes?.producto || resultadoProducto.producto
     const guardado = normalizarProductoVendedor(productoGuardado)
-    if (!resultadoImagenes) dispatch(actualizarProductoVendedorGuardado(productoGuardado))
+
     return {
-      mensaje: json.mensaje || json.message || resultadoImagenes?.mensaje || 'Producto actualizado correctamente',
+      mensaje: resultadoImagenes?.mensaje || resultadoProducto.mensaje || 'Producto actualizado correctamente',
       mensajeImagenes: resultadoImagenes?.mensaje,
       producto: guardado,
     }

@@ -9,6 +9,12 @@ export const fetchProductosDestacadosHome = createAsyncThunk(
 
         if (Array.isArray(productos)) return productos
         return productos?.content || []
+    },
+    {
+        condition: (_, { getState }) => {
+            const { home } = getState()
+            return !home.loadingDestacados && !home.destacadosCargados
+        },
     }
 )
 
@@ -17,6 +23,7 @@ const homeSlice = createSlice({
     initialState: {
         productosDestacados: [],
         loadingDestacados: false,
+        destacadosCargados: false,
         errorDestacados: null,
     },
     reducers: {},
@@ -29,9 +36,11 @@ const homeSlice = createSlice({
             .addCase(fetchProductosDestacadosHome.fulfilled, (state, action) => {
                 state.loadingDestacados = false
                 state.productosDestacados = action.payload
+                state.destacadosCargados = true
             })
             .addCase(fetchProductosDestacadosHome.rejected, (state, action) => {
                 state.loadingDestacados = false
+                state.destacadosCargados = false
                 state.productosDestacados = []
                 state.errorDestacados = action.error.message
             })

@@ -7,7 +7,7 @@ const PanelVendedor = ({ token, usuario, onCerrarSesion }) => (
   <PaginaPanelUsuario claseContenido="max-w-[92rem]" usuario={usuario} onCerrarSesion={onCerrarSesion}>
     <EncabezadoPanelVendedor />
     <div className="mt-10"><InformacionPersonal usuario={usuario} /></div>
-    <ProductosPanelVendedor token={token} />
+    <ProductosPanelVendedor token={token} usuarioId={usuario?.idUsuario} />
   </PaginaPanelUsuario>
 )
 

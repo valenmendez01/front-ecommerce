@@ -1,15 +1,21 @@
 import { Skeleton } from "@heroui/react"
+import { cn } from "../../../lib/utils"
 
-const TarjetaProductoDestacadoSkeleton = () => (
-  <article className="rounded-[1.75rem] border border-dorado-primary/20 bg-white p-5 shadow-lg">
-    <Skeleton className="h-64 rounded-[1.25rem]" />
-    <div className="mt-5 flex justify-between">
+const TarjetaProductoDestacadoSkeleton = ({ compacto = false }) => (
+  <article className={cn(
+    "border border-dorado-primary/20 bg-white shadow-lg",
+    compacto ? "rounded-[1.25rem] p-3" : "rounded-[1.75rem] p-5",
+  )}>
+    <Skeleton className={cn(
+      compacto ? "h-52 rounded-[0.9rem]" : "h-64 rounded-[1.25rem]",
+    )} />
+    <div className={cn("flex justify-between", compacto ? "mt-3" : "mt-5")}>
       <Skeleton className="h-6 w-24 rounded-full" />
       <Skeleton className="h-6 w-14 rounded-full" />
     </div>
-    <Skeleton className="mt-5 h-7 w-10/12 rounded-lg" />
-    <Skeleton className="mt-3 h-7 w-7/12 rounded-lg" />
-    <div className="mt-8 flex items-end justify-between">
+    <Skeleton className={cn("h-7 w-10/12 rounded-lg", compacto ? "mt-3" : "mt-5")} />
+    <Skeleton className={cn("h-7 w-7/12 rounded-lg", compacto ? "mt-2" : "mt-3")} />
+    <div className={cn("flex items-end justify-between", compacto ? "mt-5" : "mt-8")}>
       <div className="space-y-2">
         <Skeleton className="h-3 w-16 rounded-lg" />
         <Skeleton className="h-8 w-28 rounded-lg" />

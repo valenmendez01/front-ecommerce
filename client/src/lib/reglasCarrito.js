@@ -12,6 +12,9 @@ const obtenerIdProducto = (producto) =>
 const obtenerStockProducto = (producto) =>
   producto.stock == null ? undefined : Number(producto.stock)
 
+const obtenerSeleccionProducto = (producto) =>
+  producto.seleccion || producto.nombreSeleccion || producto.producto?.seleccion || null
+
 const formatearCategoriaProducto = (categoria = '') => {
   const categorias = {
     ALBUMES: 'Albumes',
@@ -34,6 +37,7 @@ const normalizarArticulo = (articulo) => ({
   descuento: Number(articulo.descuento || 0),
   stock: obtenerStockProducto(articulo),
   subtitulo: formatearCategoriaProducto(articulo.subtitulo),
+  seleccion: obtenerSeleccionProducto(articulo),
 })
 
 export const agregarProductoAlCarrito = (articulos, producto, cantidad = 1) => {
@@ -63,6 +67,7 @@ export const agregarProductoAlCarrito = (articulos, producto, cantidad = 1) => {
     cantidad: stock === undefined ? cantidadPedida : Math.min(cantidadPedida, stock),
     stock,
     subtitulo: formatearCategoriaProducto(producto.categoria),
+    seleccion: obtenerSeleccionProducto(producto),
     imagen: obtenerImagenProducto(producto),
   }
 
@@ -76,6 +81,7 @@ export const agregarProductoAlCarrito = (articulos, producto, cantidad = 1) => {
               precioOriginal: articuloProducto.precioOriginal,
               descuento,
               stock,
+              seleccion: articulo.seleccion || articuloProducto.seleccion,
               cantidad:
                 stock === undefined
                   ? articulo.cantidad + articuloProducto.cantidad

@@ -84,6 +84,10 @@ export const {
   carritosLimpiados,
 } = carritoSlice.actions
 
+export const cargarCarritoUsuario = carritoUsuarioCargado
+export const limpiarCarritosPersistidos = carritosLimpiados
+export const vaciarCarritoRedux = carritoVaciado
+
 // ─── Thunks ──────────────────────────────────────────────────────────────────
 
 export const agregarAlCarrito =

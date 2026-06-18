@@ -1,8 +1,8 @@
 const paises = [
-  "argelia", "argentina", "australia", "austria", "belgica", "bosnia",
-  "brasil", "cabo-verde", "canada", "colombia", "congo-rd", "costa-marfil",
-  "croacia", "curazao", "chequia", "ecuador", "inglaterra", "egipto",
-  "francia", "alemania", "ghana", "haiti", "iran", "irak",
+  "mexico", "sudafrica", "corea-del-sur", "chequia", "canada", "bosnia",
+  "qatar", "suiza", "brasil", "marruecos", "haiti", "escocia",
+  "estados-unidos", "paraguay", "australia", "turquia", "alemania", "curazao",
+  "costa-marfil", "ecuador", "ghana", "haiti", "iran", "irak",
   "japon", "jordania", "corea-del-sur", "mexico", "marruecos", "paises-bajos",
   "nueva-zelanda", "noruega", "panama", "paraguay", "portugal", "qatar",
   "arabia-saudita", "escocia", "senegal", "sudafrica", "espana", "suecia",

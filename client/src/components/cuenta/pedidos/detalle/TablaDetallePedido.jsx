@@ -9,7 +9,7 @@ const TablaDetallePedido = ({ pedido }) => (
           <tr className="bg-slate-50 text-left text-xs font-bold uppercase text-slate-400">
             <th className="px-4 py-3">Producto</th>
             <th className="px-4 py-3">Cantidad</th>
-            <th className="px-4 py-3">Precio</th>
+            <th className="px-4 py-3">Precio unitario</th>
             <th className="px-4 py-3">Subtotal</th>
           </tr>
         </thead>

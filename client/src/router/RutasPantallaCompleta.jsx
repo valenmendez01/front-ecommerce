@@ -15,12 +15,13 @@ import Compra from "../views/Compra"
 import { cerrarSesion } from "../redux/userSlice"
 
 const RutasPantallaCompleta = () => {
-  const { pathname } = useLocation()
+  const { pathname, state } = useLocation()
   const dispatch = useDispatch()
   const { token, usuario, cargandoUsuario } = useSelector((state) => state.user)
   const { requerirSesion } = useRequiereSesion()
   const mostrarNavegacionGeneral = pathname === '/carrito' || pathname === '/compra'
-  const destinoUsuarioAutenticado = usuario?.rol === 'VENDEDOR' ? '/panel-vendedor' : '/mi-cuenta'
+  const destinoComprador = state?.productoParaCarrito ? '/carrito' : '/mi-cuenta'
+  const destinoUsuarioAutenticado = usuario?.rol === 'VENDEDOR' ? '/panel-vendedor' : destinoComprador
   const cerrarSesionUsuario = () => dispatch(cerrarSesion())
 
   const redirectSiAutenticado = (elemento) => {

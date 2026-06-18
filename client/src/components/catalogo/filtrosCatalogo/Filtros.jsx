@@ -1,7 +1,15 @@
 import { Card, Accordion, AccordionItem } from "@heroui/react";
+import { ChevronRight } from "lucide-react";
 import { FiltroByCategoria } from "./FiltroByCategoria";
 import { FiltroByPrecio } from "./FiltroByPrecio";
 import { FiltroBySeleccion } from "./FiltroBySeleccion";
+
+const IndicadorFiltro = ({ isOpen }) => (
+  <ChevronRight
+    className={`text-[var(--color-green-primary)] transition-transform ${isOpen ? "rotate-90" : ""}`}
+    size={20}
+  />
+);
 
 export const Filtros = ({
   //categorias,
@@ -23,6 +31,7 @@ export const Filtros = ({
       >
         <AccordionItem 
           key="categoria"
+          indicator={IndicadorFiltro}
           aria-label="Categoría"
           title="Categoría"
           className="my-2"
@@ -37,6 +46,7 @@ export const Filtros = ({
 
         <AccordionItem 
           key="seleccion"
+          indicator={IndicadorFiltro}
           aria-label="Selección"
           title="Selección"
           className="my-2"
@@ -51,6 +61,7 @@ export const Filtros = ({
 
         <AccordionItem
           key="precio"
+          indicator={IndicadorFiltro}
           aria-label="Rango de precio"
           title="Rango de precio"
           className="my-2"

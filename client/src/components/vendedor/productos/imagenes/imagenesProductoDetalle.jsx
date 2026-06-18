@@ -39,17 +39,6 @@ export const liberarImagenesLocales = (imagenes) => {
   imagenes.forEach((imagen) => URL.revokeObjectURL(imagen.url))
 }
 
-const crearFormularioImagenes = (imagenes) => {
-  const archivos = new FormData()
-  imagenes.forEach((imagen) => archivos.append('archivos', imagen.archivo))
-  return archivos
-}
-
-const obtenerErrorRespuesta = async (respuesta, mensaje) => {
-  const json = await respuesta.json().catch(() => null)
-  return json?.mensaje || json?.message || mensaje
-}
-
 const obtenerTipoImagen = (contenido) => {
   if (contenido?.startsWith('/9j/')) return 'image/jpeg'
   if (contenido?.startsWith('iVBORw0KGgo')) return 'image/png'
@@ -60,33 +49,4 @@ const obtenerTipoImagen = (contenido) => {
 export const obtenerUrlImagenProducto = (imagen) => {
   const contenido = imagen?.contenidoBase64
   return contenido ? `data:${obtenerTipoImagen(contenido)};base64,${contenido}` : ''
-}
-
-export const guardarImagenesProducto = async (idProducto, cambios, token) => {
-  const nuevas = cambios?.nuevas || []
-  const quitadas = cambios?.quitadas || []
-  const headers = { Authorization: `Bearer ${token}` }
-  const mensajes = []
-
-  for (const idImagen of quitadas) {
-    const respuesta = await fetch(`/productos/${idProducto}/imagenes/${idImagen}`, { method: 'DELETE', headers })
-    const mensaje = await obtenerErrorRespuesta(respuesta, 'No se pudo quitar una imagen.')
-    if (!respuesta.ok) throw new Error(mensaje)
-    mensajes.push(mensaje)
-  }
-
-  if (nuevas.length > 0) {
-    const respuesta = await fetch(`/productos/${idProducto}/imagenes`, {
-      method: 'POST',
-      headers,
-      body: crearFormularioImagenes(nuevas),
-    })
-    const mensaje = await obtenerErrorRespuesta(respuesta, 'No se pudieron guardar las imagenes.')
-    if (!respuesta.ok) throw new Error(mensaje)
-    mensajes.push(mensaje)
-  }
-
-  if (nuevas.length === 0 && quitadas.length === 0) return null
-
-  return { mensaje: mensajes[mensajes.length - 1] }
 }

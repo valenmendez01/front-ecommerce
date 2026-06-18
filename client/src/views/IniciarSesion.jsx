@@ -1,6 +1,7 @@
 import { addToast } from '@heroui/react'
 import { BadgeCheck, ShieldCheck } from 'lucide-react'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import BotonVolver from '../components/auth/botones/BotonVolver'
 import ContenedorAuth from '../components/auth/estructura/ContenedorAuth'
@@ -8,7 +9,7 @@ import LayoutAuth from '../components/auth/estructura/LayoutAuth'
 import TarjetaFormularioAuth from '../components/auth/estructura/TarjetaFormularioAuth'
 import FormularioLogin from '../components/auth/formularios/FormularioLogin'
 import PanelPresentacionAuth from '../components/auth/presentacion/PanelPresentacionAuth'
-import { useDispatch } from 'react-redux'
+import { agregarAlCarrito as agregarAlCarritoRedux } from '../redux/carritoSlice'
 import { iniciarSesion } from '../redux/userSlice'
 
 const obtenerMensajeLogin = (error) => {
@@ -48,7 +49,31 @@ const IniciarSesion = () => {
 
     try {
       const { usuario } = await dispatch(iniciarSesion(credenciales)).unwrap()
-      navigate(usuario.rol === 'VENDEDOR' ? '/panel-vendedor' : '/', { replace: true })
+      const destino = location.state?.from || '/'
+      const productoParaCarrito = location.state?.productoParaCarrito
+      const cantidadParaCarrito = location.state?.cantidadParaCarrito || 1
+
+      if (usuario.rol === 'VENDEDOR') {
+        navigate('/panel-vendedor', { replace: true })
+        return
+      }
+
+      if (productoParaCarrito) {
+        dispatch(agregarAlCarritoRedux({
+          producto: productoParaCarrito,
+          cantidad: cantidadParaCarrito,
+          idUsuario: usuario.idUsuario,
+        }))
+        addToast({
+          title: 'Producto agregado al carrito',
+          description: 'Ya podés continuar tu compra.',
+          color: 'success',
+        })
+        navigate('/carrito', { replace: true })
+        return
+      }
+
+      navigate(destino, { replace: true })
     } catch (loginError) {
       const mensaje = obtenerMensajeLogin(loginError)
       setError(mensaje)

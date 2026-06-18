@@ -58,7 +58,7 @@ const ColeccionesSeleccionHome = () => (
         viewport={{ amount: 0.35, once: false }}
         whileInView={{ filter: "blur(0px)", opacity: 1, scale: 1, y: 0 }}
       >
-        <InfiniteMovingCards direction="right" speed="slow">
+        <InfiniteMovingCards direction="right" pauseOnHover={false} speed="slow">
           {selecciones.map((seleccion) => (
             <motion.article
               className={`group w-[320px] overflow-hidden rounded-2xl border border-dorado-primary/35 bg-gradient-to-b ${seleccion.color} to-white p-4 shadow-lg md:w-[360px] xl:w-[390px]`}

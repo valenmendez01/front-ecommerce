@@ -7,15 +7,19 @@ import TablaVentas from '../components/vendedor/ventas/tabla/TablaVentas'
 import { normalizarVentaVendedor, obtenerVentasPagina } from '../components/vendedor/ventas/datos/datosVentasVendedor'
 import { fetchVentasVendedor } from '../redux/ventasSlice'
 
+const obtenerNumeroId = (valor) => Number(valor) || 0
+
 const VentasVendedor = ({ token, usuario, onCerrarSesion }) => {
   const dispatch = useDispatch()
   const { ventas: ventasOriginales, loading: cargando, error } = useSelector((state) => state.ventas)
 
   useEffect(() => {
-    dispatch(fetchVentasVendedor(token))
-  }, [dispatch, token])
+    dispatch(fetchVentasVendedor({ token, usuarioId: usuario?.idUsuario }))
+  }, [dispatch, token, usuario?.idUsuario])
 
-  const ventas = obtenerVentasPagina(ventasOriginales).map(normalizarVentaVendedor)
+  const ventas = obtenerVentasPagina(ventasOriginales)
+    .map(normalizarVentaVendedor)
+    .sort((ventaA, ventaB) => obtenerNumeroId(ventaB.idVenta) - obtenerNumeroId(ventaA.idVenta))
 
   return (
     <PaginaPanelUsuario usuario={usuario} onCerrarSesion={onCerrarSesion}>

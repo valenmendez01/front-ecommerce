@@ -26,7 +26,13 @@ export const AccionesProducto = ({ producto }) => {
 
   function agregarAlCarrito() {
     if (!usuario) {
-      navigate("/iniciar-sesion", { state: { from: location.pathname } });
+      navigate("/iniciar-sesion", {
+        state: {
+          from: location.pathname,
+          productoParaCarrito: producto,
+          cantidadParaCarrito: cantidad,
+        },
+      });
       return;
     }
 
