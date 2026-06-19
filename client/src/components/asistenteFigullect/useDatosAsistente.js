@@ -1,19 +1,14 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { seleccionarArticulosCarrito } from '../../redux/carritoSlice'
-import { crearContextoAsistente } from './asistenteUtils.jsx'
+import { crearContextoAsistente } from './asistenteContexto'
 
 export const useDatosAsistente = (filtrosActuales) => {
   const asistente = useSelector((state) => state.asistente)
   const catalogo = useSelector((state) => state.productos)
   const usuario = useSelector((state) => state.user.usuario)
   const carrito = useSelector(seleccionarArticulosCarrito)
-  const { productos, categorias, selecciones, productoDetalle } = catalogo
-
-  const productosReferencia = useMemo(
-    () => productoDetalle ? [productoDetalle, ...productos] : productos,
-    [productoDetalle, productos],
-  )
+  const { categorias, productos, selecciones } = catalogo
 
   const crearContextoActual = useCallback(() => crearContextoAsistente({
     productos,
@@ -29,7 +24,7 @@ export const useDatosAsistente = (filtrosActuales) => {
     carrito,
     categorias,
     crearContextoActual,
-    productosReferencia,
+    productosReferencia: productos,
     selecciones,
     usuario,
   }

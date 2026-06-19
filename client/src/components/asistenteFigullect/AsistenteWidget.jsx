@@ -1,15 +1,16 @@
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import { AsistenteAnimado } from './AsistenteAnimado.jsx'
 import { AsistenteButton } from './AsistenteButton.jsx'
 import { AsistenteWindow } from './AsistenteWindow.jsx'
 import { useDatosAsistente } from './useDatosAsistente'
+import { resolverFiltrosDesdeAccion } from './asistenteFiltros'
 import {
   crearRespuestaRapidaAsistente,
   crearRespuestaSeleccionAsistente,
   obtenerTextoAccionRapida,
-  resolverFiltrosDesdeAccion,
-} from './asistenteUtils.jsx'
+} from './asistenteRespuestas'
 import {
   agregarMensajeAsistente,
   agregarMensajeUsuario,
@@ -42,11 +43,9 @@ export const AsistenteWidget = ({ filtrosActuales, onAplicarFiltro }) => {
   const abrirFlujoSeleccion = useCallback(() => {
     responder(crearRespuestaRapida('buscar-seleccion'))
   }, [crearRespuestaRapida, responder])
-
   const ejecutarAccionRapida = useCallback((id) => {
     const texto = obtenerTextoAccionRapida(id)
     if (!texto) return
-
     dispatch(agregarMensajeUsuario(texto))
     responder(crearRespuestaRapida(id))
   }, [crearRespuestaRapida, dispatch, responder])
@@ -81,16 +80,21 @@ export const AsistenteWidget = ({ filtrosActuales, onAplicarFiltro }) => {
   }, [abrirFlujoSeleccion, categorias, navigate, onAplicarFiltro, selecciones])
 
   if (usuario?.rol === 'VENDEDOR') return null
-  if (!abierto) return <AsistenteButton onPress={() => dispatch(alternarAsistente())} />
 
   return (
-    <AsistenteWindow
-      cargando={cargando}
-      mensajes={mensajes}
-      onAccion={ejecutarAccion}
-      onAccionRapida={ejecutarAccionRapida}
-      onCerrar={() => dispatch(cerrarAsistente())}
-      onEnviar={enviarMensaje}
+    <AsistenteAnimado
+      abierto={abierto}
+      boton={<AsistenteButton onPress={() => dispatch(alternarAsistente())} />}
+      ventana={(
+        <AsistenteWindow
+          cargando={cargando}
+          mensajes={mensajes}
+          onAccion={ejecutarAccion}
+          onAccionRapida={ejecutarAccionRapida}
+          onCerrar={() => dispatch(cerrarAsistente())}
+          onEnviar={enviarMensaje}
+        />
+      )}
     />
   )
 }

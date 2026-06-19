@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useSidebar } from '../../ui/sidebar'
+import { useSidebar } from '../../ui/sidebarContext'
 
 const PerfilMenuVendedor = ({ iniciales, usuario }) => {
   const { open } = useSidebar()

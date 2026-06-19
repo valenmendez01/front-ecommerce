@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { cn } from "../../lib/utils"
 
 const velocidades = {
@@ -14,7 +14,6 @@ const InfiniteMovingCards = ({
   pauseOnHover = true,
   speed = "normal",
 }) => {
-  const [direccionActual, setDireccionActual] = useState(direction)
   const contenidoRef = useRef(null)
   const direccionRef = useRef(direction === "right" ? 1 : -1)
   const offsetRef = useRef(0)
@@ -22,7 +21,6 @@ const InfiniteMovingCards = ({
 
   useEffect(() => {
     direccionRef.current = direction === "right" ? 1 : -1
-    setDireccionActual(direction)
   }, [direction])
 
   useEffect(() => {
@@ -39,18 +37,10 @@ const InfiniteMovingCards = ({
 
       if (contenido && anchoCiclo > 0 && !pausadoRef.current) {
         offsetRef.current += direccionRef.current * (velocidades[speed] || velocidades.normal) * segundos
-
-        if (offsetRef.current > 0) {
-          offsetRef.current -= anchoCiclo
-        }
-
-        if (offsetRef.current < -anchoCiclo) {
-          offsetRef.current += anchoCiclo
-        }
-
+        if (offsetRef.current > 0) offsetRef.current -= anchoCiclo
+        if (offsetRef.current < -anchoCiclo) offsetRef.current += anchoCiclo
         contenido.style.transform = `translateX(${offsetRef.current}px)`
       }
-
       frameId = requestAnimationFrame(moverCarrusel)
     }
 
@@ -61,7 +51,6 @@ const InfiniteMovingCards = ({
 
   function cambiarDireccion(nuevaDireccion) {
     direccionRef.current = nuevaDireccion === "right" ? 1 : -1
-    setDireccionActual((actual) => (actual === nuevaDireccion ? actual : nuevaDireccion))
   }
 
   function manejarMovimientoMouse(event) {
@@ -69,13 +58,8 @@ const InfiniteMovingCards = ({
     const limiteIzquierdo = posicion.left + posicion.width * 0.42
     const limiteDerecho = posicion.left + posicion.width * 0.58
 
-    if (event.clientX < limiteIzquierdo) {
-      cambiarDireccion("left")
-    }
-
-    if (event.clientX > limiteDerecho) {
-      cambiarDireccion("right")
-    }
+    if (event.clientX < limiteIzquierdo) cambiarDireccion("left")
+    if (event.clientX > limiteDerecho) cambiarDireccion("right")
   }
 
   function restaurarDireccion() {
@@ -94,11 +78,7 @@ const InfiniteMovingCards = ({
       onMouseLeave={restaurarDireccion}
       onMouseMove={manejarMovimientoMouse}
     >
-      <div
-        ref={contenidoRef}
-        className="flex w-max gap-5 will-change-transform"
-        data-direction={direccionActual}
-      >
+      <div ref={contenidoRef} className="flex w-max gap-5 will-change-transform" data-direction={direction}>
         <div className="flex gap-5">{children}</div>
         <div aria-hidden="true" className="flex gap-5">
           {children}

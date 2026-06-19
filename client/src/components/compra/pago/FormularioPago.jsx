@@ -34,11 +34,11 @@ export default function FormularioPago({
 
       <SeparadorPago />
 
-      {/* <BotonPaypal
+      {<BotonPaypal
         alPagar={alPagarPaypal}
         cargando={cargandoPaypal}
         puedePagar={puedePagarPaypal}
-      /> */}
+      />}
     </div>
   );
 }
