@@ -1,9 +1,8 @@
-import { createContext, useContext, useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { cn } from '../../lib/utils'
-
-const SidebarContext = createContext(null)
+import { SidebarContext, useSidebar } from './sidebarContext'
 
 export const SidebarProvider = ({ children, open, setOpen }) => {
   const [openState, setOpenState] = useState(false)
@@ -15,12 +14,6 @@ export const SidebarProvider = ({ children, open, setOpen }) => {
       {children}
     </SidebarContext.Provider>
   )
-}
-
-export const useSidebar = () => {
-  const context = useContext(SidebarContext)
-  if (!context) throw new Error('useSidebar debe usarse dentro de SidebarProvider')
-  return context
 }
 
 export const Sidebar = ({ children, className }) => (

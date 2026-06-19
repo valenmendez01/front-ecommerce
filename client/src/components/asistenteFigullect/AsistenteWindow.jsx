@@ -4,7 +4,7 @@ import { FormularioConsultaAsistente } from './FormularioConsultaAsistente.jsx'
 import { ListaMensajesAsistente } from './ListaMensajesAsistente.jsx'
 
 export const AsistenteWindow = ({ mensajes, cargando, onCerrar, onEnviar, onAccionRapida, onAccion }) => (
-  <section className="fixed bottom-6 right-6 z-[70] flex h-[640px] max-h-[calc(100vh-3rem)] w-[430px] flex-col overflow-hidden rounded-2xl border border-[var(--color-dorado-primary)]/30 bg-[#fffaf0] shadow-2xl">
+  <section className="flex h-[640px] max-h-[calc(100vh-3rem)] w-[430px] flex-col overflow-hidden rounded-2xl border border-[var(--color-dorado-primary)]/30 bg-[#fffaf0] shadow-2xl">
     <EncabezadoAsistente onCerrar={onCerrar} />
     <ListaMensajesAsistente cargando={cargando} mensajes={mensajes} onAccion={onAccion} />
     <AsistenteQuickActions deshabilitado={cargando} onSeleccionar={onAccionRapida} />
