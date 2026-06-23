@@ -8,11 +8,11 @@ const obtenerMensajeError = (error) => {
 
 export const crearOrdenPaypal = createAsyncThunk(
   'paypal/crearOrdenPaypal',
-  async ({ cancelUrl, returnUrl, token, totalPesos }, { rejectWithValue }) => {
+  async ({ cancelUrl, items, returnUrl, token }, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(
         '/pagos/paypal/crear-orden',
-        { cancelUrl, returnUrl, totalPesos },
+        { cancelUrl, items, returnUrl },
         { headers: { Authorization: `Bearer ${token}` } },
       )
 
