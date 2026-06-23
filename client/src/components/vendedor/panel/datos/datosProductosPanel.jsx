@@ -1,4 +1,3 @@
-import { calcularPrecioFinalProducto, formatearPesosProducto } from '../../productos/datos/reglasProductoVendedor'
 import { obtenerUrlImagenProducto } from '../../productos/imagenes/imagenesProductoDetalle'
 
 const crearIniciales = (nombre = '') => {
@@ -44,16 +43,3 @@ export const normalizarProductoVendedor = (producto) => ({
   destacado: Boolean(producto.destacado),
   activo: producto.activo ?? true,
 })
-
-const obtenerItems = (ventas, idProducto) =>
-  ventas.flatMap((venta) => venta.items || []).filter((item) => item.idProducto === idProducto)
-
-export const agregarDatosDeVentas = (producto, ventas) => {
-  const vendidos = obtenerItems(ventas, producto.idProducto).reduce((total, item) => total + item.cantidad, 0)
-  return {
-    ...producto,
-    vendidos,
-    precioTexto: formatearPesosProducto(producto.precio),
-    precioFinalTexto: formatearPesosProducto(calcularPrecioFinalProducto(producto.precio, producto.descuento)),
-  }
-}

@@ -1,12 +1,17 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
+const VENTAS_VENDEDOR_PAGE_SIZE = 100
+
 export const fetchVentasVendedor = createAsyncThunk(
   'ventas/fetchVentasVendedor',
   async ({ token }) => {
-    const { data } = await axios('/ventas/vendedor', {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    const { data } = await axios(
+      `/ventas/vendedor?page=0&size=${VENTAS_VENDEDOR_PAGE_SIZE}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    )
     return data.data
   },
   {
