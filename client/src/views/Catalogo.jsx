@@ -42,8 +42,8 @@ function crearParamsCatalogo({
   if (busqueda.trim()) params.set("nombre", busqueda.trim());
   if (precioMin > 0) params.set("min", precioMin);
   if (precioMax < PRECIO_MAXIMO) params.set("max", precioMax);
-  categoriasSeleccionadas.forEach((categoria) => params.append("categorias", categoria));
-  seleccionesSeleccionadas.forEach((seleccion) => params.append("selecciones", seleccion));
+  [...categoriasSeleccionadas].sort().forEach((categoria) => params.append("categorias", categoria));
+  [...seleccionesSeleccionadas].sort().forEach((seleccion) => params.append("selecciones", seleccion));
   return params.toString();
 }
 
