@@ -1,6 +1,8 @@
 import { Card, CardBody } from '@heroui/react'
 import { Info } from 'lucide-react'
-import { MAXIMO_CARACTERES_NOMBRE_PRODUCTO, MAXIMO_STOCK_PRODUCTO } from '../datos/reglasCrearProducto'
+import { MAXIMO_CARACTERES_NOMBRE_PRODUCTO } from '../datos/reglasCrearProducto'
+import { MAXIMO_STOCK_PRODUCTO } from '../datos/numerosCrearProducto'
+import CampoNumericoCrearProducto from './CampoNumericoCrearProducto'
 
 const inputClasses =
   'mt-2 w-full rounded-md border border-dorado-primary/35 bg-white px-5 py-4 text-base font-semibold text-slate-800 outline-none transition focus:border-dorado-primary focus:bg-white'
@@ -65,7 +67,7 @@ const SeccionInformacionProducto = ({ categorias, errores, mostrarErrores, onCam
             <ErrorCampo mostrar={mostrarErrores && errores.seleccion}>{errores.seleccion}</ErrorCampo>
           </EtiquetaCampo>
           <EtiquetaCampo titulo="Stock disponible">
-            <input className={inputClasses} max={MAXIMO_STOCK_PRODUCTO} min="0" step="1" type="number" value={producto.stock} onChange={(event) => onCambiar('stock', event.target.value)} />
+            <CampoNumericoCrearProducto campo="stock" className={inputClasses} maximo={MAXIMO_STOCK_PRODUCTO} onCambiar={onCambiar} valor={producto.stock} />
             <ErrorCampo mostrar={mostrarErrores && errores.stock}>{errores.stock}</ErrorCampo>
           </EtiquetaCampo>
         </div>

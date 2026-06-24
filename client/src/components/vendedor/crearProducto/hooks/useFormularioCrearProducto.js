@@ -12,10 +12,10 @@ import {
   obtenerErroresProducto,
 } from '../datos/reglasCrearProducto'
 import { crearImagenesLocales, liberarImagenesLocales, quitarImagenLocal } from '../imagenes/imagenesCrearProducto'
-
 const normalizarValorCampo = (campo, valor) => {
   const valorLimitado = campo === 'nombre' ? valor.slice(0, MAXIMO_CARACTERES_NOMBRE_PRODUCTO) : valor
-  return ['stock', 'precio', 'descuento'].includes(campo) && valorLimitado !== '' ? Number(valorLimitado) : valorLimitado
+  if (['stock', 'precio', 'descuento'].includes(campo) && (valorLimitado === '' || Number(valorLimitado) < 0)) return ''
+  return ['stock', 'precio', 'descuento'].includes(campo) ? Number(valorLimitado) : valorLimitado
 }
 export const useFormularioCrearProducto = ({ categorias, selecciones, token, usuario }) => {
   const dispatch = useDispatch()

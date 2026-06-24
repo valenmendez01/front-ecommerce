@@ -1,5 +1,7 @@
 import { Card, CardBody } from '@heroui/react'
 import { DollarSign } from 'lucide-react'
+import { MAXIMO_DESCUENTO_PRODUCTO, MAXIMO_PRECIO_PRODUCTO } from '../datos/numerosCrearProducto'
+import CampoNumericoCrearProducto from './CampoNumericoCrearProducto'
 import VistaPrecioProducto from './VistaPrecioProducto'
 
 const inputClasses =
@@ -24,10 +26,10 @@ const SeccionPrecioProducto = ({ errores, mostrarErrores, onCambiar, precioFinal
       </div>
       <div className="grid gap-6 md:grid-cols-2">
         <CampoPrecio error={errores.precio} mostrarError={mostrarErrores && errores.precio} titulo="Precio base">
-          <input className={inputClasses} min="0" placeholder="Precio base" type="number" value={producto.precio} onChange={(event) => onCambiar('precio', event.target.value)} />
+          <CampoNumericoCrearProducto campo="precio" className={inputClasses} maximo={MAXIMO_PRECIO_PRODUCTO} onCambiar={onCambiar} placeholder="Precio base" valor={producto.precio} />
         </CampoPrecio>
         <CampoPrecio error={errores.descuento} mostrarError={mostrarErrores && errores.descuento} titulo="Descuento (%)">
-          <input className={inputClasses} max="100" min="0" type="number" value={producto.descuento} onChange={(event) => onCambiar('descuento', event.target.value)} />
+          <CampoNumericoCrearProducto campo="descuento" className={inputClasses} maximo={MAXIMO_DESCUENTO_PRODUCTO} onCambiar={onCambiar} valor={producto.descuento} />
         </CampoPrecio>
       </div>
       <VistaPrecioProducto

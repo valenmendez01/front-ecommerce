@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 import seleccionAlemania from "../../../assets/home/selecciones/seleccion-alemania.png"
@@ -12,6 +13,7 @@ import seleccionNoruega from "../../../assets/home/selecciones/seleccion-noruega
 import seleccionPaisesBajos from "../../../assets/home/selecciones/seleccion-paises-bajos.png"
 import seleccionPortugal from "../../../assets/home/selecciones/seleccion-portugal.png"
 import InfiniteMovingCards from "../../ui/infinite-moving-cards"
+import { cn } from "../../../lib/utils"
 
 const selecciones = [
   { color: "from-sky-300/25", imagen: seleccionArgentina, nombre: "Argentina", texto: "Campeones, doradas y figuritas nacionales.", valor: "ARGENTINA" },
@@ -27,12 +29,28 @@ const selecciones = [
   { color: "from-red-500/20", imagen: seleccionPortugal, nombre: "Portugal", texto: "Cracks historicos y figuritas infaltables.", valor: "PORTUGAL" },
 ]
 
-const ColeccionesSeleccionHome = () => (
-  <section className="bg-[#f7f5ef] px-6 py-20 text-green-primary">
-    <div className="mx-auto max-w-7xl">
-      <div className="flex flex-col items-center gap-6 text-center">
+const ColeccionesSeleccionHome = ({ compacto = false }) => {
+  const [direccion, setDireccion] = useState("right")
+
+  const cambiarDireccionSegunCursor = (event) => {
+    const seccion = event.currentTarget.getBoundingClientRect()
+    const mitad = seccion.left + seccion.width / 2
+    setDireccion(event.clientX < mitad ? "left" : "right")
+  }
+
+  return (
+  <section
+    className={cn("bg-[#f7f5ef] px-6 text-green-primary", compacto ? "py-8" : "py-20")}
+    onMouseLeave={() => setDireccion("right")}
+    onMouseMove={cambiarDireccionSegunCursor}
+  >
+    <div className={cn("mx-auto", compacto ? "max-w-[82rem]" : "max-w-7xl")}>
+      <div className={cn("flex flex-col items-center text-center", compacto ? "gap-2" : "gap-6")}>
         <motion.p
-          className="text-sm font-black uppercase tracking-[0.35em] text-dorado-primary"
+          className={cn(
+            "font-black uppercase text-dorado-primary",
+            compacto ? "text-xs tracking-[0.28em]" : "text-sm tracking-[0.35em]",
+          )}
           initial={{ filter: "blur(8px)", opacity: 0, y: 34 }}
           transition={{ duration: 0.7, ease: "easeOut" }}
           viewport={{ amount: 0.8, once: false }}
@@ -41,7 +59,10 @@ const ColeccionesSeleccionHome = () => (
           Ruta mundialista
         </motion.p>
         <motion.h2
-          className="font-display text-4xl font-black uppercase leading-none md:text-6xl tracking-wider"
+          className={cn(
+            "font-display font-black uppercase leading-none tracking-wider",
+            compacto ? "text-3xl md:text-5xl" : "text-4xl md:text-6xl",
+          )}
           initial={{ filter: "blur(10px)", opacity: 0, scale: 0.96, y: 46 }}
           transition={{ delay: 0.08, duration: 0.75, ease: "easeOut" }}
           viewport={{ amount: 0.8, once: false }}
@@ -52,32 +73,40 @@ const ColeccionesSeleccionHome = () => (
       </div>
 
       <motion.div
-        className="mt-10"
+        className={compacto ? "mt-5" : "mt-10"}
         initial={{ filter: "blur(10px)", opacity: 0, scale: 0.96, y: 82 }}
         transition={{ delay: 0.2, duration: 0.85, ease: "easeOut" }}
         viewport={{ amount: 0.35, once: false }}
         whileInView={{ filter: "blur(0px)", opacity: 1, scale: 1, y: 0 }}
       >
-        <InfiniteMovingCards direction="right" pauseOnHover={false} speed="slow">
+        <InfiniteMovingCards direction={direccion} pauseOnHover={false} speed="slow">
           {selecciones.map((seleccion) => (
             <motion.article
-              className={`group w-[320px] overflow-hidden rounded-2xl border border-dorado-primary/35 bg-gradient-to-b ${seleccion.color} to-white p-4 shadow-lg md:w-[360px] xl:w-[390px]`}
+              className={cn(
+                `group overflow-hidden border border-dorado-primary/35 bg-gradient-to-b ${seleccion.color} to-white shadow-lg`,
+                compacto
+                  ? "w-[280px] rounded-xl p-3 md:w-[300px] xl:w-[320px]"
+                  : "w-[320px] rounded-2xl p-4 md:w-[360px] xl:w-[390px]",
+              )}
               key={seleccion.nombre}
               whileHover={{ y: -8 }}
             >
-              <div className="aspect-[4/3] overflow-hidden rounded-xl bg-white/70">
+              <div className={cn("aspect-[4/3] overflow-hidden bg-white/70", compacto ? "rounded-lg" : "rounded-xl")}>
                 <img
                   alt={`Formacion de ${seleccion.nombre}`}
                   className="h-full w-full object-cover"
                   src={seleccion.imagen}
                 />
               </div>
-              <h3 className="mt-5 text-2xl font-black">{seleccion.nombre}</h3>
-              <p className="mt-2 min-h-8 text-sm font-medium text-green-primary/65">
+              <h3 className={cn("font-black", compacto ? "mt-3 text-xl" : "mt-5 text-2xl")}>{seleccion.nombre}</h3>
+              <p className={cn("font-medium text-green-primary/65", compacto ? "mt-1 min-h-7 text-xs" : "mt-2 min-h-8 text-sm")}>
                 {seleccion.texto}
               </p>
               <Link
-                className="mt-3 inline-flex border-b border-dorado-primary pb-1 text-sm font-black text-dorado-primary"
+                className={cn(
+                  "inline-flex border-b border-dorado-primary pb-1 font-black text-dorado-primary",
+                  compacto ? "mt-2 text-xs" : "mt-3 text-sm",
+                )}
                 to={`/productos?seleccion=${encodeURIComponent(seleccion.valor)}`}
               >
                 Explorar colección
@@ -88,6 +117,7 @@ const ColeccionesSeleccionHome = () => (
       </motion.div>
     </div>
   </section>
-)
+  )
+}
 
 export default ColeccionesSeleccionHome

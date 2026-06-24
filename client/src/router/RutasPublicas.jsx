@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom"
-import FranjaBanderasCatalogo from "../components/catalogo/FranjaBanderasCatalogo"
 import EncabezadoGeneral from "../components/EncabezadoGeneral"
+import FranjaBanderasCatalogo from "../components/catalogo/FranjaBanderasCatalogo"
 import { Footer } from "../components/Footer"
 import { Catalogo } from "../views/Catalogo"
 import { DetalleCatalogo } from "../views/DetalleCatalogo"

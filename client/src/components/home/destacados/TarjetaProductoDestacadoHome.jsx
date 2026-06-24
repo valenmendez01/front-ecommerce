@@ -6,7 +6,7 @@ const TarjetaProductoDestacadoHome = ({ compacto = false, producto }) => (
   <CometCard className="h-full" rotateDepth={compacto ? 5 : 7} showGlare={false} translateDepth={compacto ? 4 : 6}>
     <article className={cn(
       "flex h-full flex-col overflow-hidden border border-dorado-primary/45 bg-white text-green-primary",
-      compacto ? "rounded-[1.25rem] p-3 shadow-[0_18px_46px_rgba(20,43,16,0.13)]" : "rounded-[1.75rem] p-4 shadow-[0_24px_70px_rgba(20,43,16,0.16)]",
+      compacto ? "rounded-[1.15rem] p-3 shadow-[0_18px_44px_rgba(20,43,16,0.13)]" : "rounded-[1.75rem] p-4 shadow-[0_24px_70px_rgba(20,43,16,0.16)]",
     )}>
       <ImagenDestacada compacto={compacto} producto={producto} />
       <EtiquetasDestacado compacto={compacto} producto={producto} />

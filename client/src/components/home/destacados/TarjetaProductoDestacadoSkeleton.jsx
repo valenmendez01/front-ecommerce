@@ -4,10 +4,10 @@ import { cn } from "../../../lib/utils"
 const TarjetaProductoDestacadoSkeleton = ({ compacto = false }) => (
   <article className={cn(
     "border border-dorado-primary/20 bg-white shadow-lg",
-    compacto ? "rounded-[1.25rem] p-3" : "rounded-[1.75rem] p-5",
+    compacto ? "rounded-[1.15rem] p-3" : "rounded-[1.75rem] p-5",
   )}>
     <Skeleton className={cn(
-      compacto ? "h-52 rounded-[0.9rem]" : "h-64 rounded-[1.25rem]",
+      compacto ? "aspect-[5/6] rounded-[0.7rem]" : "h-64 rounded-[1.25rem]",
     )} />
     <div className={cn("flex justify-between", compacto ? "mt-3" : "mt-5")}>
       <Skeleton className="h-6 w-24 rounded-full" />
