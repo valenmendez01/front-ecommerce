@@ -1,17 +1,11 @@
 import { addToast } from '@heroui/react'
 import { useCallback, useEffect } from 'react'
-
 import { crearErrorDesdeAccion } from './resultadoThunk'
 import { vaciarCarritoRedux } from '../redux/carritoSlice'
-import {
-  confirmarPedidoCompra,
-  limpiarErrorCompra,
-  registrarErrorCompra,
-} from '../redux/compraSlice'
-import { capturarOrdenPaypal, crearOrdenPaypal, limpiarPagoPaypal } from '../redux/paypalSlice'
+import { limpiarErrorCompra, registrarErrorCompra } from '../redux/compraSlice'
+import { confirmarPedidoPaypal, crearOrdenPaypal, limpiarPagoPaypal } from '../redux/paypalSlice'
 
 const PAYPAL_PENDIENTE_KEY = 'figullect_paypal_pendiente'
-
 const obtenerUrlsPaypal = () => {
   const origen = window.location.origin
   return {
@@ -20,6 +14,10 @@ const obtenerUrlsPaypal = () => {
   }
 }
 
+const obtenerItemsPaypal = (articulos) => articulos.map((articulo) => ({
+  idProducto: articulo.idProducto ?? articulo.id,
+  cantidad: articulo.cantidad,
+}))
 const mostrarErrorPaypal = (dispatch, prefijo, error) => {
   const mensaje = error?.message || error
   dispatch(registrarErrorCompra(`${prefijo}: ${mensaje}`))
@@ -36,37 +34,23 @@ export const usePagoPaypal = ({
   token,
   usuario,
 }) => {
-  const confirmarPedido = useCallback(async () => {
-    const accion = await dispatch(
-      confirmarPedidoCompra({ articulos, token, usuario }),
-    )
-    if (confirmarPedidoCompra.rejected.match(accion)) {
-      throw crearErrorDesdeAccion(accion, 'No se pudo confirmar el pedido.')
-    }
-
-    dispatch(vaciarCarritoRedux())
-    return accion.payload
-  }, [articulos, dispatch, token, usuario])
-
   const confirmarPagoAprobado = useCallback(async (orderId) => {
     try {
-      const accion = await dispatch(capturarOrdenPaypal({ orderId, token }))
-      if (capturarOrdenPaypal.rejected.match(accion)) {
+      const accion = await dispatch(
+        confirmarPedidoPaypal({ articulos, orderId, token, usuario }),
+      )
+
+      if (confirmarPedidoPaypal.rejected.match(accion)) {
         throw crearErrorDesdeAccion(accion, 'No se pudo confirmar el pago con PayPal.')
       }
-      const captura = accion.payload
-
-      if (captura.estado !== 'COMPLETED') {
-        throw new Error('PayPal no marcó el pago como completado.')
-      }
-
-      addToast({ color: 'success', title: await confirmarPedido() })
+      addToast({ color: 'success', title: accion.payload })
+      dispatch(vaciarCarritoRedux())
       sessionStorage.removeItem(PAYPAL_PENDIENTE_KEY)
       navigate('/compra', { replace: true })
     } catch (error) {
       mostrarErrorPaypal(dispatch, 'No se pudo confirmar PayPal', error)
     }
-  }, [confirmarPedido, dispatch, navigate, token])
+  }, [articulos, dispatch, navigate, token, usuario])
 
   useEffect(() => {
     const parametros = new URLSearchParams(location.search)
@@ -82,51 +66,34 @@ export const usePagoPaypal = ({
       return
     }
 
-    if (
-      estadoPaypal === 'aprobado' &&
-      orderId &&
-      pagoPendiente &&
-      !paypal.cargandoCaptura &&
-      paypal.orderIdCapturado !== orderId &&
-      usuario &&
-      articulos.length > 0
-    ) {
+    const puedeConfirmar = estadoPaypal === 'aprobado' && orderId && pagoPendiente
+      && !paypal.cargandoCaptura && paypal.orderIdCapturado !== orderId
+      && usuario && articulos.length > 0
+
+    if (puedeConfirmar) {
       confirmarPagoAprobado(orderId)
     }
   }, [articulos, confirmarPagoAprobado, dispatch, location.search, navigate, paypal, usuario])
-
   const pagarConPaypal = async () => {
     if (paypal.cargandoCrear) return
     dispatch(limpiarErrorCompra())
-
     if (!puedePagarPaypal) {
-      addToast({ color: 'danger', title: 'Completá la dirección antes de pagar con PayPal.' })
+      addToast({ color: 'danger', title: 'Completa la direccion antes de pagar con PayPal.' })
       return
     }
-
     try {
-      const items = articulos.map((articulo) => ({
-        idProducto: articulo.idProducto ?? articulo.id,
-        cantidad: articulo.cantidad,
-      }))
       const accion = await dispatch(
-        crearOrdenPaypal({ ...obtenerUrlsPaypal(), items, token }),
+        crearOrdenPaypal({ ...obtenerUrlsPaypal(), items: obtenerItemsPaypal(articulos), token }),
       )
+
       if (crearOrdenPaypal.rejected.match(accion)) {
         throw crearErrorDesdeAccion(accion, 'No se pudo iniciar el pago con PayPal.')
       }
-      const orden = accion.payload
-
       sessionStorage.setItem(PAYPAL_PENDIENTE_KEY, '1')
-      window.location.assign(orden.approvalUrl)
+      window.location.assign(accion.payload.approvalUrl)
     } catch (error) {
       mostrarErrorPaypal(dispatch, 'No se pudo iniciar PayPal', error)
     }
   }
-
-  return {
-    cargandoPaypal: paypal.cargandoCrear || paypal.cargandoCaptura,
-    confirmarPedido,
-    pagarConPaypal,
-  }
+  return { cargandoPaypal: paypal.cargandoCrear || paypal.cargandoCaptura, pagarConPaypal }
 }
