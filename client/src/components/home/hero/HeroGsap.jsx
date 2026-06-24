@@ -136,7 +136,7 @@ const HeroGsap = () => {
             {posterFiguritasCentro.map((figurita) => (
               <img
                 alt={figurita.alt}
-                className={`hero-poster-center-card w-20 transform-gpu object-contain drop-shadow-[0_28px_74px_rgba(0,0,0,0.54)] will-change-transform sm:w-28 md:w-40 lg:w-44 ${figurita.clase}`}
+                className={`hero-poster-center-card w-20 transform-gpu rounded-2xl object-contain drop-shadow-[0_28px_74px_rgba(0,0,0,0.54)] will-change-transform sm:w-28 md:w-40 lg:w-44 ${figurita.clase}`}
                 data-side="center"
                 decoding="async"
                 key={figurita.alt}
