@@ -67,7 +67,10 @@ export const useCompra = () => {
     try {
       addToast({ color: 'success', title: await pagoPaypal.confirmarPedido() })
     } catch (error) {
-      addToast({ color: 'danger', title: error })
+      addToast({
+        color: 'danger',
+        title: error?.message || 'No se pudo confirmar el pedido.',
+      })
     }
   }
 

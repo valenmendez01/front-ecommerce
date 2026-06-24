@@ -1,6 +1,7 @@
 import { Package, PackageCheck, PackageX, TriangleAlert } from 'lucide-react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { crearErrorDesdeAccion } from '../../../../lib/resultadoThunk'
 import MetricasPanelVendedor from '../metricas/MetricasPanelVendedor'
 import TablaProductos from './TablaProductos'
 import { normalizarProductoVendedor, obtenerProductosPagina } from '../datos/datosProductosPanel'
@@ -28,23 +29,28 @@ const ProductosPanelVendedor = ({ token, usuarioId }) => {
   const productos = obtenerProductosPagina(productosOriginales).map(normalizarProductoVendedor)
 
   const actualizarProducto = async (producto, cambiosImagenes) => {
-    const resultadoProducto = await dispatch(
+    const accionProducto = await dispatch(
       actualizarProductoVendedor({ producto, token })
-    ).unwrap().catch((error) => {
-      throw new Error(error || 'No se pudo actualizar el producto.')
-    })
+    )
+    if (actualizarProductoVendedor.rejected.match(accionProducto)) {
+      throw crearErrorDesdeAccion(accionProducto, 'No se pudo actualizar el producto.')
+    }
+    const resultadoProducto = accionProducto.payload
 
-    const resultadoImagenes = tieneCambiosImagenes(cambiosImagenes)
-      ? await dispatch(
-          guardarImagenesProductoVendedor({
-            cambios: cambiosImagenes,
-            idProducto: producto.idProducto,
-            token,
-          })
-        ).unwrap().catch((error) => {
-          throw new Error(error || 'No se pudieron guardar las imagenes.')
+    let resultadoImagenes = null
+    if (tieneCambiosImagenes(cambiosImagenes)) {
+      const accionImagenes = await dispatch(
+        guardarImagenesProductoVendedor({
+          cambios: cambiosImagenes,
+          idProducto: producto.idProducto,
+          token,
         })
-      : null
+      )
+      if (guardarImagenesProductoVendedor.rejected.match(accionImagenes)) {
+        throw crearErrorDesdeAccion(accionImagenes, 'No se pudieron guardar las imagenes.')
+      }
+      resultadoImagenes = accionImagenes.payload
+    }
 
     const productoGuardado = resultadoImagenes?.producto || resultadoProducto.producto
     const guardado = normalizarProductoVendedor(productoGuardado)

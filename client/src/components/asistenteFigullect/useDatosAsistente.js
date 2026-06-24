@@ -17,7 +17,8 @@ export const useDatosAsistente = (filtrosActuales) => {
     usuario,
     carrito,
     filtros: filtrosActuales,
-  }), [carrito, categorias, filtrosActuales, productos, selecciones, usuario])
+    mensajes: asistente.mensajes,
+  }), [asistente.mensajes, carrito, categorias, filtrosActuales, productos, selecciones, usuario])
 
   return {
     asistente,

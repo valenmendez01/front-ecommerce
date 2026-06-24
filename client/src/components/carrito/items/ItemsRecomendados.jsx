@@ -33,13 +33,17 @@ export default function ItemsRecomendados({ articulosCarrito = [] }) {
   }));
 
   return (
-    <div className="mt-8">
-      <h3 className="mb-4 flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-green-primary">
+    <section className="mt-4">
+      <h3 className="mb-2 flex items-center gap-2 font-heading text-sm font-semibold uppercase tracking-widest text-green-primary">
         <Sparkles size={15} />
         Completá tu colección
       </h3>
 
-      {cargando ? <RecomendadosSkeleton /> : <HoverEffect items={items} className="grid-cols-3 gap-1 py-0" />}
-    </div>
+      {cargando ? (
+        <RecomendadosSkeleton />
+      ) : (
+        <HoverEffect items={items} className="grid-cols-1 gap-2 py-0 sm:grid-cols-3" />
+      )}
+    </section>
   );
 }

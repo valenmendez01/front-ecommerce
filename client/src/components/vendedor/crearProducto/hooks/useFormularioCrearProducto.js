@@ -1,6 +1,7 @@
 import { addToast } from '@heroui/react'
 import { useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { crearErrorDesdeAccion } from '../../../../lib/resultadoThunk'
 import { crearProductoVendedor } from '../../../../redux/productosVendedorSlice'
 import { actualizarOpcionesProducto } from '../datos/opcionesCrearProducto'
 import {
@@ -63,12 +64,16 @@ export const useFormularioCrearProducto = ({ categorias, selecciones, token, usu
     if (!puedePublicar) return mostrarError('Revisá los campos obligatorios antes de publicar el producto.')
 
     try {
-      const respuesta = await dispatch(crearProductoVendedor({
+      const accion = await dispatch(crearProductoVendedor({
         imagenes,
         producto: productoConOpciones,
         token,
         usuarioId: usuario?.idUsuario,
-      })).unwrap()
+      }))
+      if (crearProductoVendedor.rejected.match(accion)) {
+        throw crearErrorDesdeAccion(accion, 'No se pudo publicar el producto.')
+      }
+      const respuesta = accion.payload
       liberarImagenesLocales(imagenes)
       setProducto(estadoInicialProducto)
       setImagenes([])
@@ -77,7 +82,7 @@ export const useFormularioCrearProducto = ({ categorias, selecciones, token, usu
       addToast({ color: 'success', title: respuesta.mensaje, description: respuesta.mensajeImagenes || undefined })
       return true
     } catch (error) {
-      const mensajeError = error || 'No se pudo publicar el producto.'
+      const mensajeError = error?.message || 'No se pudo publicar el producto.'
       mostrarError(mensajeError)
       addToast({ color: 'danger', title: mensajeError })
       return false

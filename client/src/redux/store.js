@@ -25,6 +25,11 @@ import asistenteSlice from './asistenteSlice'
 
 const storage = storageModule.default ?? storageModule
 
+const ocultarImagenesBase64EnDevTools = (clave, valor) => {
+  if (clave !== 'contenidoBase64' || typeof valor !== 'string') return valor
+  return `[imagen Base64 omitida en DevTools: ${valor.length} caracteres]`
+}
+
 const migrarCarrito = (estadoPersistido) => {
   if (!estadoPersistido) {
     return Promise.resolve(estadoPersistido)
@@ -70,6 +75,11 @@ const userPersistido = persistReducer(
 )
 
 export const store = configureStore({
+  devTools: {
+    serialize: {
+      replacer: ocultarImagenesBase64EnDevTools,
+    },
+  },
   reducer: {
     carrito: carritoPersistido,
     compra: compraSlice,

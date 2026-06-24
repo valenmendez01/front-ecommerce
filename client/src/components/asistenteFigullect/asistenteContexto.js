@@ -22,6 +22,18 @@ const resumirArticuloCarrito = (articulo) => ({
   precio: articulo.precio,
 })
 
+const resumirMensaje = (mensaje) => ({
+  autor: mensaje.autor,
+  texto: mensaje.texto,
+  acciones: (mensaje.acciones || []).map(({ texto, tipo, filtro, ruta, flujo }) => ({
+    texto,
+    tipo,
+    filtro,
+    ruta,
+    flujo,
+  })),
+})
+
 export const crearContextoAsistente = ({
   productos,
   categorias,
@@ -29,6 +41,7 @@ export const crearContextoAsistente = ({
   usuario,
   carrito,
   filtros,
+  mensajes = [],
 }) => ({
   ubicacion: 'catalogo',
   usuarioLogueado: Boolean(usuario),
@@ -38,4 +51,8 @@ export const crearContextoAsistente = ({
   seleccionesDisponibles: selecciones.map(formatearValorCatalogo),
   productosVisibles: productos.slice(0, 12).map(resumirProducto),
   carrito: carrito.slice(0, 12).map(resumirArticuloCarrito),
+  historialConversacion: mensajes
+    .filter((mensaje) => mensaje.id !== 'asistente-inicio')
+    .slice(-6)
+    .map(resumirMensaje),
 })

@@ -9,6 +9,7 @@ import TarjetaFormularioAuth from "../components/auth/estructura/TarjetaFormular
 import FormularioLogin from "../components/auth/formularios/FormularioLogin"
 import PanelPresentacionAuth from "../components/auth/presentacion/PanelPresentacionAuth"
 import { beneficiosLogin, obtenerMensajeLogin } from "../lib/loginVista"
+import { crearErrorDesdeAccion } from "../lib/resultadoThunk"
 import { agregarAlCarrito as agregarAlCarritoRedux } from "../redux/carritoSlice"
 import { iniciarSesion } from "../redux/userSlice"
 
@@ -49,7 +50,11 @@ const IniciarSesion = () => {
     setError("")
 
     try {
-      const { usuario } = await dispatch(iniciarSesion(credenciales)).unwrap()
+      const accion = await dispatch(iniciarSesion(credenciales))
+      if (iniciarSesion.rejected.match(accion)) {
+        throw crearErrorDesdeAccion(accion, "No se pudo iniciar sesion.")
+      }
+      const { usuario } = accion.payload
       if (usuario.rol === "VENDEDOR") return navigate("/panel-vendedor", { replace: true })
       if (agregarProductoPendiente(usuario)) return
       navigate(location.state?.from || "/", { replace: true })

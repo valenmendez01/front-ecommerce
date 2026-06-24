@@ -8,11 +8,11 @@ export default function ItemRecomendado({ articulo }) {
   const precioFinal = Math.round(precioOriginal * (1 - descuento / 100));
 
   return (
-    <Card className="bg-green-primary border border-dorado-primary/25 group-hover:border-dorado-primary p-3 cursor-pointer rounded-xl">
+    <Card className="cursor-pointer rounded-lg border border-dorado-primary/25 bg-green-primary p-2.5 group-hover:border-dorado-primary">
       <ImagenProducto
         src={articulo.imagen}
         alt={articulo.nombre}
-        className="w-full aspect-[3/4] rounded-lg mb-3"
+        className="mb-2 h-48 w-full rounded-md sm:h-40 xl:h-44"
         iconClassName="text-dorado-primary"
       />
       <p className="text-xs font-semibold text-white leading-tight">{articulo.nombre}</p>
@@ -27,7 +27,7 @@ export default function ItemRecomendado({ articulo }) {
       ) : (
         <p className="text-sm font-black text-dorado-primary mt-0.5">{formatearPesos(precioOriginal)}</p>
       )}
-      <p className="mt-2 text-[10px] font-black uppercase tracking-widest text-dorado-primary">
+      <p className="mt-1.5 text-[10px] font-black uppercase tracking-widest text-dorado-primary">
         Ver producto
       </p>
     </Card>

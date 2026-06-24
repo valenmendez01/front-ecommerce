@@ -1,6 +1,7 @@
 import { addToast } from '@heroui/react'
 import { useCallback, useEffect } from 'react'
 
+import { crearErrorDesdeAccion } from './resultadoThunk'
 import { vaciarCarritoRedux } from '../redux/carritoSlice'
 import {
   confirmarPedidoCompra,
@@ -36,16 +37,24 @@ export const usePagoPaypal = ({
   usuario,
 }) => {
   const confirmarPedido = useCallback(async () => {
-    const mensaje = await dispatch(
+    const accion = await dispatch(
       confirmarPedidoCompra({ articulos, token, usuario }),
-    ).unwrap()
+    )
+    if (confirmarPedidoCompra.rejected.match(accion)) {
+      throw crearErrorDesdeAccion(accion, 'No se pudo confirmar el pedido.')
+    }
+
     dispatch(vaciarCarritoRedux())
-    return mensaje
+    return accion.payload
   }, [articulos, dispatch, token, usuario])
 
   const confirmarPagoAprobado = useCallback(async (orderId) => {
     try {
-      const captura = await dispatch(capturarOrdenPaypal({ orderId, token })).unwrap()
+      const accion = await dispatch(capturarOrdenPaypal({ orderId, token }))
+      if (capturarOrdenPaypal.rejected.match(accion)) {
+        throw crearErrorDesdeAccion(accion, 'No se pudo confirmar el pago con PayPal.')
+      }
+      const captura = accion.payload
 
       if (captura.estado !== 'COMPLETED') {
         throw new Error('PayPal no marcó el pago como completado.')
@@ -100,9 +109,13 @@ export const usePagoPaypal = ({
         idProducto: articulo.idProducto ?? articulo.id,
         cantidad: articulo.cantidad,
       }))
-      const orden = await dispatch(
+      const accion = await dispatch(
         crearOrdenPaypal({ ...obtenerUrlsPaypal(), items, token }),
-      ).unwrap()
+      )
+      if (crearOrdenPaypal.rejected.match(accion)) {
+        throw crearErrorDesdeAccion(accion, 'No se pudo iniciar el pago con PayPal.')
+      }
+      const orden = accion.payload
 
       sessionStorage.setItem(PAYPAL_PENDIENTE_KEY, '1')
       window.location.assign(orden.approvalUrl)

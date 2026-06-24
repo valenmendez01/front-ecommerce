@@ -22,8 +22,9 @@ function App() {
   }, [dispatch])
 
   useEffect(() => {
+    if (usuario?.rol === 'VENDEDOR') return
     dispatch(cargarCarritoUsuario(usuario?.idUsuario))
-  }, [dispatch, usuario?.idUsuario])
+  }, [dispatch, usuario?.idUsuario, usuario?.rol])
 
   if (cargandoUsuario) {
     return <PantallaCargandoSesion />

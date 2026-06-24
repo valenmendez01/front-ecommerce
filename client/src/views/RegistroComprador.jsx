@@ -8,6 +8,7 @@ import TarjetaFormularioAuth from '../components/auth/estructura/TarjetaFormular
 import FormularioRegistro from '../components/auth/formularios/FormularioRegistro'
 import PanelPresentacionAuth from '../components/auth/presentacion/PanelPresentacionAuth'
 import { useDispatch } from 'react-redux'
+import { crearErrorDesdeAccion } from '../lib/resultadoThunk'
 import { registrarComprador } from '../redux/userSlice'
 
 const obtenerMensajeRegistro = (error) => {
@@ -46,7 +47,10 @@ const RegistroComprador = () => {
     setError('')
 
     try {
-      await dispatch(registrarComprador(datos)).unwrap()
+      const accion = await dispatch(registrarComprador(datos))
+      if (registrarComprador.rejected.match(accion)) {
+        throw crearErrorDesdeAccion(accion, 'No se pudo crear la cuenta.')
+      }
       navigate('/', { replace: true })
     } catch (registroError) {
       const mensaje = obtenerMensajeRegistro(registroError)
