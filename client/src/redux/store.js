@@ -6,6 +6,7 @@ import {
   PURGE,
   REGISTER,
   REHYDRATE,
+  createTransform,
   persistReducer,
   persistStore,
 } from 'redux-persist'
@@ -30,6 +31,24 @@ const ocultarImagenesBase64EnDevTools = (clave, valor) => {
   return `[imagen Base64 omitida en DevTools: ${valor.length} caracteres]`
 }
 
+const limpiarImagenPesadaArticulo = (articulo) => {
+  const imagenEsBase64 = typeof articulo.imagen === 'string' && articulo.imagen.startsWith('data:image')
+  const articuloLiviano = { ...articulo, imagen: imagenEsBase64 ? '' : articulo.imagen }
+
+  delete articuloLiviano.imagenes
+  delete articuloLiviano.contenidoBase64
+
+  return articuloLiviano
+}
+
+const limpiarCarritosPersistidos = (carritosPorUsuario = {}) =>
+  Object.fromEntries(
+    Object.entries(carritosPorUsuario).map(([idUsuario, articulos]) => [
+      idUsuario,
+      Array.isArray(articulos) ? articulos.map(limpiarImagenPesadaArticulo) : [],
+    ]),
+  )
+
 const migrarCarrito = (estadoPersistido) => {
   if (!estadoPersistido) {
     return Promise.resolve(estadoPersistido)
@@ -38,7 +57,7 @@ const migrarCarrito = (estadoPersistido) => {
   if (estadoPersistido.carritosPorUsuario) {
     return Promise.resolve({
       idUsuario: null,
-      carritosPorUsuario: estadoPersistido.carritosPorUsuario,
+      carritosPorUsuario: limpiarCarritosPersistidos(estadoPersistido.carritosPorUsuario),
     })
   }
 
@@ -48,18 +67,28 @@ const migrarCarrito = (estadoPersistido) => {
   return Promise.resolve({
     idUsuario: null,
     carritosPorUsuario: {
-      [clave]: estadoPersistido.articulos || [],
+      [clave]: (estadoPersistido.articulos || []).map(limpiarImagenPesadaArticulo),
     },
   })
 }
 
+const limpiarCarritoAntesDePersistir = createTransform(
+  (estado) => ({
+    ...estado,
+    carritosPorUsuario: limpiarCarritosPersistidos(estado.carritosPorUsuario),
+  }),
+  (estado) => estado,
+  { whitelist: ['carrito'] },
+)
+
 const carritoPersistido = persistReducer(
   {
     key: 'carrito',
-    version: 2,
+    version: 3,
     storage,
     whitelist: ['carritosPorUsuario'],
     migrate: migrarCarrito,
+    transforms: [limpiarCarritoAntesDePersistir],
   },
   carritoSlice,
 )
