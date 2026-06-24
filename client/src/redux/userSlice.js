@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { apiRequest } from '../lib/api'
-import { limpiarCarritosPersistidos } from './carritoSlice'
 import { REHYDRATE } from 'redux-persist'
 
 const formatearFecha = (fecha) => {
@@ -44,7 +43,7 @@ const obtenerErrorRechazo = (error) => ({
     payload: error.payload,
 })
 
-const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { dispatch, rejectWithValue }) => {
+const autenticarUsuario = async ({ endpoint, body }, { rejectWithValue }) => {
     try {
         const respuesta = await apiRequest(endpoint, {
             auth: false,
@@ -54,10 +53,6 @@ const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { dispatch
 
         const usuarioNormalizado = normalizarUsuario(respuesta.usuario)
         if (!usuarioNormalizado) throw new Error('No se pudo obtener el usuario autenticado.')
-
-        if (usuarioActualId && usuarioActualId !== usuarioNormalizado.idUsuario) {
-            dispatch(limpiarCarritosPersistidos())
-        }
 
         return {
             token: respuesta.access_token,
@@ -73,11 +68,9 @@ const autenticarUsuario = async ({ endpoint, body, usuarioActualId }, { dispatch
 export const iniciarSesion = createAsyncThunk(
     'user/iniciarSesion',
     async (credenciales, thunkApi) => {
-        const usuarioActualId = thunkApi.getState().user.usuario?.idUsuario
         return autenticarUsuario({
             endpoint: '/api/v1/auth/authenticate',
             body: credenciales,
-            usuarioActualId,
         }, thunkApi)
     }
 )
@@ -85,11 +78,9 @@ export const iniciarSesion = createAsyncThunk(
 export const registrarComprador = createAsyncThunk(
     'user/registrarComprador',
     async (datos, thunkApi) => {
-        const usuarioActualId = thunkApi.getState().user.usuario?.idUsuario
         return autenticarUsuario({
             endpoint: '/api/v1/auth/register',
             body: datos,
-            usuarioActualId,
         }, thunkApi)
     }
 )
@@ -178,7 +169,6 @@ const userSlice = createSlice({
 export const { limpiarErrorSesion, limpiarSesion, validarSesionPersistida } = userSlice.actions
 
 export const cerrarSesion = () => (dispatch) => {
-    dispatch(limpiarCarritosPersistidos())
     dispatch(limpiarSesion())
 }
 
