@@ -3,14 +3,16 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { seleccionarArticulosCarrito } from '../redux/carritoSlice'
+import { seleccionarArticulosCarrito, vaciarCarritoRedux } from '../redux/carritoSlice'
 import {
+  confirmarPedidoCompra,
   guardarEnvioCompra,
   guardarPagoCompra,
   registrarErrorCompra,
   reiniciarCompra,
 } from '../redux/compraSlice'
 import { calcularResumenCarrito } from './reglasCarrito'
+import { crearErrorDesdeAccion } from './resultadoThunk'
 import { usePagoPaypal } from './usePagoPaypal'
 
 export const useCompra = () => {
@@ -28,16 +30,9 @@ export const useCompra = () => {
   )
 
   const puedeConfirmar = Boolean(
-    compra.envioGuardado &&
-    compra.pagoGuardado &&
-    articulos.length > 0 &&
-    esComprador,
+    compra.envioGuardado && compra.pagoGuardado && articulos.length > 0 && esComprador,
   )
-  const puedePagarPaypal = Boolean(
-    compra.envioGuardado &&
-    articulos.length > 0 &&
-    esComprador,
-  )
+  const puedePagarPaypal = Boolean(compra.envioGuardado && articulos.length > 0 && esComprador)
 
   const pagoPaypal = usePagoPaypal({
     articulos,
@@ -46,7 +41,6 @@ export const useCompra = () => {
     navigate,
     paypal,
     puedePagarPaypal,
-    resumen,
     token,
     usuario,
   })
@@ -65,7 +59,13 @@ export const useCompra = () => {
     }
 
     try {
-      addToast({ color: 'success', title: await pagoPaypal.confirmarPedido() })
+      const accion = await dispatch(confirmarPedidoCompra({ articulos, token, usuario }))
+      if (confirmarPedidoCompra.rejected.match(accion)) {
+        throw crearErrorDesdeAccion(accion, 'No se pudo confirmar el pedido.')
+      }
+
+      dispatch(vaciarCarritoRedux())
+      addToast({ color: 'success', title: accion.payload })
     } catch (error) {
       addToast({
         color: 'danger',

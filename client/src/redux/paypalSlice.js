@@ -5,7 +5,6 @@ const obtenerMensajeError = (error) => {
   const data = error.response?.data
   return data?.mensaje || data?.message || data?.error || error.message
 }
-
 export const crearOrdenPaypal = createAsyncThunk(
   'paypal/crearOrdenPaypal',
   async ({ cancelUrl, items, returnUrl, token }, { rejectWithValue }) => {
@@ -15,7 +14,6 @@ export const crearOrdenPaypal = createAsyncThunk(
         { cancelUrl, items, returnUrl },
         { headers: { Authorization: `Bearer ${token}` } },
       )
-
       return data
     } catch (error) {
       return rejectWithValue(obtenerMensajeError(error))
@@ -25,18 +23,22 @@ export const crearOrdenPaypal = createAsyncThunk(
     condition: (_, { getState }) => !getState().paypal.cargandoCrear,
   },
 )
-
-export const capturarOrdenPaypal = createAsyncThunk(
-  'paypal/capturarOrdenPaypal',
-  async ({ orderId, token }, { rejectWithValue }) => {
+export const confirmarPedidoPaypal = createAsyncThunk(
+  'paypal/confirmarPedidoPaypal',
+  async ({ articulos, orderId, token, usuario }, { rejectWithValue }) => {
     try {
       const { data } = await axios.post(
-        `/pagos/paypal/capturar-orden/${orderId}`,
-        {},
+        `/pagos/paypal/confirmar-pedido/${orderId}`,
+        {
+          idUsuario: usuario.idUsuario,
+          items: articulos.map((articulo) => ({
+            idProducto: articulo.idProducto ?? articulo.id,
+            cantidad: articulo.cantidad,
+          })),
+        },
         { headers: { Authorization: `Bearer ${token}` } },
       )
-
-      return data
+      return data?.mensaje || data?.message || 'Pedido confirmado'
     } catch (error) {
       return rejectWithValue(obtenerMensajeError(error))
     }
@@ -48,7 +50,6 @@ export const capturarOrdenPaypal = createAsyncThunk(
     },
   },
 )
-
 const paypalSlice = createSlice({
   name: 'paypal',
   initialState: {
@@ -58,41 +59,37 @@ const paypalSlice = createSlice({
     orderIdCapturado: null,
   },
   reducers: {
-    limpiarPagoPaypal: (state) => {
-      state.cargandoCrear = false
-      state.cargandoCaptura = false
-      state.error = null
-      state.orderIdCapturado = null
-    },
+    limpiarPagoPaypal: (state) => Object.assign(state, {
+      cargandoCrear: false,
+      cargandoCaptura: false,
+      error: null,
+      orderIdCapturado: null,
+    }),
   },
   extraReducers: (builder) => {
     builder
       .addCase(crearOrdenPaypal.pending, (state) => {
-        state.cargandoCrear = true
-        state.error = null
+        Object.assign(state, { cargandoCrear: true, error: null })
       })
       .addCase(crearOrdenPaypal.fulfilled, (state) => {
         state.cargandoCrear = false
       })
-      .addCase(crearOrdenPaypal.rejected, (state, action) => {
-        state.cargandoCrear = false
-        state.error = action.payload || 'No se pudo iniciar el pago con PayPal.'
+      .addCase(crearOrdenPaypal.rejected, (state, action) => Object.assign(state, {
+        cargandoCrear: false,
+        error: action.payload || 'No se pudo iniciar el pago con PayPal.',
+      }))
+      .addCase(confirmarPedidoPaypal.pending, (state) => {
+        Object.assign(state, { cargandoCaptura: true, error: null })
       })
-      .addCase(capturarOrdenPaypal.pending, (state) => {
-        state.cargandoCaptura = true
-        state.error = null
-      })
-      .addCase(capturarOrdenPaypal.fulfilled, (state, action) => {
+      .addCase(confirmarPedidoPaypal.fulfilled, (state, action) => {
         state.cargandoCaptura = false
-        state.orderIdCapturado = action.payload.orderId
+        state.orderIdCapturado = action.meta.arg.orderId
       })
-      .addCase(capturarOrdenPaypal.rejected, (state, action) => {
-        state.cargandoCaptura = false
-        state.error = action.payload || 'No se pudo confirmar el pago con PayPal.'
-      })
+      .addCase(confirmarPedidoPaypal.rejected, (state, action) => Object.assign(state, {
+        cargandoCaptura: false,
+        error: action.payload || 'No se pudo confirmar el pago con PayPal.',
+      }))
   },
 })
-
 export const { limpiarPagoPaypal } = paypalSlice.actions
-
 export default paypalSlice.reducer
