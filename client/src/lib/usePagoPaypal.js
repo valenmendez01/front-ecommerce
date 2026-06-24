@@ -32,7 +32,6 @@ export const usePagoPaypal = ({
   navigate,
   paypal,
   puedePagarPaypal,
-  resumen,
   token,
   usuario,
 }) => {
@@ -97,8 +96,12 @@ export const usePagoPaypal = ({
     }
 
     try {
+      const items = articulos.map((articulo) => ({
+        idProducto: articulo.idProducto ?? articulo.id,
+        cantidad: articulo.cantidad,
+      }))
       const orden = await dispatch(
-        crearOrdenPaypal({ ...obtenerUrlsPaypal(), token, totalPesos: resumen.total }),
+        crearOrdenPaypal({ ...obtenerUrlsPaypal(), items, token }),
       ).unwrap()
 
       sessionStorage.setItem(PAYPAL_PENDIENTE_KEY, '1')
