@@ -1,5 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { confirmarPedidoCompra } from './compraSlice'
+import { confirmarPedidoPaypal } from './paypalSlice'
+import {
+    actualizarProductoVendedor,
+    crearProductoVendedor,
+    guardarImagenesProductoVendedor,
+} from './productosVendedorSlice'
 
 const crearClaveProductos = ({ page, size }) => `page=${page}&size=${size}`
 
@@ -7,6 +14,21 @@ const normalizarPaginaProductos = (payload) => ({
     productos: payload?.content || [],
     totalPaginas: payload?.totalPages ?? 1,
 })
+
+const invalidarCacheProductos = (state) => {
+    state.productos = []
+    state.productosPorConsulta = {}
+    state.consultaActual = null
+    state.totalPaginas = 1
+    state.filtro.productos = []
+    state.filtro.productosPorConsulta = {}
+    state.filtro.totalPaginas = 1
+    state.filtro.lastParams = null
+    state.productoDetalleId = null
+    state.detallesPorId = {}
+    state.errorDetalle = null
+    state.errorDetalleId = null
+}
 
 export const fetchProductos = createAsyncThunk('catalogo/fetchProductos', async ({ page, size }) => {
     const { data } = await axios(`/productos?page=${page}&size=${size}`)
@@ -90,10 +112,11 @@ const catalogoSlice = createSlice({
             error: null,
             lastParams: null,
         },
-        productoDetalle: null,
         productoDetalleId: null,
         detallesPorId: {},
         loadingDetalle: false,
+        errorDetalle: null,
+        errorDetalleId: null,
         error: null,
     },
     reducers: {
@@ -166,19 +189,27 @@ const catalogoSlice = createSlice({
 
             .addCase(fetchProductoDetalle.pending, (state, action) => {
                 state.loadingDetalle = true
-                state.error = null
+                state.errorDetalle = null
+                state.errorDetalleId = null
                 state.productoDetalleId = String(action.meta.arg)
             })
             .addCase(fetchProductoDetalle.fulfilled, (state, action) => {
                 state.loadingDetalle = false
-                state.productoDetalle = action.payload
+                state.errorDetalle = null
+                state.errorDetalleId = null
                 state.productoDetalleId = String(action.meta.arg)
                 state.detallesPorId[String(action.meta.arg)] = action.payload
             })
             .addCase(fetchProductoDetalle.rejected, (state, action) => {
                 state.loadingDetalle = false
-                state.error = action.error.message
+                state.errorDetalle = action.error.message
+                state.errorDetalleId = String(action.meta.arg)
             })
+            .addCase(confirmarPedidoCompra.fulfilled, invalidarCacheProductos)
+            .addCase(confirmarPedidoPaypal.fulfilled, invalidarCacheProductos)
+            .addCase(crearProductoVendedor.fulfilled, invalidarCacheProductos)
+            .addCase(actualizarProductoVendedor.fulfilled, invalidarCacheProductos)
+            .addCase(guardarImagenesProductoVendedor.fulfilled, invalidarCacheProductos)
     }
 })
 

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { confirmarPedidoCompra } from './compraSlice'
+import { confirmarPedidoPaypal } from './paypalSlice'
 
 export const fetchPedidosComprador = createAsyncThunk(
   'pedidos/fetchPedidosComprador',
@@ -56,6 +57,9 @@ const pedidosSlice = createSlice({
         state.error = action.error.message || 'No se pudieron cargar tus pedidos.'
       })
       .addCase(confirmarPedidoCompra.fulfilled, (state) => {
+        state.pedidosDesactualizados = true
+      })
+      .addCase(confirmarPedidoPaypal.fulfilled, (state) => {
         state.pedidosDesactualizados = true
       })
   },

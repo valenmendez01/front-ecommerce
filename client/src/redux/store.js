@@ -73,12 +73,9 @@ const migrarCarrito = (estadoPersistido) => {
 }
 
 const limpiarCarritoAntesDePersistir = createTransform(
-  (estado) => ({
-    ...estado,
-    carritosPorUsuario: limpiarCarritosPersistidos(estado.carritosPorUsuario),
-  }),
+  (carritosPorUsuario) => limpiarCarritosPersistidos(carritosPorUsuario),
   (estado) => estado,
-  { whitelist: ['carrito'] },
+  { whitelist: ['carritosPorUsuario'] },
 )
 
 const carritoPersistido = persistReducer(

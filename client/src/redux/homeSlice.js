@@ -1,5 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { confirmarPedidoCompra } from './compraSlice'
+import { confirmarPedidoPaypal } from './paypalSlice'
+import {
+    actualizarProductoVendedor,
+    crearProductoVendedor,
+    guardarImagenesProductoVendedor,
+} from './productosVendedorSlice'
+
+const invalidarDestacados = (state) => {
+    state.productosDestacados = []
+    state.destacadosCargados = false
+    state.errorDestacados = null
+}
 
 export const fetchProductosDestacadosHome = createAsyncThunk(
     'home/fetchProductosDestacadosHome',
@@ -44,6 +57,11 @@ const homeSlice = createSlice({
                 state.productosDestacados = []
                 state.errorDestacados = action.error.message
             })
+            .addCase(confirmarPedidoCompra.fulfilled, invalidarDestacados)
+            .addCase(confirmarPedidoPaypal.fulfilled, invalidarDestacados)
+            .addCase(crearProductoVendedor.fulfilled, invalidarDestacados)
+            .addCase(actualizarProductoVendedor.fulfilled, invalidarDestacados)
+            .addCase(guardarImagenesProductoVendedor.fulfilled, invalidarDestacados)
     }
 })
 

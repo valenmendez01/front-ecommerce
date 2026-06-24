@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { crearDatosProducto, obtenerMensajeRespuesta } from '../components/vendedor/crearProducto/datos/reglasCrearProducto'
 import { crearFormularioImagenes } from '../components/vendedor/crearProducto/imagenes/imagenesCrearProducto'
+import { confirmarPedidoCompra } from './compraSlice'
+import { confirmarPedidoPaypal } from './paypalSlice'
 
 const obtenerMensajeErrorProducto = (error, mensaje) => {
   const data = error.response?.data
@@ -262,6 +264,14 @@ const productosVendedorSlice = createSlice({
       .addCase(actualizarProductoVendedor.rejected, (state, action) => {
         state.actualizando = false
         state.errorActualizar = action.payload || action.error.message || 'No se pudo actualizar el producto.'
+      })
+      .addCase(confirmarPedidoCompra.fulfilled, (state) => {
+        state.productos = []
+        state.productosCargados = false
+      })
+      .addCase(confirmarPedidoPaypal.fulfilled, (state) => {
+        state.productos = []
+        state.productosCargados = false
       })
   },
 })

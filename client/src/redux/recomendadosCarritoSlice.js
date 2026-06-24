@@ -1,8 +1,25 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { obtenerImagenProducto } from '../lib/reglasCarrito'
+import { confirmarPedidoCompra } from './compraSlice'
+import { confirmarPedidoPaypal } from './paypalSlice'
+import {
+  actualizarProductoVendedor,
+  crearProductoVendedor,
+  guardarImagenesProductoVendedor,
+} from './productosVendedorSlice'
 
 const obtenerId = (producto) => producto?.idProducto ?? producto?.id
+const RECOMENDADOS_PAGE_SIZE = 30
+
+const invalidarRecomendados = (state) => {
+  state.cargando = false
+  state.clave = null
+  state.claveSolicitada = null
+  state.error = null
+  state.productos = []
+  state.requestId = null
+}
 
 const mezclar = (productos) => {
   const copia = [...productos]
@@ -41,7 +58,7 @@ export const fetchRecomendadosCarrito = createAsyncThunk(
   'recomendadosCarrito/fetch',
   async (idsCarrito) => {
     const excluidos = new Set(String(idsCarrito || '').split(',').filter(Boolean).map(Number))
-    const { data } = await axios('/productos?page=0&size=1000')
+    const { data } = await axios(`/productos?page=0&size=${RECOMENDADOS_PAGE_SIZE}`)
     const productos = (data.data?.content || data.content || [])
       .filter((producto) => {
         const id = obtenerId(producto)
@@ -107,6 +124,11 @@ const recomendadosCarritoSlice = createSlice({
         state.productos = []
         state.requestId = null
       })
+      .addCase(confirmarPedidoCompra.fulfilled, invalidarRecomendados)
+      .addCase(confirmarPedidoPaypal.fulfilled, invalidarRecomendados)
+      .addCase(crearProductoVendedor.fulfilled, invalidarRecomendados)
+      .addCase(actualizarProductoVendedor.fulfilled, invalidarRecomendados)
+      .addCase(guardarImagenesProductoVendedor.fulfilled, invalidarRecomendados)
   },
 })
 

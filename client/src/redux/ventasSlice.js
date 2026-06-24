@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { confirmarPedidoCompra } from './compraSlice'
+import { confirmarPedidoPaypal } from './paypalSlice'
 
 const VENTAS_VENDEDOR_PAGE_SIZE = 100
 
@@ -56,6 +58,14 @@ const ventasSlice = createSlice({
         state.loading = false
         state.ventasCargadas = false
         state.error = action.error.message || 'No se pudieron cargar tus ventas.'
+      })
+      .addCase(confirmarPedidoCompra.fulfilled, (state) => {
+        state.ventas = null
+        state.ventasCargadas = false
+      })
+      .addCase(confirmarPedidoPaypal.fulfilled, (state) => {
+        state.ventas = null
+        state.ventasCargadas = false
       })
   },
 })

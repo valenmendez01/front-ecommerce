@@ -14,24 +14,24 @@ export const DetalleCatalogo = () => {
   const dispatch = useDispatch();
   const {
     detallesPorId,
-    error,
+    errorDetalle,
+    errorDetalleId,
     loadingDetalle: cargando,
-    productoDetalle,
   } = useSelector((state) => state.productos);
-  const producto = detallesPorId[String(id)] || productoDetalle;
+  const idActual = String(id);
+  const producto = detallesPorId[idActual];
+  const errorActual = errorDetalleId === idActual ? errorDetalle : null;
 
   useEffect(() => {
-    if (detallesPorId[String(id)]) return;
+    if (detallesPorId[idActual]) return;
     dispatch(fetchProductoDetalle(id));
-  }, [detallesPorId, dispatch, id]);
+  }, [detallesPorId, dispatch, id, idActual]);
 
-  if ((cargando && !producto) || !producto) return <SkeletonDetalle />;
-
-  if (error) {
+  if (errorActual) {
     return (
       <div className="min-h-screen p-6 md:p-10">
         <Card className="max-w-2xl mx-auto p-8 text-center">
-          <h1 className="text-2xl font-black text-emerald-950">{error}</h1>
+          <h1 className="text-2xl font-black text-emerald-950">{errorActual}</h1>
           <p className="mt-3 text-gray-600">
             El producto que querés ver no existe o ya no está disponible.
           </p>
@@ -39,6 +39,8 @@ export const DetalleCatalogo = () => {
       </div>
     );
   }
+
+  if ((cargando && !producto) || !producto) return <SkeletonDetalle />;
 
   return (
     <div className="mb-8">
