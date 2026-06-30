@@ -37,6 +37,7 @@ const limpiarImagenPesadaArticulo = (articulo) => {
 
   delete articuloLiviano.imagenes
   delete articuloLiviano.contenidoBase64
+  delete articuloLiviano.imagenConsultada
 
   return articuloLiviano
 }
