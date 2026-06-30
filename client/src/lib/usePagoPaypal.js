@@ -2,7 +2,7 @@ import { addToast } from '@heroui/react'
 import { useCallback, useEffect } from 'react'
 import { crearErrorDesdeAccion } from './resultadoThunk'
 import { vaciarCarritoRedux } from '../redux/carritoSlice'
-import { limpiarErrorCompra, registrarErrorCompra } from '../redux/compraSlice'
+import { limpiarErrorCompra, marcarCompraConfirmada, registrarErrorCompra } from '../redux/compraSlice'
 import { confirmarPedidoPaypal, crearOrdenPaypal, limpiarPagoPaypal } from '../redux/paypalSlice'
 
 const PAYPAL_PENDIENTE_KEY = 'figullect_paypal_pendiente'
@@ -43,6 +43,7 @@ export const usePagoPaypal = ({
       if (confirmarPedidoPaypal.rejected.match(accion)) {
         throw crearErrorDesdeAccion(accion, 'No se pudo confirmar el pago con PayPal.')
       }
+      dispatch(marcarCompraConfirmada())
       addToast({ color: 'success', title: accion.payload })
       dispatch(vaciarCarritoRedux())
       sessionStorage.removeItem(PAYPAL_PENDIENTE_KEY)

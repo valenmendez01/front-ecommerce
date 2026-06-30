@@ -42,7 +42,7 @@ export default function ItemsRecomendados({ articulosCarrito = [] }) {
       {cargando ? (
         <RecomendadosSkeleton />
       ) : (
-        <HoverEffect items={items} className="flex flex-wrap justify-center gap-20 py-0" />
+        <HoverEffect items={items} className="flex flex-wrap justify-center gap-3 py-0" />
       )}
     </section>
   );

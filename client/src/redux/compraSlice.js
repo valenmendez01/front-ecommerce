@@ -73,6 +73,11 @@ const compraSlice = createSlice({
     registrarErrorCompra: (state, action) => {
       state.errorConfirmar = action.payload
     },
+    marcarCompraConfirmada: (state) => {
+      state.cargandoConfirmar = false
+      state.confirmado = true
+      state.errorConfirmar = null
+    },
     reiniciarCompra: (state) => {
       state.cargandoConfirmar = false
       state.confirmado = false
@@ -103,6 +108,7 @@ export const {
   guardarEnvioCompra,
   guardarPagoCompra,
   limpiarErrorCompra,
+  marcarCompraConfirmada,
   registrarErrorCompra,
   reiniciarCompra,
 } = compraSlice.actions
