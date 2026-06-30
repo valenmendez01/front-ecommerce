@@ -6,6 +6,7 @@ import { limpiarErrorCompra, marcarCompraConfirmada, registrarErrorCompra } from
 import { confirmarPedidoPaypal, crearOrdenPaypal, limpiarPagoPaypal } from '../redux/paypalSlice'
 
 const PAYPAL_PENDIENTE_KEY = 'figullect_paypal_pendiente'
+const PAYPAL_CONFIRMACION_KEY = 'figullect_paypal_confirmacion'
 const obtenerUrlsPaypal = () => {
   const origen = window.location.origin
   return {
@@ -47,8 +48,10 @@ export const usePagoPaypal = ({
       addToast({ color: 'success', title: accion.payload })
       dispatch(vaciarCarritoRedux())
       sessionStorage.removeItem(PAYPAL_PENDIENTE_KEY)
+      sessionStorage.removeItem(PAYPAL_CONFIRMACION_KEY)
       navigate('/compra', { replace: true })
     } catch (error) {
+      sessionStorage.removeItem(PAYPAL_PENDIENTE_KEY)
       mostrarErrorPaypal(dispatch, 'No se pudo confirmar PayPal', error)
     }
   }, [articulos, dispatch, navigate, token, usuario])
@@ -58,9 +61,11 @@ export const usePagoPaypal = ({
     const estadoPaypal = parametros.get('paypal')
     const orderId = parametros.get('token')
     const pagoPendiente = sessionStorage.getItem(PAYPAL_PENDIENTE_KEY) === '1'
+    const confirmacionActual = sessionStorage.getItem(PAYPAL_CONFIRMACION_KEY)
 
     if (estadoPaypal === 'cancelado') {
       sessionStorage.removeItem(PAYPAL_PENDIENTE_KEY)
+      sessionStorage.removeItem(PAYPAL_CONFIRMACION_KEY)
       dispatch(limpiarPagoPaypal())
       dispatch(registrarErrorCompra('El pago con PayPal fue cancelado.'))
       navigate('/compra', { replace: true })
@@ -68,10 +73,13 @@ export const usePagoPaypal = ({
     }
 
     const puedeConfirmar = estadoPaypal === 'aprobado' && orderId && pagoPendiente
+      && confirmacionActual !== orderId
       && !paypal.cargandoCaptura && paypal.orderIdCapturado !== orderId
       && usuario && articulos.length > 0
 
     if (puedeConfirmar) {
+      sessionStorage.setItem(PAYPAL_CONFIRMACION_KEY, orderId)
+      navigate('/compra', { replace: true })
       confirmarPagoAprobado(orderId)
     }
   }, [articulos, confirmarPagoAprobado, dispatch, location.search, navigate, paypal, usuario])
