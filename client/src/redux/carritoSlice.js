@@ -55,6 +55,17 @@ const carritoSlice = createSlice({
       state.carritosPorUsuario[clave] = action.payload
     },
 
+    imagenesCarritoActualizadas: (state, action) => {
+      const clave = obtenerClaveUsuario(state.idUsuario)
+      const imagenesPorId = action.payload || {}
+      state.carritosPorUsuario[clave] = obtenerCarritoPorIdUsuario(state, state.idUsuario)
+        .map((articulo) => ({
+          ...articulo,
+          imagen: articulo.imagen || imagenesPorId[articulo.idProducto] || '',
+          imagenConsultada: true,
+        }))
+    },
+
     carritoVaciado: (state) => {
       const clave = obtenerClaveUsuario(state.idUsuario)
       state.carritosPorUsuario[clave] = []
@@ -80,6 +91,7 @@ export const {
   productoAgregado,
   cantidadActualizada,
   productoEliminado,
+  imagenesCarritoActualizadas,
   carritoVaciado,
   carritosLimpiados,
 } = carritoSlice.actions
