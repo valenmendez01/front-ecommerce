@@ -45,7 +45,7 @@ export const usePagoPaypal = ({
         throw crearErrorDesdeAccion(accion, 'No se pudo confirmar el pago con PayPal.')
       }
       dispatch(marcarCompraConfirmada())
-      addToast({ color: 'success', title: accion.payload })
+      addToast({ color: 'success', title: accion.payload.mensaje })
       dispatch(vaciarCarritoRedux())
       sessionStorage.removeItem(PAYPAL_PENDIENTE_KEY)
       sessionStorage.removeItem(PAYPAL_CONFIRMACION_KEY)

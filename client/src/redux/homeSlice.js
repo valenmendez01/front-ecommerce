@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { confirmarPedidoCompra } from './compraSlice'
+import { confirmarPedidoPaypal } from './paypalSlice'
 import {
     actualizarProductoVendedor,
     crearProductoVendedor,
@@ -10,6 +12,25 @@ const invalidarDestacados = (state) => {
     state.productosDestacados = []
     state.destacadosCargados = false
     state.errorDestacados = null
+}
+
+const obtenerIdProducto = (producto) => producto?.idProducto ?? producto?.id
+
+const descontarStockDestacados = (state, action) => {
+    const cantidadesCompradas = new Map(
+        (action.meta.arg.articulos || []).map((articulo) => [
+            Number(obtenerIdProducto(articulo)),
+            Number(articulo.cantidad || 0),
+        ]),
+    )
+
+    state.productosDestacados.forEach((producto) => {
+        const cantidad = cantidadesCompradas.get(Number(obtenerIdProducto(producto)))
+
+        if (cantidad && producto.stock != null) {
+            producto.stock = Math.max(0, Number(producto.stock) - cantidad)
+        }
+    })
 }
 
 export const fetchProductosDestacadosHome = createAsyncThunk(
@@ -55,6 +76,8 @@ const homeSlice = createSlice({
                 state.productosDestacados = []
                 state.errorDestacados = action.error.message
             })
+            .addCase(confirmarPedidoCompra.fulfilled, descontarStockDestacados)
+            .addCase(confirmarPedidoPaypal.fulfilled, descontarStockDestacados)
             .addCase(crearProductoVendedor.fulfilled, invalidarDestacados)
             .addCase(actualizarProductoVendedor.fulfilled, invalidarDestacados)
             .addCase(guardarImagenesProductoVendedor.fulfilled, invalidarDestacados)

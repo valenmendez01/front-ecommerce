@@ -30,6 +30,42 @@ const invalidarCacheProductos = (state) => {
     state.errorDetalleId = null
 }
 
+const obtenerIdProducto = (articulo) => articulo?.idProducto ?? articulo?.id
+
+const descontarStockProducto = (producto, cantidadesCompradas) => {
+    const idProducto = obtenerIdProducto(producto)
+    const cantidad = cantidadesCompradas.get(Number(idProducto))
+
+    if (!cantidad || producto.stock == null) return
+
+    producto.stock = Math.max(0, Number(producto.stock) - cantidad)
+}
+
+const descontarStockCatalogo = (state, action) => {
+    const cantidadesCompradas = new Map(
+        (action.meta.arg.articulos || []).map((articulo) => [
+            Number(obtenerIdProducto(articulo)),
+            Number(articulo.cantidad || 0),
+        ]),
+    )
+
+    state.productos.forEach((producto) => descontarStockProducto(producto, cantidadesCompradas))
+
+    Object.values(state.productosPorConsulta).forEach((consulta) => {
+        consulta.productos?.forEach((producto) => descontarStockProducto(producto, cantidadesCompradas))
+    })
+
+    state.filtro.productos.forEach((producto) => descontarStockProducto(producto, cantidadesCompradas))
+
+    Object.values(state.filtro.productosPorConsulta).forEach((consulta) => {
+        consulta.productos?.forEach((producto) => descontarStockProducto(producto, cantidadesCompradas))
+    })
+
+    Object.values(state.detallesPorId).forEach((producto) => {
+        descontarStockProducto(producto, cantidadesCompradas)
+    })
+}
+
 export const fetchProductos = createAsyncThunk('catalogo/fetchProductos', async ({ page, size }) => {
     const { data } = await axios(`/productos?page=${page}&size=${size}`)
     return {
@@ -205,8 +241,8 @@ const catalogoSlice = createSlice({
                 state.errorDetalle = action.error.message
                 state.errorDetalleId = String(action.meta.arg)
             })
-            .addCase(confirmarPedidoCompra.fulfilled, invalidarCacheProductos)
-            .addCase(confirmarPedidoPaypal.fulfilled, invalidarCacheProductos)
+            .addCase(confirmarPedidoCompra.fulfilled, descontarStockCatalogo)
+            .addCase(confirmarPedidoPaypal.fulfilled, descontarStockCatalogo)
             .addCase(crearProductoVendedor.fulfilled, invalidarCacheProductos)
             .addCase(actualizarProductoVendedor.fulfilled, invalidarCacheProductos)
             .addCase(guardarImagenesProductoVendedor.fulfilled, invalidarCacheProductos)

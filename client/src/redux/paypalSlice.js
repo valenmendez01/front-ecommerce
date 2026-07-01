@@ -38,7 +38,10 @@ export const confirmarPedidoPaypal = createAsyncThunk(
         },
         { headers: { Authorization: `Bearer ${token}` } },
       )
-      return data?.mensaje || data?.message || 'Pedido confirmado'
+      return {
+        mensaje: data?.mensaje || data?.message || 'Pedido confirmado',
+        pedido: data?.data || null,
+      }
     } catch (error) {
       return rejectWithValue(obtenerMensajeError(error))
     }
