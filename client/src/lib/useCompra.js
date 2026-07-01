@@ -65,7 +65,7 @@ export const useCompra = () => {
       }
 
       dispatch(vaciarCarritoRedux())
-      addToast({ color: 'success', title: accion.payload })
+      addToast({ color: 'success', title: accion.payload.mensaje })
     } catch (error) {
       addToast({
         color: 'danger',

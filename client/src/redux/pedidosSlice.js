@@ -36,6 +36,28 @@ const pedidosSlice = createSlice({
   },
   reducers: {},
   extraReducers: (builder) => {
+    const agregarPedidoConfirmado = (state, action) => {
+      const pedido = action.payload?.pedido
+      const usuarioId = action.meta.arg.usuario?.idUsuario
+      const mismoUsuario = state.usuarioIdCargado === usuarioId
+
+      if (!pedido || !mismoUsuario || !state.pedidosCargados) {
+        state.pedidosDesactualizados = true
+        return
+      }
+
+      const idPedido = pedido.idPedido ?? pedido.id
+      const yaExiste = state.pedidos.some((pedidoActual) => (
+        (pedidoActual.idPedido ?? pedidoActual.id) === idPedido
+      ))
+
+      if (!yaExiste) {
+        state.pedidos.unshift(pedido)
+      }
+
+      state.pedidosDesactualizados = false
+    }
+
     builder
       .addCase(fetchPedidosComprador.pending, (state, action) => {
         state.loading = true
@@ -56,12 +78,8 @@ const pedidosSlice = createSlice({
         state.pedidosCargados = false
         state.error = action.error.message || 'No se pudieron cargar tus pedidos.'
       })
-      .addCase(confirmarPedidoCompra.fulfilled, (state) => {
-        state.pedidosDesactualizados = true
-      })
-      .addCase(confirmarPedidoPaypal.fulfilled, (state) => {
-        state.pedidosDesactualizados = true
-      })
+      .addCase(confirmarPedidoCompra.fulfilled, agregarPedidoConfirmado)
+      .addCase(confirmarPedidoPaypal.fulfilled, agregarPedidoConfirmado)
   },
 })
 
